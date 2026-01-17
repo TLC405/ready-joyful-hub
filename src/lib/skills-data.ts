@@ -1,3 +1,18 @@
+// Skill images - ES6 imports
+import frogStandImg from '@/assets/skills/frog-stand.jpg';
+import lSitImg from '@/assets/skills/l-sit.jpg';
+import headstandImg from '@/assets/skills/headstand.jpg';
+import pistolSquatImg from '@/assets/skills/pistol-squat.jpg';
+import handstandImg from '@/assets/skills/handstand.jpg';
+import skinTheCatImg from '@/assets/skills/skin-the-cat.jpg';
+import pulloverImg from '@/assets/skills/pullover.jpg';
+import tigerBendImg from '@/assets/skills/tiger-bend.jpg';
+import clutchFlagImg from '@/assets/skills/clutch-flag.jpg';
+import elbowLeverImg from '@/assets/skills/elbow-lever.jpg';
+import needleImg from '@/assets/skills/needle.jpg';
+import bentArmHandstandImg from '@/assets/skills/bent-arm-handstand.jpg';
+import singleArmElbowLeverImg from '@/assets/skills/single-arm-elbow-lever.jpg';
+
 export interface Skill {
   id: string;
   name: string;
@@ -32,7 +47,7 @@ export const skills: Skill[] = [
       'Start with a pillow in front for confidence'
     ],
     muscleGroups: ['Core', 'Shoulders', 'Wrists'],
-    image: '/skills/frog-stand.jpg'
+    image: frogStandImg
   },
   {
     id: 'l-sit',
@@ -54,7 +69,7 @@ export const skills: Skill[] = [
       'Keep shoulders down and away from ears'
     ],
     muscleGroups: ['Core', 'Hip Flexors', 'Triceps'],
-    image: '/skills/l-sit.jpg'
+    image: lSitImg
   },
   {
     id: 'headstand',
@@ -76,13 +91,13 @@ export const skills: Skill[] = [
       'Engage your core to prevent arching'
     ],
     muscleGroups: ['Shoulders', 'Core', 'Neck'],
-    image: '/skills/headstand.jpg'
+    image: headstandImg
   },
   {
     id: 'pistol-squat',
     name: 'Pistol Squat',
     difficulty: 'beginner',
-    tier: 'basic',
+    tier: 'free',
     description: 'The ultimate single-leg strength exercise that builds leg power, balance, and mobility.',
     instructions: [
       'Stand on one leg with the other leg extended forward',
@@ -98,13 +113,13 @@ export const skills: Skill[] = [
       'Work on ankle mobility separately'
     ],
     muscleGroups: ['Quadriceps', 'Glutes', 'Core'],
-    image: '/skills/pistol-squat.jpg'
+    image: pistolSquatImg
   },
   {
     id: 'handstand',
     name: 'Handstand',
     difficulty: 'intermediate',
-    tier: 'basic',
+    tier: 'free',
     description: 'The king of bodyweight skills. A freestanding handstand demonstrates mastery of balance and body control.',
     instructions: [
       'Start in a standing position facing a wall',
@@ -120,13 +135,13 @@ export const skills: Skill[] = [
       'Practice falling safely by cartwheeling out'
     ],
     muscleGroups: ['Shoulders', 'Core', 'Wrists', 'Triceps'],
-    image: '/skills/handstand.jpg'
+    image: handstandImg
   },
   {
     id: 'skin-the-cat',
     name: 'Skin The Cat',
     difficulty: 'intermediate',
-    tier: 'basic',
+    tier: 'free',
     description: 'A dynamic shoulder mobility exercise that builds the foundation for advanced ring work.',
     instructions: [
       'Hang from a bar or rings with straight arms',
@@ -142,13 +157,13 @@ export const skills: Skill[] = [
       'Never force the stretch - build range over time'
     ],
     muscleGroups: ['Shoulders', 'Lats', 'Core'],
-    image: '/skills/skin-the-cat.jpg'
+    image: skinTheCatImg
   },
   {
     id: 'pullover',
     name: 'Pullover',
     difficulty: 'intermediate',
-    tier: 'basic',
+    tier: 'free',
     description: 'A fundamental bar transition skill that combines pulling strength with hip flexibility.',
     instructions: [
       'Start hanging from a bar with overhand grip',
@@ -164,13 +179,13 @@ export const skills: Skill[] = [
       'Use a lower bar to practice the motion'
     ],
     muscleGroups: ['Back', 'Biceps', 'Core'],
-    image: '/skills/pullover.jpg'
+    image: pulloverImg
   },
   {
     id: 'tiger-bend-pushup',
     name: 'Tiger Bend Push Up',
     difficulty: 'intermediate',
-    tier: 'basic',
+    tier: 'free',
     description: 'An advanced push-up variation that builds tricep strength for planche and handstand push-ups.',
     instructions: [
       'Start in a forearm plank position',
@@ -186,13 +201,13 @@ export const skills: Skill[] = [
       'Start elevated if floor is too difficult'
     ],
     muscleGroups: ['Triceps', 'Shoulders', 'Core'],
-    image: '/skills/tiger-bend.jpg'
+    image: tigerBendImg
   },
   {
     id: 'pole-flag',
     name: 'Pole Flag',
     difficulty: 'advanced',
-    tier: 'pro',
+    tier: 'free',
     description: 'An impressive display of lateral core strength and shoulder stability.',
     instructions: [
       'Grip a vertical pole with both hands, one high and one low',
@@ -208,13 +223,13 @@ export const skills: Skill[] = [
       'The bottom arm does most of the work'
     ],
     muscleGroups: ['Obliques', 'Shoulders', 'Lats', 'Grip'],
-    image: '/skills/pole-flag.jpg'
+    image: clutchFlagImg // Using clutch flag image as fallback
   },
   {
     id: 'clutch-flag',
     name: 'Clutch Flag',
     difficulty: 'advanced',
-    tier: 'pro',
+    tier: 'free',
     description: 'A horizontal flag variation performed on a vertical bar with a unique grip.',
     instructions: [
       'Grip the bar with top hand in underhand position',
@@ -230,13 +245,13 @@ export const skills: Skill[] = [
       'Use chalk for better grip'
     ],
     muscleGroups: ['Obliques', 'Lats', 'Shoulders'],
-    image: '/skills/clutch-flag.jpg'
+    image: clutchFlagImg
   },
   {
     id: 'elbow-lever',
     name: 'Elbow Lever',
     difficulty: 'advanced',
-    tier: 'pro',
+    tier: 'free',
     description: 'A horizontal balance hold that creates the illusion of defying gravity.',
     instructions: [
       'Place hands on the ground shoulder-width apart',
@@ -252,13 +267,13 @@ export const skills: Skill[] = [
       'Spread fingers wide for better balance'
     ],
     muscleGroups: ['Core', 'Shoulders', 'Wrists'],
-    image: '/skills/elbow-lever.jpg'
+    image: elbowLeverImg
   },
   {
     id: 'needle',
     name: 'Needle',
     difficulty: 'advanced',
-    tier: 'pro',
+    tier: 'free',
     description: 'An extreme flexibility skill showcasing total hamstring and hip mobility.',
     instructions: [
       'Stand on one leg with arms by your sides',
@@ -274,13 +289,13 @@ export const skills: Skill[] = [
       'Use a wall for balance support initially'
     ],
     muscleGroups: ['Hamstrings', 'Hip Flexors', 'Lower Back'],
-    image: '/skills/needle.jpg'
+    image: needleImg
   },
   {
     id: 'bent-arm-handstand',
     name: 'Bent Arm Handstand',
     difficulty: 'advanced',
-    tier: 'pro',
+    tier: 'free',
     description: 'A crocodile-style handstand that requires tremendous tricep and shoulder strength.',
     instructions: [
       'Start in a frog stand position',
@@ -296,13 +311,13 @@ export const skills: Skill[] = [
       'Use a wall for support while learning'
     ],
     muscleGroups: ['Triceps', 'Shoulders', 'Core'],
-    image: '/skills/bent-arm-handstand.jpg'
+    image: bentArmHandstandImg
   },
   {
     id: 'single-arm-elbow-lever',
     name: 'Single Arm Elbow Lever',
     difficulty: 'advanced',
-    tier: 'pro',
+    tier: 'free',
     description: 'The ultimate elbow lever progression - balancing your entire body on one arm.',
     instructions: [
       'Start in a two-arm elbow lever position',
@@ -318,7 +333,7 @@ export const skills: Skill[] = [
       'Shift weight gradually before lifting hand'
     ],
     muscleGroups: ['Core', 'Shoulder', 'Wrist'],
-    image: '/skills/single-arm-elbow-lever.jpg'
+    image: singleArmElbowLeverImg
   }
 ];
 

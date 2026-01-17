@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        chalk: ['"Bebas Neue"', 'sans-serif'],
+        chalk: ['"Oswald"', 'sans-serif'],
         sans: ['Inter', 'sans-serif'],
       },
       colors: {
@@ -65,11 +65,29 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        // Premium metallic colors
+        platinum: {
+          DEFAULT: "hsl(40, 5%, 75%)",
+          light: "hsl(40, 10%, 85%)",
+          dark: "hsl(40, 5%, 65%)",
+        },
+        bronze: {
+          DEFAULT: "hsl(33, 60%, 50%)",
+          light: "hsl(33, 60%, 60%)",
+          dark: "hsl(33, 60%, 40%)",
+        },
+        gold: {
+          DEFAULT: "hsl(42, 87%, 55%)",
+          light: "hsl(45, 90%, 65%)",
+          dark: "hsl(38, 90%, 45%)",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        "2xl": "1rem",
+        "3xl": "1.5rem",
       },
       keyframes: {
         "accordion-down": {
@@ -104,6 +122,10 @@ export default {
           "0%": { backgroundPosition: "-200% 0" },
           "100%": { backgroundPosition: "200% 0" },
         },
+        "glow-pulse": {
+          "0%, 100%": { boxShadow: "0 0 20px hsla(42, 87%, 55%, 0.2)" },
+          "50%": { boxShadow: "0 0 40px hsla(42, 87%, 55%, 0.4)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -114,11 +136,19 @@ export default {
         "fade-in": "fade-in 0.3s ease-out",
         "pulse-slow": "pulse-slow 2s ease-in-out infinite",
         shimmer: "shimmer 2s linear infinite",
+        "glow-pulse": "glow-pulse 2s ease-in-out infinite",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-gold": "linear-gradient(135deg, hsl(47, 95%, 53%) 0%, hsl(40, 100%, 45%) 100%)",
-        shimmer: "linear-gradient(90deg, transparent 0%, hsla(47, 95%, 53%, 0.1) 50%, transparent 100%)",
+        "gradient-gold": "linear-gradient(135deg, hsl(42, 87%, 55%) 0%, hsl(38, 90%, 45%) 100%)",
+        "gradient-platinum": "linear-gradient(135deg, hsl(40, 5%, 75%) 0%, hsl(40, 10%, 85%) 100%)",
+        "gradient-bronze": "linear-gradient(135deg, hsl(33, 60%, 50%) 0%, hsl(30, 50%, 40%) 100%)",
+        shimmer: "linear-gradient(90deg, transparent 0%, hsla(42, 87%, 55%, 0.1) 50%, transparent 100%)",
+      },
+      boxShadow: {
+        "gold-glow": "0 0 40px hsla(42, 87%, 55%, 0.2)",
+        "gold-glow-lg": "0 0 60px hsla(42, 87%, 55%, 0.3)",
+        "premium": "0 20px 60px -10px hsla(0, 0%, 0%, 0.5)",
       },
     },
   },
