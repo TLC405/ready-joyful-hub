@@ -12,6 +12,19 @@ import elbowLeverImg from '@/assets/skills/elbow-lever.jpg';
 import needleImg from '@/assets/skills/needle.jpg';
 import bentArmHandstandImg from '@/assets/skills/bent-arm-handstand.jpg';
 import singleArmElbowLeverImg from '@/assets/skills/single-arm-elbow-lever.jpg';
+import plancheLeanImg from '@/assets/skills/planche-lean.jpg';
+import tuckPlancheImg from '@/assets/skills/tuck-planche.jpg';
+
+// Movement briefing structure for premium protocol content
+export interface Movement {
+  name: string;
+  mechanic: string;
+  brutality: string;
+  progression: string;
+  volume: string;
+  watch_out: string;
+  movement_recovery: string;
+}
 
 export interface Skill {
   id: string;
@@ -24,6 +37,13 @@ export interface Skill {
   tips: string[];
   muscleGroups: string[];
   image: string;
+  // Premium protocol fields (optional for legacy skills)
+  protocol_name?: string;
+  objective?: string;
+  category?: string;
+  movements?: Movement[];
+  intensity_markers?: string[];
+  recovery_vector?: string[];
 }
 
 export const skills: Skill[] = [
@@ -334,6 +354,154 @@ export const skills: Skill[] = [
     ],
     muscleGroups: ['Core', 'Shoulder', 'Wrist'],
     image: singleArmElbowLeverImg
+  },
+
+  // ==================== PLANCHE MASTERY ====================
+
+  {
+    id: 'planche-phase-1',
+    name: 'Planche Mastery: Phase 1',
+    difficulty: 'beginner',
+    tier: 'free',
+    description: 'Phase 1 is about earning the right to lean. You will build the tissue tolerance and scapular protraction that makes planche training feel possible instead of painful.',
+    instructions: [
+      'Master wrist prep before every session',
+      'Build scapular protraction with push-up plus',
+      'Develop pushing strength with incline variations',
+      'Learn the planche lean entry skill'
+    ],
+    progressionTargets: ['Wrist prep 5 min', 'Scap push-up 15 reps', 'Planche lean 10s', 'Planche lean 20s', 'Planche lean 30s'],
+    tips: [
+      'Microdose holds across 3–4 days beats one heroic day',
+      'If elbows feel spicy: reduce lean angle for 7 days',
+      'Wrist hygiene daily (2–3 minutes)'
+    ],
+    muscleGroups: ['Shoulders', 'Wrists', 'Serratus', 'Core'],
+    image: plancheLeanImg,
+    protocol_name: 'PROTOCOL: PLANCHE LADDER (PHASE 1)',
+    objective: 'BUILD WRIST TOLERANCE + PROTRACTION CONTROL + FORWARD LEAN OWNERSHIP.',
+    category: 'Leverage',
+    movements: [
+      {
+        name: 'WRIST PREP',
+        mechanic: 'Wrist rocks (front/back + side/side) and circles. Keep pressure even through the palm—don\'t dump into the heel of the hand.',
+        brutality: 'Passive wrists are brittle. We are restoring tissue tolerance. This is your planche insurance policy.',
+        progression: 'Bodyweight → Longer range → Fingertip rocking (optional)',
+        volume: '5–6 minutes total prep',
+        watch_out: 'Sharp wrist pain = reduce range immediately.',
+        movement_recovery: 'Finger flexor stretch + wrist CARs (slow).'
+      },
+      {
+        name: 'SCAP PUSH-UP PLUS (PROTRACTION REPS)',
+        mechanic: 'Straight arms. In plank, push the floor away until your upper back rounds slightly, then return to neutral without bending elbows.',
+        brutality: 'This looks easy until your serratus taps out. If planche is a door, this is the key.',
+        progression: 'Incline → Floor → Feet elevated',
+        volume: '3–4 sets × 8–15 reps (45–60s rest)',
+        watch_out: 'If elbows bend, you turned it into a push-up (wrong stimulus).',
+        movement_recovery: 'Wall slides + light pec doorway stretch.'
+      },
+      {
+        name: 'INCLINE PUSH-UP (QUALITY ENGINE)',
+        mechanic: 'Hands shoulder-width, elbows ~45°. Body stays one line. Lower chest to target and press back up without losing ribs-down control.',
+        brutality: 'Gravity exposes core leaks. If you can\'t hold alignment here, planche will collect interest later.',
+        progression: 'Wall → Counter → Low box → Floor',
+        volume: '4 sets × 6–12 reps (60–90s rest)',
+        watch_out: 'Rib flare or hip sag = regress the incline.',
+        movement_recovery: 'Wrist extension stretch + thoracic opener.'
+      },
+      {
+        name: 'PLANCHE LEAN (ENTRY SKILL)',
+        mechanic: 'Hands slightly behind shoulders. Lock elbows. Push the floor away (protract) and lean forward while staying hollow (ribs to hips).',
+        brutality: 'You are fighting leverage. If you lose the lean, you lose the protocol. Small holds win.',
+        progression: 'Small lean → Deeper lean → Longer holds',
+        volume: '5 sets × 10–25s (60–90s rest)',
+        watch_out: 'Bent elbows = instant fail. Reset, reduce lean.',
+        movement_recovery: 'Forearm flush + gentle biceps tendon unload (easy stretch).'
+      }
+    ],
+    intensity_markers: [
+      'Protraction Integrity: if shoulder blades drift together, the set is over.',
+      'Lockout Rule: elbows stay straight—no negotiation.',
+      'Learning Rule: microdose holds across 3–4 days beats one heroic day.'
+    ],
+    recovery_vector: [
+      'Wrist hygiene daily (2–3 minutes).',
+      'Serratus wall slides after sessions.',
+      'If elbows feel spicy: reduce lean angle for 7 days.'
+    ]
+  },
+
+  {
+    id: 'planche-phase-2',
+    name: 'Planche Mastery: Phase 2',
+    difficulty: 'intermediate',
+    tier: 'free',
+    description: 'Phase 2 is where planche becomes real. Your job is simple: keep elbows locked, keep protraction max, and never chase fatigue with sloppy leverage.',
+    instructions: [
+      'Master pseudo planche push-ups with forward lean',
+      'Build straight-arm holds with planche planks',
+      'Learn tuck planche entry and float',
+      'Optional: rings straight-arm lean for shoulder health'
+    ],
+    progressionTargets: ['Pseudo PPPU 5 reps', 'Planche plank 20s', 'Tuck planche 5s', 'Tuck planche 10s', 'Tuck planche 15s'],
+    tips: [
+      'Film 1 set, then train. Don\'t audit every rep.',
+      'Keep total planche isometrics under 90 seconds per session at first',
+      'Exit control: you must be able to stop the hold on purpose'
+    ],
+    muscleGroups: ['Shoulders', 'Triceps', 'Core', 'Serratus'],
+    image: tuckPlancheImg,
+    protocol_name: 'PROTOCOL: PLANCHE LADDER (PHASE 2)',
+    objective: 'TURN THE LEAN INTO A STRAIGHT-ARM HOLD. BUILD TENDON CAPACITY SAFELY.',
+    category: 'Leverage',
+    movements: [
+      {
+        name: 'PSEUDO PLANCHE PUSH-UP',
+        mechanic: 'Hands slightly back. Lean forward before you descend. At the top: elbows lock + scap protraction + hollow stays tight.',
+        brutality: 'This is a push-up that punishes dishonesty. Lose the lean and you\'ve changed the exercise.',
+        progression: 'Knee pseudo (small lean) → Toe pseudo (shallow lean) → Deeper lean',
+        volume: '4 sets × 5–10 reps (90s rest)',
+        watch_out: 'Soft elbows at the top = stop the set and reset.',
+        movement_recovery: 'Serratus release (ball) + wrist flexor stretch.'
+      },
+      {
+        name: 'PLANCHE PLANK (STRAIGHT-ARM)',
+        mechanic: 'Elbows locked. Push floor away. Hollow body. Hold the line like you\'re freezing a screenshot.',
+        brutality: 'This is tendon work. It should feel intense without feeling sketchy. Respect the line.',
+        progression: 'Knees → Toes (light) → Deeper lean angle',
+        volume: '5 sets × 15–30s (60–90s rest)',
+        watch_out: 'If elbows bend even 1 degree, you just left planche training.',
+        movement_recovery: 'Cold water forearm dip (optional) + gentle biceps stretch.'
+      },
+      {
+        name: 'TUCK PLANCHE (INTRO FLOAT)',
+        mechanic: 'From a strong lean: tuck knees tight to chest, shoulders forward, elbows locked, protract hard. Small float, clean exit.',
+        brutality: 'This is where your nervous system panics. Stay calm. Small holds are the correct dose.',
+        progression: 'Toe taps (micro float) → Tuck holds → Tuck re-entries',
+        volume: '8–10 sets × 5–12s (60–90s rest)',
+        watch_out: 'Jumping into it = wrist tax. Float only.',
+        movement_recovery: 'Forearm massage + scap wall slides.'
+      },
+      {
+        name: 'RINGS STRAIGHT-ARM LEAN (OPTIONAL ASSIST)',
+        mechanic: 'Rings low. Feet on floor for assistance. Lock elbows, turn rings slightly out, lean forward while protracting and staying hollow.',
+        brutality: 'Rings expose weak stacking instantly. The goal is control, not heroics.',
+        progression: 'More foot support → Less foot support → Longer holds',
+        volume: '4–6 sets × 10–20s (60–90s rest)',
+        watch_out: 'If rings drift into your arms or elbows soften, reduce lean.',
+        movement_recovery: 'Biceps tendon unload stretch + light dead hang.'
+      }
+    ],
+    intensity_markers: [
+      'Straight-Arm Law: elbows locked = valid rep. Anything else is a different exercise.',
+      'Exit Control: you must be able to stop the hold on purpose.',
+      'Learning Rule: film 1 set, then train. Don\'t audit every rep.'
+    ],
+    recovery_vector: [
+      'If wrists get sore: reduce lean angle for 1 week, keep frequency.',
+      'If elbows get sore: swap 1 day for rings lean with more foot support.',
+      'Keep total planche isometrics under 90 seconds per session at first.'
+    ]
   }
 ];
 
@@ -346,3 +514,39 @@ export const getSkillsByTier = (tier: Skill['tier']) =>
 export const getFreeSkills = () => skills.filter(skill => skill.tier === 'free');
 export const getBasicSkills = () => skills.filter(skill => skill.tier === 'basic' || skill.tier === 'free');
 export const getAllSkills = () => skills;
+
+// Planche progression phases for track display
+export const PLANCHE_PROGRESSION_PHASES = [
+  {
+    phase: 1,
+    name: 'Push-Up → Lean Foundations',
+    description: 'Weeks 1–4: Build wrist tolerance, scapular protraction, and forward-lean control without tendon drama.',
+    technical_cues: ['Hands slightly back', 'Push floor away', 'Ribs down', 'Lean forward on purpose'],
+    common_errors: ['Soft elbows at top', 'Shoulders shrugging', 'Hips piked to fake it'],
+    duration_target: 'Planche Lean: 3×20s clean'
+  },
+  {
+    phase: 2,
+    name: 'Straight-Arm Lock + Planche Plank',
+    description: 'Weeks 5–8: Convert your lean into a straight-arm hold. This is where connective tissue earns its paycheck.',
+    technical_cues: ['Elbows locked hard', 'Protract to a round upper back', 'Glutes on', 'Quiet neck'],
+    common_errors: ['Bent elbows (instant fail)', 'Scap collapse', 'Leaning without hollow'],
+    duration_target: 'Planche Plank: 5×20s'
+  },
+  {
+    phase: 3,
+    name: 'Tuck Planche + Rings Assist',
+    description: 'Weeks 9–16: Start floating. Keep volume conservative. Quality over ego, always.',
+    technical_cues: ['Knees tucked tight', 'Scap protraction stays max', 'Hands torque into floor', 'Small holds, many sets'],
+    common_errors: ['Jumping into it', 'Losing protraction', 'Painful wrists/elbows ignored'],
+    duration_target: 'Tuck Planche: 8×8–12s'
+  },
+  {
+    phase: 4,
+    name: 'Advanced Tuck → Straddle Prep',
+    description: 'Months 4–12: You earn leverage by stacking compression + straight-arm strength. Straddle is not a vibe—it\'s a contract.',
+    technical_cues: ['Hips higher, knees farther', 'Compression work stays weekly', 'Leans stay strong', 'Attempts stay controlled'],
+    common_errors: ['Rushing to straddle', 'Ignoring compression', 'Grinding through elbow pain'],
+    duration_target: 'Advanced Tuck: 6×10s clean'
+  }
+];

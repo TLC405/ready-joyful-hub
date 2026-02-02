@@ -1,17 +1,12 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  CheckCircle, 
   ChevronRight, 
-  Target,
-  Lightbulb,
-  Play,
-  X,
   Sparkles
 } from 'lucide-react';
 import { skills, Skill } from '@/lib/skills-data';
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { SkillDetailModal } from './skills/SkillDetailModal';
 
 type DifficultyFilter = 'all' | 'beginner' | 'intermediate' | 'advanced';
 
@@ -163,129 +158,10 @@ export function SkillsLibrary() {
       {/* Skill Detail Modal */}
       <AnimatePresence>
         {selectedSkill && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-background/98 p-4 backdrop-blur-xl"
-            onClick={() => setSelectedSkill(null)}
-          >
-            <motion.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              onClick={(e) => e.stopPropagation()}
-              className="relative max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-3xl border border-border bg-card p-6 shadow-2xl lg:p-10"
-            >
-              {/* Close Button */}
-              <button
-                onClick={() => setSelectedSkill(null)}
-                className="absolute right-4 top-4 flex h-12 w-12 items-center justify-center rounded-xl bg-secondary transition-colors hover:bg-muted"
-              >
-                <X className="h-5 w-5" />
-              </button>
-
-              <div className="grid gap-8 lg:grid-cols-2">
-                {/* Image */}
-                <div className="relative overflow-hidden rounded-2xl">
-                  <img
-                    src={selectedSkill.image}
-                    alt={selectedSkill.name}
-                    className="h-full w-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-card/80 to-transparent" />
-                </div>
-
-                {/* Content */}
-                <div>
-                  {/* Header */}
-                  <div className="mb-6">
-                    <div className={cn(
-                      "mb-3 inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-medium",
-                      difficultyStyles[selectedSkill.difficulty].badge
-                    )}>
-                      <span className="font-chalk">{difficultyStyles[selectedSkill.difficulty].label}</span>
-                    </div>
-                    <h2 className="font-chalk text-4xl lg:text-5xl">{selectedSkill.name}</h2>
-                    <p className="mt-3 leading-relaxed text-muted-foreground">{selectedSkill.description}</p>
-                  </div>
-
-                  {/* Progression Targets */}
-                  <div className="mb-6">
-                    <h3 className="mb-3 flex items-center gap-2 font-chalk text-lg text-primary">
-                      <Target className="h-5 w-5" />
-                      PROGRESSION TARGETS
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedSkill.progressionTargets.map((target, idx) => (
-                        <div
-                          key={idx}
-                          className={cn(
-                            "flex items-center gap-2 rounded-lg border px-3 py-1.5 text-sm",
-                            idx === 0 
-                              ? "border-primary bg-primary/10 text-primary" 
-                              : "border-border bg-secondary/50"
-                          )}
-                        >
-                          {idx === 0 && <CheckCircle className="h-4 w-4" />}
-                          <span className="font-chalk">{target}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Instructions */}
-              <div className="mt-8">
-                <h3 className="mb-4 flex items-center gap-2 font-chalk text-xl text-primary">
-                  <Play className="h-5 w-5" />
-                  STEP-BY-STEP INSTRUCTIONS
-                </h3>
-                <ol className="grid gap-3 sm:grid-cols-2">
-                  {selectedSkill.instructions.map((instruction, idx) => (
-                    <motion.li
-                      key={idx}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: idx * 0.1 }}
-                      className="flex gap-4 rounded-xl bg-secondary/30 p-4"
-                    >
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary font-chalk text-sm text-primary-foreground">
-                        {idx + 1}
-                      </span>
-                      <span className="text-sm text-foreground">{instruction}</span>
-                    </motion.li>
-                  ))}
-                </ol>
-              </div>
-
-              {/* Tips */}
-              <div className="mt-8">
-                <h3 className="mb-4 flex items-center gap-2 font-chalk text-xl text-primary">
-                  <Lightbulb className="h-5 w-5" />
-                  PRO TIPS
-                </h3>
-                <div className="grid gap-3 sm:grid-cols-3">
-                  {selectedSkill.tips.map((tip, idx) => (
-                    <div
-                      key={idx}
-                      className="rounded-xl border border-primary/20 bg-primary/5 p-4"
-                    >
-                      <span className="text-sm text-muted-foreground">{tip}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Action Button */}
-              <div className="mt-10">
-                <Button className="w-full bg-primary py-7 font-chalk text-xl text-primary-foreground shadow-lg transition-all hover:bg-primary/90 hover:shadow-[0_0_40px_hsla(42,87%,55%,0.3)]">
-                  START PRACTICING
-                </Button>
-              </div>
-            </motion.div>
-          </motion.div>
+          <SkillDetailModal 
+            skill={selectedSkill} 
+            onClose={() => setSelectedSkill(null)} 
+          />
         )}
       </AnimatePresence>
     </section>
