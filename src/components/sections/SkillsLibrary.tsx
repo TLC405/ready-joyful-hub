@@ -14,17 +14,17 @@ const difficultyStyles = {
   beginner: {
     badge: 'difficulty-beginner',
     label: 'BEGINNER',
-    accent: 'hsl(40, 5%, 75%)'
+    accent: 'hsl(215, 10%, 55%)'
   },
   intermediate: {
     badge: 'difficulty-intermediate', 
     label: 'INTERMEDIATE',
-    accent: 'hsl(33, 60%, 55%)'
+    accent: 'hsl(210, 40%, 52%)'
   },
   advanced: {
     badge: 'difficulty-advanced',
     label: 'ADVANCED',
-    accent: 'hsl(42, 87%, 55%)'
+    accent: 'hsl(0, 0%, 88%)'
   },
 };
 
@@ -59,7 +59,7 @@ export function SkillsLibrary() {
               <span className="font-chalk text-sm text-primary">14 ELITE SKILLS</span>
             </div>
             <h2 className="font-chalk text-5xl sm:text-6xl lg:text-7xl">
-              <span className="text-gradient">SKILL</span> LIBRARY
+              <span className="text-primary">SKILL</span> LIBRARY
             </h2>
             <p className="mt-3 max-w-lg text-muted-foreground">
               Master gravity-defying feats from foundational moves to elite calisthenics mastery
@@ -101,7 +101,7 @@ export function SkillsLibrary() {
               transition={{ duration: 0.4, delay: index * 0.05 }}
               whileHover={{ scale: 1.02, y: -6 }}
               onClick={() => setSelectedSkill(skill)}
-              className="group relative cursor-pointer overflow-hidden rounded-2xl border border-border bg-card transition-all duration-500 hover:border-primary/50 hover:shadow-[0_20px_60px_-10px_hsla(42,87%,55%,0.15)]"
+              className="group relative cursor-pointer overflow-hidden rounded-2xl border border-border bg-card transition-all duration-500 hover:border-primary/50 hover:shadow-steel-glow"
             >
               {/* Skill Image */}
               <div className="relative aspect-[4/3] overflow-hidden">
@@ -149,7 +149,7 @@ export function SkillsLibrary() {
               </div>
 
               {/* Premium Gold Accent Line */}
-              <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-primary via-accent to-primary transition-all duration-500 group-hover:w-full" />
+              <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-primary transition-all duration-500 group-hover:w-full" />
             </motion.div>
           ))}
         </AnimatePresence>

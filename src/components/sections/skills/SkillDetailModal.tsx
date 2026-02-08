@@ -296,7 +296,7 @@ export function SkillDetailModal({ skill, onClose }: SkillDetailModalProps) {
 
         {/* Action Button */}
         <div className="mt-10">
-          <Button className="w-full bg-primary py-7 font-chalk text-xl text-primary-foreground shadow-lg transition-all hover:bg-primary/90 hover:shadow-[0_0_40px_hsla(42,87%,55%,0.3)]">
+          <Button className="w-full bg-primary py-7 font-chalk text-xl text-primary-foreground shadow-lg transition-all hover:bg-primary/90 hover:shadow-steel-glow">
             START PRACTICING
           </Button>
         </div>
