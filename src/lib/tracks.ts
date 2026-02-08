@@ -25,9 +25,11 @@ export const tracks: Track[] = [
     nodes: [
       { exerciseId: 'hollow-body-hold', prereqs: [], unlockTest: { type: 'hold', value: 30, unit: 'sec' } },
       { exerciseId: 'chest-to-wall-handstand', prereqs: ['hollow-body-hold'], unlockTest: { type: 'hold', value: 45, unit: 'sec' } },
+      { exerciseId: 'straddle-hs-kick-up', prereqs: ['chest-to-wall-handstand'], unlockTest: { type: 'reps', value: 5, unit: 'reps' } },
       { exerciseId: 'hs-shrugs', prereqs: ['chest-to-wall-handstand'], unlockTest: { type: 'reps', value: 10, unit: 'reps' } },
       { exerciseId: 'wall-pull-aways', prereqs: ['hs-shrugs'], unlockTest: { type: 'hold', value: 5, unit: 'sec' } },
-      { exerciseId: 'freestanding-handstand', prereqs: ['wall-pull-aways'] },
+      { exerciseId: 'handstand-bail', prereqs: ['wall-pull-aways'], unlockTest: { type: 'reps', value: 3, unit: 'reps' } },
+      { exerciseId: 'freestanding-handstand', prereqs: ['wall-pull-aways', 'handstand-bail'] },
     ],
   },
   {
@@ -53,6 +55,7 @@ export const tracks: Track[] = [
       { exerciseId: 'hollow-body-hold', prereqs: [], unlockTest: { type: 'hold', value: 30, unit: 'sec' } },
       { exerciseId: 'hanging-leg-raise', prereqs: ['hollow-body-hold'], unlockTest: { type: 'reps', value: 8, unit: 'reps' } },
       { exerciseId: 'tuck-sit', prereqs: ['hollow-body-hold'], unlockTest: { type: 'hold', value: 15, unit: 'sec' } },
+      { exerciseId: 'seated-pike-lift', prereqs: ['hollow-body-hold'], unlockTest: { type: 'reps', value: 8, unit: 'reps' } },
       { exerciseId: 'seated-straddle-lift', prereqs: ['tuck-sit'], unlockTest: { type: 'reps', value: 8, unit: 'reps' } },
       { exerciseId: 'l-sit', prereqs: ['tuck-sit'] },
     ],
@@ -78,10 +81,45 @@ export const tracks: Track[] = [
     icon: 'Footprints',
     nodes: [
       { exerciseId: 'bodyweight-squat', prereqs: [], unlockTest: { type: 'reps', value: 20, unit: 'reps' } },
+      { exerciseId: 'lunge', prereqs: ['bodyweight-squat'], unlockTest: { type: 'reps', value: 12, unit: 'reps' } },
+      { exerciseId: 'cossack-squat', prereqs: ['bodyweight-squat'], unlockTest: { type: 'reps', value: 8, unit: 'reps' } },
       { exerciseId: 'bulgarian-split-squat', prereqs: ['bodyweight-squat'], unlockTest: { type: 'reps', value: 10, unit: 'reps' } },
       { exerciseId: 'pistol-squat', prereqs: ['bulgarian-split-squat'], unlockTest: { type: 'reps', value: 5, unit: 'reps' } },
       { exerciseId: 'shrimp-squat', prereqs: ['pistol-squat'], unlockTest: { type: 'reps', value: 3, unit: 'reps' } },
       { exerciseId: 'nordic-curl', prereqs: ['bodyweight-squat'], unlockTest: { type: 'reps', value: 5, unit: 'reps' } },
+    ],
+  },
+  {
+    id: 'forearm-stand',
+    name: 'Forearm Stand',
+    description: 'Dolphin to Pincha. Build the shoulder stability for forearm-supported inversions.',
+    icon: 'Hand',
+    nodes: [
+      { exerciseId: 'dolphin-pose', prereqs: [], unlockTest: { type: 'hold', value: 30, unit: 'sec' } },
+      { exerciseId: 'forearm-stand-toe-pulls', prereqs: ['dolphin-pose'], unlockTest: { type: 'hold', value: 5, unit: 'sec' } },
+      { exerciseId: 'forearm-stand-line-hold', prereqs: ['forearm-stand-toe-pulls'] },
+    ],
+  },
+  {
+    id: 'elbow-stand',
+    name: 'Elbow Stand',
+    description: 'Wall holds to freestanding. Tricep-intensive inversion control.',
+    icon: 'Triangle',
+    nodes: [
+      { exerciseId: 'elbow-stand-wall-hold', prereqs: [], unlockTest: { type: 'hold', value: 20, unit: 'sec' } },
+      { exerciseId: 'elbow-stand-straddle-entry', prereqs: ['elbow-stand-wall-hold'], unlockTest: { type: 'reps', value: 3, unit: 'reps' } },
+      { exerciseId: 'elbow-stand-exit', prereqs: ['elbow-stand-wall-hold'] },
+    ],
+  },
+  {
+    id: 'grip',
+    name: 'Grip',
+    description: 'Dead hang to towel hang. Build forearm endurance and extensor balance.',
+    icon: 'Grip',
+    nodes: [
+      { exerciseId: 'dead-hang', prereqs: [], unlockTest: { type: 'hold', value: 30, unit: 'sec' } },
+      { exerciseId: 'towel-hang', prereqs: ['dead-hang'], unlockTest: { type: 'hold', value: 15, unit: 'sec' } },
+      { exerciseId: 'extensor-band', prereqs: [] },
     ],
   },
 ];

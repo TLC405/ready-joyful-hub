@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Lock, Eye, FlaskConical, CheckCircle, ChevronRight, Zap, ArrowUp, Circle, Minimize2, ArrowDown, Footprints } from 'lucide-react';
+import { Lock, Eye, FlaskConical, CheckCircle, ChevronRight, Zap, ArrowUp, Circle, Minimize2, ArrowDown, Footprints, Hand, Triangle, GripVertical } from 'lucide-react';
 import { tracks } from '@/lib/tracks';
 import { getExerciseById } from '@/lib/exercises';
 import type { Track, UnlockState } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
 const trackIcons: Record<string, React.ElementType> = {
-  Zap, ArrowUp, Circle, Minimize2, ArrowDown, Footprints,
+  Zap, ArrowUp, Circle, Minimize2, ArrowDown, Footprints, Hand, Triangle, Grip: GripVertical,
 };
 
 // Mock unlock states (will come from DB later)

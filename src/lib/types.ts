@@ -2,7 +2,7 @@
 
 export type Category = 'push' | 'pull' | 'legs' | 'core' | 'mobility' | 'skills';
 export type Difficulty = 'easy' | 'beginner' | 'intermediate' | 'advanced' | 'master';
-export type TrackId = 'planche' | 'handstand' | 'rings' | 'compression' | 'pull-strength' | 'legs' | 'flag' | 'general';
+export type TrackId = 'planche' | 'handstand' | 'rings' | 'compression' | 'pull-strength' | 'legs' | 'flag' | 'general' | 'forearm-stand' | 'elbow-stand' | 'grip';
 export type Equipment = 'floor' | 'wall' | 'pull-up bar' | 'rings' | 'chair' | 'towel' | 'resistance band' | 'parallettes';
 export type UnlockState = 'locked' | 'preview' | 'try_mode' | 'unlocked' | 'coach_override';
 
