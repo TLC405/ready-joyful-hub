@@ -32,6 +32,9 @@ const trackFilters: { id: TrackId | 'all'; label: string }[] = [
   { id: 'compression', label: 'COMPRESSION' },
   { id: 'pull-strength', label: 'PULL' },
   { id: 'legs', label: 'LEGS' },
+  { id: 'forearm-stand', label: 'FOREARM STAND' },
+  { id: 'elbow-stand', label: 'ELBOW STAND' },
+  { id: 'grip', label: 'GRIP' },
 ];
 
 const difficultyBadge: Record<string, string> = {
