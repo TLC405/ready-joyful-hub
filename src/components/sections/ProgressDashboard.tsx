@@ -47,7 +47,7 @@ export function ProgressDashboard() {
         className="mb-12"
       >
         <h2 className="font-chalk text-5xl sm:text-6xl lg:text-7xl">
-          YOUR <span className="text-gradient">PROGRESS</span>
+          YOUR <span className="text-primary">PROGRESS</span>
         </h2>
         <p className="mt-2 max-w-lg text-muted-foreground">
           Track your journey from beginner to calisthenics master
@@ -63,26 +63,19 @@ export function ProgressDashboard() {
         className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
       >
         {/* Streak Card - Featured */}
-        <div className="relative overflow-hidden rounded-xl border-2 border-primary bg-gradient-to-br from-orange-500/20 to-red-600/20 p-6 sm:col-span-2 lg:col-span-1">
-          <div className="absolute -right-4 -top-4 opacity-20">
-            <Flame className="h-32 w-32 text-orange-500" />
-          </div>
+        <div className="relative overflow-hidden rounded-xl border-2 border-primary bg-primary/5 p-6 sm:col-span-2 lg:col-span-1">
           <div className="relative">
             <div className="mb-2 flex items-center gap-2">
-              <motion.div
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{ duration: 1, repeat: Infinity }}
-                className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-red-600"
-              >
-                <Flame className="h-6 w-6 text-white" />
-              </motion.div>
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/20">
+                <Zap className="h-6 w-6 text-primary" />
+              </div>
               <span className="font-chalk text-sm text-muted-foreground">CURRENT STREAK</span>
             </div>
             <div className="flex items-baseline gap-2">
               <span className="font-chalk text-6xl text-foreground">{currentStreak}</span>
               <span className="font-chalk text-2xl text-muted-foreground">DAYS</span>
             </div>
-            <p className="mt-2 text-sm text-orange-400">🔥 Your longest streak ever!</p>
+            <p className="mt-2 text-sm text-primary">Longest streak active</p>
           </div>
         </div>
 
@@ -161,12 +154,7 @@ export function ProgressDashboard() {
                     }`}
                   >
                     {activityData[idx] && (
-                      <motion.div
-                        animate={{ scale: [1, 1.2, 1] }}
-                        transition={{ duration: 1, repeat: Infinity, delay: idx * 0.1 }}
-                      >
-                        <Flame className="h-5 w-5 text-primary" />
-                      </motion.div>
+                      <div className="h-3 w-3 rounded-full bg-primary" />
                     )}
                   </motion.div>
                 </div>
@@ -221,7 +209,7 @@ export function ProgressDashboard() {
                     : 'border-border bg-secondary/50 opacity-50'
                 }`}
               >
-                <span className="text-2xl">{achievement.icon}</span>
+                <Award className="h-6 w-6 text-primary" />
                 <span className="text-center font-chalk text-xs">{achievement.name}</span>
               </motion.div>
             ))}
@@ -265,7 +253,7 @@ export function ProgressDashboard() {
                     whileInView={{ width: `${skill.progress}%` }}
                     viewport={{ once: true }}
                     transition={{ duration: 1, delay: 0.6 + idx * 0.1 }}
-                    className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-primary to-yellow-400"
+                    className="absolute inset-y-0 left-0 rounded-full bg-primary"
                   />
                 </div>
               </motion.div>

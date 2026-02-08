@@ -67,7 +67,7 @@ export function ExerciseLibrary() {
             <span className="font-chalk text-sm text-primary">{exercises.length} EXERCISES</span>
           </div>
           <h2 className="font-chalk text-5xl sm:text-6xl lg:text-7xl">
-            <span className="text-gradient">EXERCISE</span> LIBRARY
+            <span className="text-primary">EXERCISE</span> LIBRARY
           </h2>
         </motion.div>
       </div>
@@ -164,7 +164,7 @@ export function ExerciseLibrary() {
                 </div>
               </div>
 
-              <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-gradient-to-r from-primary via-accent to-primary transition-all duration-500 group-hover:w-full" />
+              <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-primary transition-all duration-500 group-hover:w-full" />
             </motion.div>
           ))}
         </AnimatePresence>

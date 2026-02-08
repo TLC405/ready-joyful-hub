@@ -36,7 +36,7 @@ export function TrackLadder() {
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-10">
         <h2 className="font-chalk text-5xl sm:text-6xl lg:text-7xl">
-          <span className="text-gradient">TRACK</span> LADDER
+          <span className="text-primary">TRACK</span> LADDER
         </h2>
         <p className="mt-2 max-w-lg text-muted-foreground">
           Follow structured progressions. Unlock skills by meeting objective tests.

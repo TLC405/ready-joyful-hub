@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Flame, Dumbbell, Trophy, ChevronDown, Zap } from 'lucide-react';
+import { Target, Dumbbell, Trophy, ChevronDown, Crosshair } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface HeroSectionProps {
@@ -9,38 +9,19 @@ interface HeroSectionProps {
 export function HeroSection({ onStartTraining }: HeroSectionProps) {
   const stats = [
     { label: 'SKILLS MASTERED', value: '3', total: '14', icon: Dumbbell },
-    { label: 'DAY STREAK', value: '7', icon: Flame, highlight: true },
+    { label: 'SESSIONS LOGGED', value: '34', icon: Target, highlight: true },
     { label: 'GLOBAL RANK', value: '#142', icon: Trophy },
   ];
 
   return (
     <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 py-20 lg:px-8">
-      {/* Animated Background */}
+      {/* Background - Blueprint Grid Only */}
       <div className="absolute inset-0 overflow-hidden">
-        {/* Gradient Orbs */}
-        <motion.div
-          className="absolute -left-40 top-1/4 h-96 w-96 rounded-full bg-primary/10 blur-[100px]"
-          animate={{ 
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.5, 0.3]
-          }}
-          transition={{ duration: 8, repeat: Infinity }}
-        />
-        <motion.div
-          className="absolute -right-40 bottom-1/4 h-96 w-96 rounded-full bg-primary/10 blur-[100px]"
-          animate={{ 
-            scale: [1.2, 1, 1.2],
-            opacity: [0.3, 0.5, 0.3]
-          }}
-          transition={{ duration: 8, repeat: Infinity }}
-        />
-        
-        {/* Grid Pattern */}
         <div 
-          className="absolute inset-0 opacity-[0.03]"
+          className="absolute inset-0 opacity-[0.04]"
           style={{
-            backgroundImage: `linear-gradient(hsl(var(--foreground)) 1px, transparent 1px),
-                             linear-gradient(90deg, hsl(var(--foreground)) 1px, transparent 1px)`,
+            backgroundImage: `linear-gradient(hsl(var(--primary)) 1px, transparent 1px),
+                             linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)`,
             backgroundSize: '60px 60px'
           }}
         />
@@ -55,8 +36,8 @@ export function HeroSection({ onStartTraining }: HeroSectionProps) {
           transition={{ duration: 0.6 }}
           className="mb-6 flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2"
         >
-          <Zap className="h-4 w-4 text-primary" />
-          <span className="font-chalk text-sm tracking-wider text-primary">TRANSFORM YOUR BODY</span>
+          <Crosshair className="h-4 w-4 text-primary" />
+          <span className="font-chalk text-sm tracking-wider text-primary">BODYWEIGHT SKILL SYSTEM</span>
         </motion.div>
 
         {/* Main Headline */}
@@ -66,7 +47,7 @@ export function HeroSection({ onStartTraining }: HeroSectionProps) {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="mb-2 font-chalk text-6xl leading-none tracking-tight sm:text-7xl md:text-8xl lg:text-9xl"
         >
-          <span className="text-gradient">UNLEASH</span>
+          <span className="text-primary">MASTER</span>
         </motion.h1>
         
         <motion.h1
@@ -75,7 +56,7 @@ export function HeroSection({ onStartTraining }: HeroSectionProps) {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="mb-6 font-chalk text-6xl leading-none tracking-tight sm:text-7xl md:text-8xl lg:text-9xl"
         >
-          YOUR POWER
+          YOUR STACK
         </motion.h1>
 
         {/* Subtitle */}
@@ -85,7 +66,7 @@ export function HeroSection({ onStartTraining }: HeroSectionProps) {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="mb-10 max-w-xl text-lg text-muted-foreground sm:text-xl"
         >
-          Master 14 calisthenics skills from beginner to advanced. Track your progress, compete globally, and transform your body.
+          Structured progressions across 6 tracks. Objective unlock tests. No guesswork.
         </motion.p>
 
         {/* CTA Buttons */}
@@ -142,10 +123,10 @@ export function HeroSection({ onStartTraining }: HeroSectionProps) {
               >
                 <div className={`flex h-12 w-12 items-center justify-center rounded-lg ${
                   stat.highlight 
-                    ? 'bg-gradient-to-br from-orange-500 to-red-600' 
+                    ? 'bg-primary/20' 
                     : 'bg-secondary'
                 }`}>
-                  <Icon className={`h-6 w-6 ${stat.highlight ? 'text-white' : 'text-primary'}`} />
+                  <Icon className="h-6 w-6 text-primary" />
                 </div>
                 <div className="text-center">
                   <div className="flex items-baseline justify-center gap-1">

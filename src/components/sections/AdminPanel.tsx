@@ -71,7 +71,7 @@ export function AdminPanel() {
           <span className="font-chalk text-sm text-primary">ADMIN ACCESS</span>
         </div>
         <h2 className="font-chalk text-5xl sm:text-6xl lg:text-7xl">
-          <span className="text-gradient">COMMAND</span> CENTER
+          <span className="text-primary">COMMAND</span> CENTER
         </h2>
         <p className="mt-2 max-w-lg text-muted-foreground">
           Send notifications, track metrics, and manage your community
