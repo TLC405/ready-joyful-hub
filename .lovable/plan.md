@@ -1,111 +1,110 @@
 
 
-# STACKED — Full Visual Overhaul
+# Add Planche Progressions + New Track Exercises
 
-## Direction
+## Overview
 
-Replacing the current warm gold/amber luxury palette with a **cold, technical "blueprint/ink"** aesthetic. Think: architectural drawings, aviation instruments, technical manuals. No gradients, no glow, no metallic sheen.
+Add ~18 new exercises with YouTube thumbnails and tutorial links, update ~8 existing exercises with media, and create 3 new track ladders (Forearm Stand, Elbow Stand, Grip). This is a data-layer-heavy change touching 3 files.
 
-## New Design System
+## What Already Exists (update with media only)
 
-### Color Palette
-- **Background**: Near-black with a cool blue undertone (`220 15% 4%`) instead of warm neutral
-- **Primary accent**: Cool steel blue (`210 40% 52%`) — replaces all gold/amber
-- **Secondary accent**: Muted slate (`215 15% 18%`)
-- **Destructive/Warning**: Stays red but desaturated (`0 55% 50%`)
-- **Success**: Cool green-gray (`160 20% 55%`)
-- **Difficulty tiers**: Slate (beginner) -> Steel blue (intermediate) -> Ice white (advanced) -> Bright cyan (master)
-- **Borders**: Cool gray (`215 10% 16%`) — sharper, more architectural
-- **Muted foreground**: Blue-gray (`215 10% 50%`)
+These exercises are already in the library and just need `thumbnailUrl` and `videoUrl` fields added:
 
-### Typography
-- **Display/Headers**: Replace Oswald with **"Space Grotesk"** — geometric, technical, modern. Used for all `.font-chalk` instances
-- **Body**: Keep **Inter** — already clean and readable
-- Letter-spacing on headers increases slightly for that "blueprint label" feel
+- `pseudo-planche-push-up` -- add thumbnail + video
+- `planche-lean` -- add thumbnail + video
+- `tuck-planche` -- add thumbnail + video
+- `chest-to-wall-handstand` -- add thumbnail + video (matches "Handstand Wall Drills")
+- `wall-pull-aways` -- add thumbnail + video (matches "Handstand Pull-Aways")
+- `ring-support-hold` -- add thumbnail + video
+- `rto-support-hold` -- add thumbnail + video
+- `ring-row` -- add thumbnail + video (matches "Ring Rows")
+- `ring-dip` -- add thumbnail + video
+- `seated-straddle-lift` -- add thumbnail + video (matches "Seated Straddle Compression Lifts")
+- `pistol-squat` -- add thumbnail + video
+- `nordic-curl` -- add thumbnail + video
+- `calf-raise` -- add thumbnail + video
+- `l-sit` -- add thumbnail + video
 
-### Utility Classes Overhaul
-- Remove all `text-gradient` gold shimmer effects — replace with solid color or `text-primary`
-- Remove `glow`, `glow-text`, `glow-subtle`, `shimmer`, `metallic` utilities — they conflict with the blueprint aesthetic
-- Keep `glass` and `glass-premium` but retune to cool blue tones
-- `card-hover` keeps the lift but drops the gold shadow — uses a subtle cool border highlight instead
-- Difficulty badges get new cool-tone colors
-- `image-overlay` gradient retunes to the new background hue
+## New Exercises to Add (18 entries)
 
-## Files to Change (10 files)
+### Handstand Track additions
+1. `straddle-hs-kick-up` -- Straddle Handstand Kick-Ups (beginner, inversion control)
+2. `handstand-bail` -- Handstand Exits / Bail-Outs (intermediate, inversion control)
 
-### 1. `src/index.css`
-- Swap Google Fonts import: Oswald -> Space Grotesk
-- Rewrite all CSS custom properties (`:root` block) to the new cool palette
-- Update `.font-chalk` to use `'Space Grotesk'`
-- Retune all utility classes (`text-gradient`, `glow`, `glass`, `border-brutal`, `shimmer`, `metallic`, difficulty badges, `image-overlay`) to cool blue tones
-- Remove gold-specific animations (metallic shine, pulse-glow gold)
-- Focus ring color changes to new primary
+### Forearm Stand (Pincha) Track (entirely new)
+3. `dolphin-pose` -- Dolphin Pose / Pincha Prep (easy, mobility)
+4. `forearm-stand-toe-pulls` -- Forearm Stand Toe Pulls (intermediate, skills)
+5. `forearm-stand-line-hold` -- Forearm Stand Line Holds (advanced, skills)
 
-### 2. `tailwind.config.ts`
-- Update `fontFamily.chalk` to `Space Grotesk`
-- Replace `gold`, `platinum`, `bronze` color tokens with `steel`, `slate`, `ice` equivalents
-- Update `boxShadow` presets — remove gold-glow, add subtle blue-tint shadows
-- Update `backgroundImage` presets — remove gold gradients, add blueprint-style ones
+### Elbow Stand Track (entirely new)
+6. `elbow-stand-wall-hold` -- Elbow Stand Wall Holds (beginner, skills)
+7. `elbow-stand-straddle-entry` -- Elbow Stand Straddle Leg Entry (intermediate, skills)
+8. `elbow-stand-exit` -- Elbow Stand Exits / Safe Dismounts (intermediate, skills)
 
-### 3. `src/components/sections/HeroSection.tsx`
-- Replace gradient orb background with subtle grid-only pattern (blueprint feel)
-- Replace `text-gradient` on "UNLEASH" with solid `text-primary`
-- Change stat card styling — remove orange fire gradient, use cool accent
-- Update badge/CTA button colors to new primary
-- Change copy from "TRANSFORM YOUR BODY" to something calmer: "BODYWEIGHT SKILL SYSTEM"
-- Replace fire/streak language with skill-focused language
+### Grip Track (entirely new)
+9. `dead-hang` -- Dead Hangs (easy, pull)
+10. `towel-hang` -- Towel Hangs (beginner, pull)
+11. `extensor-band` -- Extensor Band Exercises (easy, mobility, equipment: resistance band)
+
+### Compression additions
+12. `seated-pike-lift` -- Seated Pike Compression Lifts (beginner, core)
+
+### Legs additions
+13. `lunge` -- Lunges / Bodyweight Lunges (easy, legs)
+14. `cossack-squat` -- Cossack Squats (beginner, legs)
+
+## New Tracks to Add
+
+### Forearm Stand Track
+`id: 'forearm-stand'`
+Nodes: dolphin-pose -> forearm-stand-toe-pulls -> forearm-stand-line-hold
+
+### Elbow Stand Track
+`id: 'elbow-stand'`
+Nodes: elbow-stand-wall-hold -> elbow-stand-straddle-entry -> elbow-stand-exit
+
+### Grip Track
+`id: 'grip'`
+Nodes: dead-hang -> towel-hang -> extensor-band (parallel node, no prereq on towel-hang)
+
+## Files to Change
+
+### 1. `src/lib/types.ts`
+- Add `'forearm-stand' | 'elbow-stand' | 'grip'` to `TrackId` type
+
+### 2. `src/lib/exercises.ts`
+- Add `thumbnailUrl` and `videoUrl` to the 14 existing exercises listed above
+- Add 14 new exercise entries with full Exercise card data (id, name, category, difficulty, muscles, equipment, tracks, shortPurpose, description, doThis, cueStack, failSigns, regressTo, progressTo, thumbnailUrl, videoUrl)
+- Each new exercise follows the established content standard (3 cues max, 3 fail signs max, coach-tone descriptions)
+
+### 3. `src/lib/tracks.ts`
+- Add 3 new track definitions (Forearm Stand, Elbow Stand, Grip) with nodes and unlock tests
+- Update Handstand track to include `straddle-hs-kick-up` and `handstand-bail` as new nodes
+- Update Compression track to include `seated-pike-lift` as a node
+- Update Legs track to include `lunge` and `cossack-squat` as nodes
 
 ### 4. `src/components/sections/ExerciseLibrary.tsx`
-- Replace `text-gradient` on "EXERCISE" with `text-primary`
-- All filter buttons use new palette
-- Card hover bottom accent line uses new primary
-- Difficulty badges use new cool-tone classes
-- Modal coach notes sections use new tones
+- Add `'forearm-stand'`, `'elbow-stand'`, and `'grip'` to the `trackFilters` array so users can filter by the new tracks
 
 ### 5. `src/components/sections/TrackLadder.tsx`
-- Replace `text-gradient` on "TRACK" with `text-primary`
-- Track selector buttons use new palette
-- Node state colors (unlocked/preview/try_mode) retune to cool blue spectrum
-- Vertical line and dot indicators use new border/primary colors
+- Add icon mappings for the 3 new tracks (e.g., `Hand` for Forearm Stand, `Triangle` for Elbow Stand, `Grip` for Grip)
 
-### 6. `src/components/sections/ProgressDashboard.tsx`
-- Replace `text-gradient` on "PROGRESS" with `text-primary`
-- Remove fire/streak gamification styling (orange gradients, pulsing flames)
-- Streak card becomes a clean stat card with cool accent
-- Activity calendar uses new primary for active days
-- Progress bars use solid primary color (no `from-primary to-yellow-400` gradient)
-- Remove emoji achievements — replace with clean icon-based display
+## Content Standard for New Entries
 
-### 7. `src/components/sections/AdminPanel.tsx`
-- Replace `text-gradient` on "COMMAND" with `text-primary`
-- Notification type badges use muted, cool-toned category colors
-- Stat cards use new palette
-- Form elements (select, input, textarea) use new border/focus colors
-
-### 8. `src/components/sections/SkillsLibrary.tsx`
-- Replace `text-gradient` on "SKILL" with `text-primary`
-- Card hover shadow uses new cool shadow instead of gold
-- Filter buttons use new palette
-
-### 9. `src/components/sections/skills/SkillDetailModal.tsx`
-- Tabs and section headers use new primary color
-- Coach note blocks (mechanic/brutality/watch out/recovery) retune backgrounds
-- Action button uses new primary
-
-### 10. `src/components/layout/Navigation.tsx`
-- Logo badge uses new primary color
-- Active nav indicator uses new primary
-- Mobile overlay uses new palette
+Every new exercise follows the existing pattern:
+- `shortPurpose`: 1 line, action-oriented
+- `description`: 2-3 sentences, calm and technical
+- `doThis`: realistic sets/reps/hold ranges
+- `cueStack`: max 3 bullets, concrete body cues
+- `failSigns`: max 3 bullets, observable failures
+- `regressTo` / `progressTo`: linked to existing exercise IDs where possible
+- `thumbnailUrl`: YouTube thumbnail from user's list
+- `videoUrl`: YouTube tutorial URL from user's list
 
 ## What Does NOT Change
-- Component structure, layout, and logic stay identical
-- All exercise data, track data, types stay untouched
-- Framer Motion animations stay (they work well)
-- All existing functionality preserved
-- No files deleted, no components removed
 
-## Technical Notes
-- The Google Fonts import switches from `Oswald` to `Space+Grotesk` with the same weight range (400-700)
-- All HSL values shift from warm (hue 38-45) to cool (hue 200-220)
-- The `font-chalk` class name is kept for backward compatibility even though it no longer references a "chalk" font
+- No exercises removed
+- No existing exercise data modified (beyond adding media URLs)
+- No UI layout or styling changes
+- All existing tracks preserved as-is
 
