@@ -1,0 +1,89 @@
+// ==================== STACKED — Track Definitions ====================
+import type { Track } from './types';
+
+export const tracks: Track[] = [
+  {
+    id: 'planche',
+    name: 'Planche',
+    description: 'From push-up to planche. Straight-arm strength, protraction, and leverage mastery.',
+    icon: 'Zap',
+    nodes: [
+      { exerciseId: 'planche-lean', prereqs: [], unlockTest: { type: 'hold', value: 20, unit: 'sec' } },
+      { exerciseId: 'pseudo-planche-push-up', prereqs: ['planche-lean'], unlockTest: { type: 'reps', value: 8, unit: 'reps' } },
+      { exerciseId: 'planche-plank', prereqs: ['planche-lean'], unlockTest: { type: 'hold', value: 20, unit: 'sec' } },
+      { exerciseId: 'tuck-planche', prereqs: ['planche-plank', 'pseudo-planche-push-up'], unlockTest: { type: 'hold', value: 10, unit: 'sec' } },
+      { exerciseId: 'advanced-tuck-planche', prereqs: ['tuck-planche'], unlockTest: { type: 'hold', value: 10, unit: 'sec' } },
+      { exerciseId: 'straddle-planche', prereqs: ['advanced-tuck-planche'], unlockTest: { type: 'hold', value: 5, unit: 'sec' } },
+      { exerciseId: 'full-planche', prereqs: ['straddle-planche'] },
+    ],
+  },
+  {
+    id: 'handstand',
+    name: 'Handstand',
+    description: 'Wall work to freestanding. Build the line, then own the balance.',
+    icon: 'ArrowUp',
+    nodes: [
+      { exerciseId: 'hollow-body-hold', prereqs: [], unlockTest: { type: 'hold', value: 30, unit: 'sec' } },
+      { exerciseId: 'chest-to-wall-handstand', prereqs: ['hollow-body-hold'], unlockTest: { type: 'hold', value: 45, unit: 'sec' } },
+      { exerciseId: 'hs-shrugs', prereqs: ['chest-to-wall-handstand'], unlockTest: { type: 'reps', value: 10, unit: 'reps' } },
+      { exerciseId: 'wall-pull-aways', prereqs: ['hs-shrugs'], unlockTest: { type: 'hold', value: 5, unit: 'sec' } },
+      { exerciseId: 'freestanding-handstand', prereqs: ['wall-pull-aways'] },
+    ],
+  },
+  {
+    id: 'rings',
+    name: 'Rings',
+    description: 'Support hold to muscle-up pipeline. Control instability.',
+    icon: 'Circle',
+    nodes: [
+      { exerciseId: 'ring-support-hold', prereqs: [], unlockTest: { type: 'hold', value: 20, unit: 'sec' } },
+      { exerciseId: 'rto-support-hold', prereqs: ['ring-support-hold'], unlockTest: { type: 'hold', value: 15, unit: 'sec' } },
+      { exerciseId: 'ring-row', prereqs: ['ring-support-hold'], unlockTest: { type: 'reps', value: 10, unit: 'reps' } },
+      { exerciseId: 'ring-dip', prereqs: ['rto-support-hold'], unlockTest: { type: 'reps', value: 5, unit: 'reps' } },
+      { exerciseId: 'false-grip-hold', prereqs: ['rto-support-hold'], unlockTest: { type: 'hold', value: 15, unit: 'sec' } },
+      { exerciseId: 'muscle-up', prereqs: ['ring-dip', 'false-grip-hold'] },
+    ],
+  },
+  {
+    id: 'compression',
+    name: 'Compression',
+    description: 'Hanging raises to L-sit. Active hip flexion under control.',
+    icon: 'Minimize2',
+    nodes: [
+      { exerciseId: 'hollow-body-hold', prereqs: [], unlockTest: { type: 'hold', value: 30, unit: 'sec' } },
+      { exerciseId: 'hanging-leg-raise', prereqs: ['hollow-body-hold'], unlockTest: { type: 'reps', value: 8, unit: 'reps' } },
+      { exerciseId: 'tuck-sit', prereqs: ['hollow-body-hold'], unlockTest: { type: 'hold', value: 15, unit: 'sec' } },
+      { exerciseId: 'seated-straddle-lift', prereqs: ['tuck-sit'], unlockTest: { type: 'reps', value: 8, unit: 'reps' } },
+      { exerciseId: 'l-sit', prereqs: ['tuck-sit'] },
+    ],
+  },
+  {
+    id: 'pull-strength',
+    name: 'Pull Strength',
+    description: 'Australian row to front lever. Build your back.',
+    icon: 'ArrowDown',
+    nodes: [
+      { exerciseId: 'australian-row', prereqs: [], unlockTest: { type: 'reps', value: 12, unit: 'reps' } },
+      { exerciseId: 'chin-up', prereqs: ['australian-row'], unlockTest: { type: 'reps', value: 8, unit: 'reps' } },
+      { exerciseId: 'pull-up', prereqs: ['chin-up'], unlockTest: { type: 'reps', value: 8, unit: 'reps' } },
+      { exerciseId: 'archer-pull-up', prereqs: ['pull-up'], unlockTest: { type: 'reps', value: 5, unit: 'reps' } },
+      { exerciseId: 'front-lever-raise', prereqs: ['pull-up'], unlockTest: { type: 'reps', value: 3, unit: 'reps' } },
+      { exerciseId: 'front-lever', prereqs: ['front-lever-raise'] },
+    ],
+  },
+  {
+    id: 'legs',
+    name: 'Legs',
+    description: 'Squat to nordic. Single-leg strength progression.',
+    icon: 'Footprints',
+    nodes: [
+      { exerciseId: 'bodyweight-squat', prereqs: [], unlockTest: { type: 'reps', value: 20, unit: 'reps' } },
+      { exerciseId: 'bulgarian-split-squat', prereqs: ['bodyweight-squat'], unlockTest: { type: 'reps', value: 10, unit: 'reps' } },
+      { exerciseId: 'pistol-squat', prereqs: ['bulgarian-split-squat'], unlockTest: { type: 'reps', value: 5, unit: 'reps' } },
+      { exerciseId: 'shrimp-squat', prereqs: ['pistol-squat'], unlockTest: { type: 'reps', value: 3, unit: 'reps' } },
+      { exerciseId: 'nordic-curl', prereqs: ['bodyweight-squat'], unlockTest: { type: 'reps', value: 5, unit: 'reps' } },
+    ],
+  },
+];
+
+export const getTrackById = (id: string) => tracks.find(t => t.id === id);
