@@ -2,14 +2,12 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Navigation } from '@/components/layout/Navigation';
 import { HeroSection } from '@/components/sections/HeroSection';
-import { SkillsLibrary } from '@/components/sections/SkillsLibrary';
+import { ExerciseLibrary } from '@/components/sections/ExerciseLibrary';
+import { TrackLadder } from '@/components/sections/TrackLadder';
 import { ProgressDashboard } from '@/components/sections/ProgressDashboard';
-import { Leaderboard } from '@/components/sections/Leaderboard';
 import { AdminPanel } from '@/components/sections/AdminPanel';
-import { SubscriptionPlans } from '@/components/sections/SubscriptionPlans';
-import { DownloadSection } from '@/components/sections/DownloadSection';
 
-type Section = 'home' | 'skills' | 'progress' | 'leaderboard' | 'profile' | 'admin';
+type Section = 'home' | 'library' | 'tracks' | 'progress' | 'admin';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState<Section>('home');
@@ -20,7 +18,7 @@ const Index = () => {
   };
 
   const handleStartTraining = () => {
-    setActiveSection('skills');
+    setActiveSection('library');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -31,83 +29,37 @@ const Index = () => {
       <main className="lg:pl-20">
         <AnimatePresence mode="wait">
           {activeSection === 'home' && (
-            <motion.div
-              key="home"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            >
+            <motion.div key="home" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
               <HeroSection onStartTraining={handleStartTraining} />
-              <SkillsLibrary />
-              <ProgressDashboard />
-              <SubscriptionPlans />
-              <DownloadSection />
+              <ExerciseLibrary />
             </motion.div>
           )}
 
-          {activeSection === 'skills' && (
-            <motion.div
-              key="skills"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-            >
-              <SkillsLibrary />
+          {activeSection === 'library' && (
+            <motion.div key="library" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.3 }}>
+              <ExerciseLibrary />
+            </motion.div>
+          )}
+
+          {activeSection === 'tracks' && (
+            <motion.div key="tracks" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.3 }}>
+              <TrackLadder />
             </motion.div>
           )}
 
           {activeSection === 'progress' && (
-            <motion.div
-              key="progress"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-            >
+            <motion.div key="progress" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.3 }}>
               <ProgressDashboard />
             </motion.div>
           )}
 
-          {activeSection === 'leaderboard' && (
-            <motion.div
-              key="leaderboard"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Leaderboard />
-            </motion.div>
-          )}
-
-          {activeSection === 'profile' && (
-            <motion.div
-              key="profile"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-            >
-              <SubscriptionPlans />
-            </motion.div>
-          )}
-
           {activeSection === 'admin' && (
-            <motion.div
-              key="admin"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-            >
+            <motion.div key="admin" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.3 }}>
               <AdminPanel />
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Bottom Padding for Mobile Nav */}
         <div className="h-24 lg:hidden" />
       </main>
     </div>
