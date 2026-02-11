@@ -1,219 +1,135 @@
 
 
-# STACKED -- Design System + Layout Shell + Component Reskin + Progression Engine
+# Layout and Organization Overhaul
 
-This is a 4-layer build that establishes a complete design foundation, wraps the app in a HUD-style layout shell, reskins every component to use shared tokens, and adds the client-side progression engine.
+## Problems Identified
 
----
+1. **Every section forces `min-h-screen`** -- creates huge empty padding even when content is short
+2. **Hero section takes a full viewport** just to show a heading and 3 stat cards
+3. **Exercise Library** -- 70+ cards in an endless vertical grid. Three rows of filter chips stacked on top add visual noise. No pagination or compact view
+4. **Track Ladder** -- shows one track at a time as a tall vertical list. 9 track selector buttons wrap across full width. The track nodes are just a flat list with no sense of progression density
+5. **Progress Dashboard** -- stat cards and calendar are spaced out with too much vertical padding
+6. **Admin Panel** -- functional but spaciously padded
+7. **Home page stacks Hero + full Exercise Library** which means scrolling through 2 full "pages" of content
 
-## Layer 1: Global Design Tokens + Utility Classes
+## Solution: Tighter, Denser, App-Like Layout
 
-**File: `src/index.css`**
-
-Expand the existing CSS variables with new spatial, typographic, and surface tokens:
-
-- **Spacing scale**: `--space-xs` through `--space-3xl` (4px to 64px) mapped to consistent padding/margins
-- **Type scale**: `--text-xs` through `--text-display` with matching line-heights and letter-spacing values
-- **Surface tokens**: `--surface-0` (darkest, app bg), `--surface-1` (card), `--surface-2` (elevated card), `--surface-3` (modal/popover) with increasing lightness
-- **Border tokens**: `--border-subtle` (hsla 6% opacity), `--border-default` (current), `--border-active` (primary)
-- **HUD-specific tokens**: `--grid-color`, `--scanline-opacity`, `--grid-size`
-
-**File: `tailwind.config.ts`**
-
-Map new tokens into Tailwind:
-- Add `surface-0/1/2/3` to colors referencing the CSS variables
-- Add `spacing` entries for the spatial scale
-- Add `fontSize` entries for the type scale
-
-New utility classes in `src/index.css`:
-- `.hud-grid` -- repeating CSS grid lines using `--grid-color` and `--grid-size`
-- `.scanline` -- pseudo-element overlay with repeating horizontal lines at very low opacity
-- `.surface-glass` -- backdrop-blur + surface-1 at 85% opacity + border-subtle
-- `.surface-elevated` -- surface-2 + shadow-premium
-- `.text-label` -- font-chalk + text-xs + tracking-widest + uppercase (for all section labels)
-- `.text-heading` -- font-chalk + responsive size + tracking-tight
-- `.accent-line` -- 2px bottom border that animates width on hover (replaces repeated inline hover patterns)
+### Principle
+Switch from a "marketing landing page" feel (big sections, lots of whitespace) to a **dashboard/app feel** (dense, organized, everything reachable without endless scrolling).
 
 ---
 
-## Layer 2: Layout Shell
+### 1. Remove `min-h-screen` from All Sections
 
-**New file: `src/components/layout/AppShell.tsx`**
+**Files:** `HeroSection.tsx`, `ExerciseLibrary.tsx`, `TrackLadder.tsx`, `ProgressDashboard.tsx`, `AdminPanel.tsx`
 
-A wrapper component applied at the app root (`Index.tsx`) that provides:
-
-- A full-viewport background layer with the `.hud-grid` pattern (subtle blueprint grid lines)
-- An optional `.scanline` overlay (thin horizontal lines at ~2% opacity for CRT/technical feel)
-- A noise texture using a tiny inline SVG filter (`feTurbulence`) at very low opacity for surface grain
-- Corner "bracket" decorations (4 L-shaped SVG elements in corners, like a targeting HUD)
-- The main content area passes through as `children`
-
-This component wraps `<main>` in `Index.tsx`, so every section automatically gets the background treatment without touching individual section files.
-
-**Edit: `src/pages/Index.tsx`**
-
-- Import and wrap content in `<AppShell>`
-- The existing `<main className="lg:pl-20">` moves inside AppShell
+Every section currently has `min-h-screen` forcing them to fill the entire viewport even when content is smaller. Replace with natural height + sensible padding (`py-8 lg:py-12` instead of `py-20`).
 
 ---
 
-## Layer 3: Component Reskin (using shared tokens)
+### 2. Hero Section -- Compact Header Bar
 
-All components switch from ad-hoc color values to the new token classes. No layout or logic changes.
+**File:** `src/components/sections/HeroSection.tsx`
 
-### `src/components/layout/Navigation.tsx`
-- Desktop nav background: `surface-glass` instead of `bg-card/95 backdrop-blur-xl`
-- Logo badge: add a subtle `border border-primary/30` for more definition
-- Tooltip popover: use `surface-elevated` class
-- Mobile overlay: use `surface-glass` with full opacity
+Current: Full-screen centered hero with massive typography, "SCROLL TO EXPLORE" indicator, and staggered animations.
 
-### `src/components/sections/HeroSection.tsx`
-- Remove the inline `backgroundImage` style for the grid -- it now comes from AppShell
-- Badge: use `.text-label` utility
-- Stats cards: use `surface-elevated` class, replace inline border logic with token classes
-- Headline: use `.text-heading` utility
-
-### `src/components/sections/ExerciseLibrary.tsx`
-- Section header badge: `.text-label`
-- Search bar: `surface-glass` instead of `border border-border bg-card`
-- Filter buttons: standardize to use `surface-0` (inactive) and `bg-primary` (active)
-- Exercise cards: `surface-elevated` + `.accent-line` for hover bottom border
-- Detail modal backdrop: consistent with AppShell surface treatment
-
-### `src/components/sections/TrackLadder.tsx`
-- Track selector buttons: same filter-button pattern as Library
-- Track info card: `surface-elevated`
-- Ladder nodes: use surface tokens for different unlock states
-- Vertical line: use `--border-default` color
-
-### `src/components/sections/ProgressDashboard.tsx`
-- All stat cards: `surface-elevated`
-- Streak card (featured): `surface-elevated` + `border-primary`
-- Activity calendar cells: use primary token consistently
-- Achievement grid: `surface-elevated` for unlocked, `surface-0` + opacity for locked
-
-### `src/components/sections/AdminPanel.tsx`
-- Stat cards: `surface-elevated`
-- Form container: `surface-elevated`
-- Select/Input/Textarea: consistent `bg-surface-0 border-border focus:border-primary`
-- History cards: `surface-glass`
-
-### `src/components/sections/SkillsLibrary.tsx`
-- Cards: `surface-elevated` + `.accent-line`
-- Filter bar: `surface-glass`
-
-### `src/components/sections/skills/SkillDetailModal.tsx`
-- Modal card: `surface-elevated`
-- Tab content blocks: consistent surface tokens
-- Movement briefing cards: `surface-glass`
+New: A **compact header strip** at the top of the home page:
+- Remove the full-viewport centering layout
+- Make it a horizontal bar: "MASTER YOUR STACK" headline on left, 3 stat cards in a tight row on right
+- Remove the "SCROLL TO EXPLORE" indicator entirely
+- Remove the CTA buttons (user is already in the app -- "START TRAINING" just navigates to Library, which the nav already does)
+- Keep the badge but make it smaller inline
+- Height target: approximately 200-250px total instead of 100vh
 
 ---
 
-## Layer 4: Progression Engine
+### 3. Exercise Library -- Table/List View + Pagination
 
-This is the client-side state machine that tracks unlock states, enforces Try Mode guardrails, and handles graduation checks. All local state for now (no database), designed to be swapped to Supabase later.
+**File:** `src/components/sections/ExerciseLibrary.tsx`
 
-### New file: `src/lib/progression-engine.ts`
+Current: 4-column card grid showing all 70+ exercises at once with image thumbnails. Three separate rows of filter chips.
 
-Core module containing:
+New layout:
+- **Compact filter bar**: Combine category, difficulty, and track filters into a single horizontal row using dropdown `<select>` elements instead of chip rows. This collapses 3 rows of buttons into 1 row of 3 dropdowns
+- **View toggle**: Add a grid/list toggle button. Default to **list view** (compact table rows with exercise name, difficulty badge, category, and track tags -- no images). Grid view available as alternate
+- **Pagination**: Show 20 exercises per page with simple prev/next controls at the bottom. No more infinite scroll through 70+ cards
+- **Sticky search + filter bar**: The search input and filter dropdowns stick to the top of the section when scrolling so they're always accessible
+- Cards in grid mode become smaller (3 columns max, not 4, with smaller aspect ratio)
 
-**Types:**
-```text
-ProgressionState {
-  unlockedExercises: Map<exerciseId, UnlockState>
-  exerciseLogs: ExerciseLog[]
-  tryModeState: Map<exerciseId, TryModeRecord>
-  softLocks: Map<exerciseId, { until: Date; reason: string }>
-}
+---
 
-ExerciseLog {
-  exerciseId: string
-  date: Date
-  sets: number
-  reps?: number
-  holdSec?: number
-  qualityScore: 1-5
-  painScore: 0-10
-  notes?: string
-}
+### 4. Track Ladder -- Side-by-Side Panel Layout
 
-TryModeRecord {
-  setsUsedToday: number
-  lastSessionDate: Date
-  qualityFailCount: number
-  painFlagCount: number
-}
-```
+**File:** `src/components/sections/TrackLadder.tsx`
 
-**Functions:**
+Current: Full-width track selector buttons, then a single vertical node list centered on page.
 
-- `initProgressionState(tracks)` -- Seeds initial state: first node of each track = unlocked, rest based on prereqs
-- `getExerciseState(exerciseId)` -- Returns current UnlockState accounting for soft locks
-- `canAttemptExercise(exerciseId)` -- Checks if user can log (respects Try Mode caps and soft locks)
-- `logExercise(log: ExerciseLog)` -- Records a set, updates Try Mode counters
-- `checkTryModeGuardrails(exerciseId, log)` -- Enforces:
-  - Max 2 sets per session in try_mode
-  - Max 10-15 sec hold or 3 reps per set
-  - If quality < 3 twice: auto-regress + 72-hour soft lock
-  - If pain > 3/10: auto-regress + 72-hour soft lock
-  - Returns `{ allowed: boolean; reason?: string; action?: 'regress' | 'soft_lock' }`
-- `checkGraduation(exerciseId)` -- Checks if the unlock test for the next node is met based on logged data (e.g., "held 30 sec for 3 sets" meets a hold test)
-- `graduateExercise(exerciseId)` -- Moves next node from locked/preview to unlocked, returns the newly unlocked exercise
+New layout:
+- **Two-panel layout**: Left panel (narrow, ~250px) shows the track list as a vertical menu. Right panel (flex-1) shows the selected track's nodes
+- Track list in left panel: each track is a compact row with icon + name + node count badge. Vertical, always visible -- no wrapping
+- Right panel nodes: keep the vertical ladder but make it more compact (less padding per node, smaller images)
+- Remove the separate "track info" card between the selector and nodes -- fold the description into the left panel under the track name when selected
+- This makes the entire Tracks section fit in one viewport without scrolling for most tracks
 
-### New file: `src/hooks/use-progression.ts`
+---
 
-React hook wrapping the engine:
+### 5. Progress Dashboard -- Tighter Grid
 
-- `useProgression()` returns:
-  - `state: ProgressionState`
-  - `getState(exerciseId): UnlockState`
-  - `canAttempt(exerciseId): boolean`
-  - `logSet(log): { success: boolean; message?: string; graduated?: string }`
-  - `getSoftLock(exerciseId): { until: Date; reason: string } | null`
-- Uses `useState` + `localStorage` persistence (serializes/deserializes on mount)
-- Exposes a `reset()` function for development
+**File:** `src/components/sections/ProgressDashboard.tsx`
 
-### Edit: `src/components/sections/TrackLadder.tsx`
+- Reduce stat card sizes (smaller icon containers, less internal padding)
+- Make the 4 stat cards a single compact row (all same size, no featured/enlarged streak card)
+- Activity calendar and achievements side-by-side stay, but reduce internal padding
+- Skill progression bars: make them a compact table-like layout instead of oversized rows
+- Section heading: smaller (text-3xl instead of text-7xl)
 
-- Replace `getMockUnlockState()` with `useProgression().getState(exerciseId)`
-- Each node shows real state from the engine
-- Clicking an unlocked/try_mode node could open the exercise detail
+---
 
-### Edit: `src/components/sections/ExerciseLibrary.tsx`
+### 6. Admin Panel -- Compact
 
-- Import `useProgression`
-- Show unlock state badge on each exercise card (small icon in corner)
-- In the detail modal, show a "LOG SET" button for unlocked exercises
-- For try_mode exercises, show remaining attempts ("1/2 sets remaining")
-- For locked exercises, show what's needed to unlock
+**File:** `src/components/sections/AdminPanel.tsx`
+
+- Smaller section heading (text-3xl instead of text-7xl)
+- Reduce stat card internal padding
+- Tighter spacing throughout
+
+---
+
+### 7. Home Page Composition
+
+**File:** `src/pages/Index.tsx`
+
+Currently the home page stacks `HeroSection` + `ExerciseLibrary` making it extremely long. 
+
+New: Home page shows only the compact Hero header + a **preview row** of 6-8 featured exercises (horizontal scroll or single row), not the full library. The full library is only on the Library tab.
+
+---
+
+### 8. Section Headings -- Consistent and Smaller
+
+**All section files**
+
+Current headings are massive (`text-5xl sm:text-6xl lg:text-7xl`). Scale down to `text-2xl sm:text-3xl` across all sections. The giant headings waste vertical space and feel like landing page marketing, not an app.
 
 ---
 
 ## File Summary
 
-| File | Action |
-|------|--------|
-| `src/index.css` | Edit -- add tokens, utility classes |
-| `tailwind.config.ts` | Edit -- map new tokens |
-| `src/components/layout/AppShell.tsx` | Create -- layout shell with HUD grid, scanlines, noise |
-| `src/pages/Index.tsx` | Edit -- wrap in AppShell |
-| `src/components/layout/Navigation.tsx` | Edit -- use surface tokens |
-| `src/components/sections/HeroSection.tsx` | Edit -- use tokens, remove inline grid |
-| `src/components/sections/ExerciseLibrary.tsx` | Edit -- tokens + progression integration |
-| `src/components/sections/TrackLadder.tsx` | Edit -- tokens + progression integration |
-| `src/components/sections/ProgressDashboard.tsx` | Edit -- surface tokens |
-| `src/components/sections/AdminPanel.tsx` | Edit -- surface tokens |
-| `src/components/sections/SkillsLibrary.tsx` | Edit -- surface tokens |
-| `src/components/sections/skills/SkillDetailModal.tsx` | Edit -- surface tokens |
-| `src/lib/progression-engine.ts` | Create -- state machine, guardrails, graduation |
-| `src/hooks/use-progression.ts` | Create -- React hook with localStorage |
+| File | Changes |
+|------|---------|
+| `src/components/sections/HeroSection.tsx` | Compact header bar layout, remove full-screen centering, remove scroll indicator and CTAs |
+| `src/components/sections/ExerciseLibrary.tsx` | Dropdown filters, list/grid view toggle, pagination (20/page), sticky filter bar, smaller cards |
+| `src/components/sections/TrackLadder.tsx` | Two-panel layout (track menu left, nodes right), compact nodes |
+| `src/components/sections/ProgressDashboard.tsx` | Smaller headings, tighter stat cards, reduced padding |
+| `src/components/sections/AdminPanel.tsx` | Smaller headings, reduced padding |
+| `src/pages/Index.tsx` | Home shows compact hero + featured exercise preview row (not full library) |
 
-**Total: 3 new files, 11 edited files**
+**Total: 6 files edited, 0 new files**
 
 ## What Does NOT Change
-- Exercise data (`exercises.ts`), track data (`tracks.ts`), types (`types.ts`) -- untouched
-- Skills data (`skills-data.ts`) -- untouched
-- All shadcn/ui primitives -- untouched
-- Routing, React Query setup, toasters -- untouched
-- Framer Motion animations -- preserved, just restyled
-
+- Navigation component (already compact and well-organized)
+- AppShell / HUD background (looks good)
+- Color palette and design tokens
+- Exercise data, track data, progression engine
+- Modal/detail views
+- All functionality preserved
