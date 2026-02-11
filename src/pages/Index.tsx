@@ -7,19 +7,27 @@ import { ExerciseLibrary } from '@/components/sections/ExerciseLibrary';
 import { TrackLadder } from '@/components/sections/TrackLadder';
 import { ProgressDashboard } from '@/components/sections/ProgressDashboard';
 import { AdminPanel } from '@/components/sections/AdminPanel';
+import { exercises } from '@/lib/exercises';
+import { cn } from '@/lib/utils';
 
 type Section = 'home' | 'library' | 'tracks' | 'progress' | 'admin';
+
+const difficultyBadge: Record<string, string> = {
+  easy: 'bg-muted/30 text-muted-foreground',
+  beginner: 'difficulty-beginner',
+  intermediate: 'difficulty-intermediate',
+  advanced: 'difficulty-advanced',
+  master: 'bg-primary/20 text-primary',
+};
+
+// Featured exercises for home preview
+const featured = exercises.filter(e => e.image).slice(0, 8);
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState<Section>('home');
 
   const handleNavigate = (section: string) => {
     setActiveSection(section as Section);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const handleStartTraining = () => {
-    setActiveSection('library');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -32,8 +40,31 @@ const Index = () => {
           <AnimatePresence mode="wait">
             {activeSection === 'home' && (
               <motion.div key="home" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
-                <HeroSection onStartTraining={handleStartTraining} />
-                <ExerciseLibrary />
+                <HeroSection />
+                {/* Featured preview row */}
+                <section className="px-4 pb-8 lg:px-8">
+                  <div className="mb-3 flex items-center justify-between">
+                    <h3 className="font-chalk text-lg text-muted-foreground">FEATURED SKILLS</h3>
+                    <button onClick={() => handleNavigate('library')} className="text-label text-xs text-primary hover:underline">VIEW ALL →</button>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4">
+                    {featured.map((ex) => (
+                      <div key={ex.id} onClick={() => handleNavigate('library')} className="group cursor-pointer overflow-hidden rounded-lg surface-elevated transition-all hover:border-primary/50">
+                        <div className="relative aspect-[16/10] overflow-hidden">
+                          <img src={ex.image} alt={ex.name} className="h-full w-full object-cover transition-transform group-hover:scale-105" />
+                          <div className="absolute left-2 top-2">
+                            <span className={cn("rounded-full px-1.5 py-0.5 text-label text-[9px] backdrop-blur-sm", difficultyBadge[ex.difficulty])}>
+                              {ex.difficulty.toUpperCase()}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="p-2">
+                          <h4 className="font-chalk text-sm truncate">{ex.name}</h4>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
               </motion.div>
             )}
 

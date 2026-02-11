@@ -1,40 +1,40 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Filter, ChevronRight, Sparkles } from 'lucide-react';
+import { Search, LayoutGrid, LayoutList, ChevronLeft, ChevronRight } from 'lucide-react';
 import { exercises } from '@/lib/exercises';
 import type { Exercise, Category, Difficulty, TrackId } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
 const categories: { id: Category | 'all'; label: string }[] = [
-  { id: 'all', label: 'ALL' },
-  { id: 'push', label: 'PUSH' },
-  { id: 'pull', label: 'PULL' },
-  { id: 'legs', label: 'LEGS' },
-  { id: 'core', label: 'CORE' },
-  { id: 'mobility', label: 'MOBILITY' },
-  { id: 'skills', label: 'SKILLS' },
+  { id: 'all', label: 'All Categories' },
+  { id: 'push', label: 'Push' },
+  { id: 'pull', label: 'Pull' },
+  { id: 'legs', label: 'Legs' },
+  { id: 'core', label: 'Core' },
+  { id: 'mobility', label: 'Mobility' },
+  { id: 'skills', label: 'Skills' },
 ];
 
 const difficulties: { id: Difficulty | 'all'; label: string }[] = [
-  { id: 'all', label: 'ALL LEVELS' },
-  { id: 'easy', label: 'EASY' },
-  { id: 'beginner', label: 'BEGINNER' },
-  { id: 'intermediate', label: 'INTERMEDIATE' },
-  { id: 'advanced', label: 'ADVANCED' },
-  { id: 'master', label: 'MASTER' },
+  { id: 'all', label: 'All Levels' },
+  { id: 'easy', label: 'Easy' },
+  { id: 'beginner', label: 'Beginner' },
+  { id: 'intermediate', label: 'Intermediate' },
+  { id: 'advanced', label: 'Advanced' },
+  { id: 'master', label: 'Master' },
 ];
 
 const trackFilters: { id: TrackId | 'all'; label: string }[] = [
-  { id: 'all', label: 'ALL TRACKS' },
-  { id: 'planche', label: 'PLANCHE' },
-  { id: 'handstand', label: 'HANDSTAND' },
-  { id: 'rings', label: 'RINGS' },
-  { id: 'compression', label: 'COMPRESSION' },
-  { id: 'pull-strength', label: 'PULL' },
-  { id: 'legs', label: 'LEGS' },
-  { id: 'forearm-stand', label: 'FOREARM STAND' },
-  { id: 'elbow-stand', label: 'ELBOW STAND' },
-  { id: 'grip', label: 'GRIP' },
+  { id: 'all', label: 'All Tracks' },
+  { id: 'planche', label: 'Planche' },
+  { id: 'handstand', label: 'Handstand' },
+  { id: 'rings', label: 'Rings' },
+  { id: 'compression', label: 'Compression' },
+  { id: 'pull-strength', label: 'Pull' },
+  { id: 'legs', label: 'Legs' },
+  { id: 'forearm-stand', label: 'Forearm Stand' },
+  { id: 'elbow-stand', label: 'Elbow Stand' },
+  { id: 'grip', label: 'Grip' },
 ];
 
 const difficultyBadge: Record<string, string> = {
@@ -45,127 +45,202 @@ const difficultyBadge: Record<string, string> = {
   master: 'bg-primary/20 text-primary border-primary/40',
 };
 
+const ITEMS_PER_PAGE = 20;
+
 export function ExerciseLibrary() {
   const [categoryFilter, setCategoryFilter] = useState<Category | 'all'>('all');
   const [difficultyFilter, setDifficultyFilter] = useState<Difficulty | 'all'>('all');
   const [trackFilter, setTrackFilter] = useState<TrackId | 'all'>('all');
   const [search, setSearch] = useState('');
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
+  const [page, setPage] = useState(1);
 
-  const filtered = exercises.filter(e => {
-    if (categoryFilter !== 'all' && e.category !== categoryFilter) return false;
-    if (difficultyFilter !== 'all' && e.difficulty !== difficultyFilter) return false;
-    if (trackFilter !== 'all' && !e.tracks.includes(trackFilter)) return false;
-    if (search && !e.name.toLowerCase().includes(search.toLowerCase())) return false;
-    return true;
-  });
+  const filtered = useMemo(() => {
+    return exercises.filter(e => {
+      if (categoryFilter !== 'all' && e.category !== categoryFilter) return false;
+      if (difficultyFilter !== 'all' && e.difficulty !== difficultyFilter) return false;
+      if (trackFilter !== 'all' && !e.tracks.includes(trackFilter)) return false;
+      if (search && !e.name.toLowerCase().includes(search.toLowerCase())) return false;
+      return true;
+    });
+  }, [categoryFilter, difficultyFilter, trackFilter, search]);
+
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+  const paginated = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+
+  // Reset page when filters change
+  const updateFilter = <T,>(setter: React.Dispatch<React.SetStateAction<T>>, value: T) => {
+    setter(value);
+    setPage(1);
+  };
 
   return (
-    <section className="relative min-h-screen px-4 py-20 lg:px-8">
+    <section className="relative px-4 py-8 lg:px-8">
       {/* Header */}
-      <div className="mb-8">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5">
-            <Sparkles className="h-4 w-4 text-primary" />
-            <span className="text-label text-sm text-primary">{exercises.length} EXERCISES</span>
-          </div>
-          <h2 className="text-heading text-5xl sm:text-6xl lg:text-7xl">
-            <span className="text-primary">EXERCISE</span> LIBRARY
-          </h2>
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="font-chalk text-2xl sm:text-3xl">
+          <span className="text-primary">EXERCISE</span> LIBRARY
+          <span className="ml-3 text-sm text-muted-foreground font-normal">{filtered.length} exercises</span>
+        </h2>
+        <div className="flex gap-1">
+          <button
+            onClick={() => setViewMode('list')}
+            className={cn("rounded-md p-2 transition-colors", viewMode === 'list' ? "bg-primary/20 text-primary" : "text-muted-foreground hover:text-foreground")}
+          >
+            <LayoutList className="h-4 w-4" />
+          </button>
+          <button
+            onClick={() => setViewMode('grid')}
+            className={cn("rounded-md p-2 transition-colors", viewMode === 'grid' ? "bg-primary/20 text-primary" : "text-muted-foreground hover:text-foreground")}
+          >
+            <LayoutGrid className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
+
+      {/* Search + Filter Bar */}
+      <div className="sticky top-0 z-20 -mx-4 mb-4 flex flex-wrap items-center gap-2 bg-background/95 px-4 py-3 backdrop-blur-sm lg:-mx-8 lg:px-8">
+        <div className="flex flex-1 items-center gap-2 rounded-lg border border-border bg-surface-0 px-3 py-2">
+          <Search className="h-4 w-4 text-muted-foreground" />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+            placeholder="Search..."
+            className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
+          />
+        </div>
+        <select
+          value={categoryFilter}
+          onChange={(e) => updateFilter(setCategoryFilter, e.target.value as Category | 'all')}
+          className="rounded-lg border border-border bg-surface-0 px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none"
+        >
+          {categories.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
+        </select>
+        <select
+          value={difficultyFilter}
+          onChange={(e) => updateFilter(setDifficultyFilter, e.target.value as Difficulty | 'all')}
+          className="rounded-lg border border-border bg-surface-0 px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none"
+        >
+          {difficulties.map(d => <option key={d.id} value={d.id}>{d.label}</option>)}
+        </select>
+        <select
+          value={trackFilter}
+          onChange={(e) => updateFilter(setTrackFilter, e.target.value as TrackId | 'all')}
+          className="rounded-lg border border-border bg-surface-0 px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none"
+        >
+          {trackFilters.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}
+        </select>
+      </div>
+
+      {/* List View */}
+      {viewMode === 'list' ? (
+        <div className="overflow-hidden rounded-lg border border-border">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-border bg-surface-1 text-left">
+                <th className="px-4 py-2 text-label text-xs text-muted-foreground">EXERCISE</th>
+                <th className="hidden px-4 py-2 text-label text-xs text-muted-foreground sm:table-cell">DIFFICULTY</th>
+                <th className="hidden px-4 py-2 text-label text-xs text-muted-foreground md:table-cell">CATEGORY</th>
+                <th className="hidden px-4 py-2 text-label text-xs text-muted-foreground lg:table-cell">TRACKS</th>
+              </tr>
+            </thead>
+            <tbody>
+              {paginated.map((exercise) => (
+                <tr
+                  key={exercise.id}
+                  onClick={() => setSelectedExercise(exercise)}
+                  className="cursor-pointer border-b border-border/50 transition-colors hover:bg-surface-1"
+                >
+                  <td className="px-4 py-2.5">
+                    <div className="font-chalk">{exercise.name}</div>
+                    <div className="text-xs text-muted-foreground line-clamp-1 sm:hidden">{exercise.difficulty} · {exercise.category}</div>
+                  </td>
+                  <td className="hidden px-4 py-2.5 sm:table-cell">
+                    <span className={cn("rounded-full border px-2 py-0.5 text-label text-[10px]", difficultyBadge[exercise.difficulty])}>
+                      {exercise.difficulty.toUpperCase()}
+                    </span>
+                  </td>
+                  <td className="hidden px-4 py-2.5 text-muted-foreground md:table-cell">{exercise.category}</td>
+                  <td className="hidden px-4 py-2.5 lg:table-cell">
+                    <div className="flex gap-1">
+                      {exercise.tracks.slice(0, 2).map(t => (
+                        <span key={t} className="rounded bg-surface-1 px-1.5 py-0.5 text-label text-[10px] text-muted-foreground">{t}</span>
+                      ))}
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        /* Grid View */
+        <motion.div layout className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <AnimatePresence mode="popLayout">
+            {paginated.map((exercise) => (
+              <motion.div
+                key={exercise.id}
+                layout
+                initial={{ opacity: 0, scale: 0.97 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.97 }}
+                onClick={() => setSelectedExercise(exercise)}
+                className="accent-line group cursor-pointer overflow-hidden rounded-xl surface-elevated transition-all hover:border-primary/50"
+              >
+                {exercise.image ? (
+                  <div className="relative aspect-[16/9] overflow-hidden">
+                    <img src={exercise.image} alt={exercise.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                    <div className="image-overlay absolute inset-0" />
+                    <div className="absolute left-2 top-2">
+                      <span className={cn("rounded-full border px-2 py-0.5 text-label text-[10px] backdrop-blur-sm", difficultyBadge[exercise.difficulty])}>
+                        {exercise.difficulty.toUpperCase()}
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="relative flex aspect-[16/9] items-center justify-center bg-surface-1">
+                    <span className="font-chalk text-3xl text-muted-foreground/20">{exercise.name[0]}</span>
+                    <div className="absolute left-2 top-2">
+                      <span className={cn("rounded-full border px-2 py-0.5 text-label text-[10px]", difficultyBadge[exercise.difficulty])}>
+                        {exercise.difficulty.toUpperCase()}
+                      </span>
+                    </div>
+                  </div>
+                )}
+                <div className="p-3">
+                  <h3 className="mb-0.5 font-chalk text-base truncate">{exercise.name}</h3>
+                  <p className="text-xs text-muted-foreground line-clamp-1">{exercise.shortPurpose}</p>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </motion.div>
-      </div>
+      )}
 
-      {/* Search */}
-      <div className="surface-glass mb-6 flex items-center gap-3 rounded-xl px-4 py-3">
-        <Search className="h-5 w-5 text-muted-foreground" />
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search exercises..."
-          className="flex-1 bg-transparent font-chalk text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
-        />
-        <span className="text-label text-xs text-muted-foreground">{filtered.length} results</span>
-      </div>
-
-      {/* Filters */}
-      <div className="mb-4 space-y-3">
-        <div className="flex flex-wrap gap-1.5">
-          {categories.map(c => (
-            <button key={c.id} onClick={() => setCategoryFilter(c.id)}
-              className={cn("rounded-lg px-3 py-1.5 text-label text-xs transition-all",
-                categoryFilter === c.id ? "bg-primary text-primary-foreground" : "bg-surface-0 text-muted-foreground hover:text-foreground"
-              )}>{c.label}</button>
-          ))}
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="mt-4 flex items-center justify-center gap-3">
+          <button
+            onClick={() => setPage(p => Math.max(1, p - 1))}
+            disabled={page === 1}
+            className="flex items-center gap-1 rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground disabled:opacity-30"
+          >
+            <ChevronLeft className="h-4 w-4" /> Prev
+          </button>
+          <span className="text-label text-xs text-muted-foreground">
+            {page} / {totalPages}
+          </span>
+          <button
+            onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+            className="flex items-center gap-1 rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground disabled:opacity-30"
+          >
+            Next <ChevronRight className="h-4 w-4" />
+          </button>
         </div>
-        <div className="flex flex-wrap gap-1.5">
-          {difficulties.map(d => (
-            <button key={d.id} onClick={() => setDifficultyFilter(d.id)}
-              className={cn("rounded-lg px-3 py-1.5 text-label text-xs transition-all",
-                difficultyFilter === d.id ? "bg-primary text-primary-foreground" : "bg-surface-0 text-muted-foreground hover:text-foreground"
-              )}>{d.label}</button>
-          ))}
-        </div>
-        <div className="flex flex-wrap gap-1.5">
-          {trackFilters.map(t => (
-            <button key={t.id} onClick={() => setTrackFilter(t.id)}
-              className={cn("rounded-lg px-3 py-1.5 text-label text-xs transition-all",
-                trackFilter === t.id ? "bg-primary text-primary-foreground" : "bg-surface-0 text-muted-foreground hover:text-foreground"
-              )}>{t.label}</button>
-          ))}
-        </div>
-      </div>
-
-      {/* Grid */}
-      <motion.div layout className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        <AnimatePresence mode="popLayout">
-          {filtered.map((exercise, index) => (
-            <motion.div
-              key={exercise.id}
-              layout
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.3, delay: index * 0.02 }}
-              whileHover={{ y: -4 }}
-              onClick={() => setSelectedExercise(exercise)}
-              className="accent-line group cursor-pointer overflow-hidden rounded-2xl surface-elevated transition-all hover:border-primary/50"
-            >
-              {exercise.image ? (
-                <div className="relative aspect-[4/3] overflow-hidden">
-                  <img src={exercise.image} alt={exercise.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                  <div className="image-overlay absolute inset-0" />
-                  <div className="absolute left-3 top-3">
-                    <span className={cn("rounded-full border px-2.5 py-0.5 text-label text-[10px] backdrop-blur-sm", difficultyBadge[exercise.difficulty])}>
-                      {exercise.difficulty.toUpperCase()}
-                    </span>
-                  </div>
-                </div>
-              ) : (
-                <div className="relative flex aspect-[4/3] items-center justify-center bg-surface-1">
-                  <span className="font-chalk text-4xl text-muted-foreground/20">{exercise.name[0]}</span>
-                  <div className="absolute left-3 top-3">
-                    <span className={cn("rounded-full border px-2.5 py-0.5 text-label text-[10px]", difficultyBadge[exercise.difficulty])}>
-                      {exercise.difficulty.toUpperCase()}
-                    </span>
-                  </div>
-                </div>
-              )}
-
-              <div className="p-4">
-                <h3 className="mb-1 font-chalk text-lg truncate">{exercise.name}</h3>
-                <p className="mb-3 text-xs text-muted-foreground line-clamp-1">{exercise.shortPurpose}</p>
-                <div className="flex flex-wrap gap-1">
-                  {exercise.tracks.slice(0, 2).map(t => (
-                    <span key={t} className="rounded-md bg-surface-1 px-2 py-0.5 text-label text-[10px] text-muted-foreground">{t}</span>
-                  ))}
-                  <span className="rounded-md bg-surface-1 px-2 py-0.5 text-label text-[10px] text-muted-foreground">{exercise.category}</span>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </motion.div>
+      )}
 
       {/* Exercise Detail Modal */}
       <AnimatePresence>
@@ -204,7 +279,7 @@ function ExerciseDetailModal({ exercise, onClose }: { exercise: Exercise; onClos
             <span className={cn("mb-2 inline-block rounded-full border px-3 py-0.5 text-label text-xs", difficultyBadge[exercise.difficulty])}>
               {exercise.difficulty.toUpperCase()}
             </span>
-            <h2 className="text-heading text-3xl">{exercise.name}</h2>
+            <h2 className="font-chalk text-2xl">{exercise.name}</h2>
             <p className="mt-2 text-sm text-muted-foreground">{exercise.description}</p>
 
             <div className="mt-4 rounded-lg bg-surface-1 p-4">

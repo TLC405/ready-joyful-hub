@@ -1,154 +1,62 @@
 import { motion } from 'framer-motion';
-import { Target, Dumbbell, Trophy, ChevronDown, Crosshair } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Target, Dumbbell, Trophy, Crosshair } from 'lucide-react';
 
-interface HeroSectionProps {
-  onStartTraining: () => void;
-}
-
-export function HeroSection({ onStartTraining }: HeroSectionProps) {
+export function HeroSection() {
   const stats = [
-    { label: 'SKILLS MASTERED', value: '3', total: '14', icon: Dumbbell },
-    { label: 'SESSIONS LOGGED', value: '34', icon: Target, highlight: true },
-    { label: 'GLOBAL RANK', value: '#142', icon: Trophy },
+    { label: 'SKILLS', value: '3', total: '14', icon: Dumbbell },
+    { label: 'SESSIONS', value: '34', icon: Target },
+    { label: 'RANK', value: '#142', icon: Trophy },
   ];
 
   return (
-    <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 py-20 lg:px-8">
-      {/* Main Content */}
-      <div className="relative z-10 flex flex-col items-center text-center">
-        {/* Badge */}
+    <section className="px-4 py-6 lg:px-8 lg:py-8">
+      <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+        {/* Left: headline */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-6 flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2"
+          className="flex items-center gap-4"
         >
-          <Crosshair className="h-4 w-4 text-primary" />
-          <span className="text-label text-sm text-primary">BODYWEIGHT SKILL SYSTEM</span>
+          <div className="flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1">
+            <Crosshair className="h-3 w-3 text-primary" />
+            <span className="text-label text-[10px] text-primary">BODYWEIGHT SKILL SYSTEM</span>
+          </div>
+          <h1 className="font-chalk text-2xl sm:text-3xl tracking-tight">
+            <span className="text-primary">MASTER</span> YOUR STACK
+          </h1>
         </motion.div>
 
-        {/* Main Headline */}
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="text-heading mb-2 text-6xl leading-none sm:text-7xl md:text-8xl lg:text-9xl"
-        >
-          <span className="text-primary">MASTER</span>
-        </motion.h1>
-        
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-heading mb-6 text-6xl leading-none sm:text-7xl md:text-8xl lg:text-9xl"
-        >
-          YOUR STACK
-        </motion.h1>
-
-        {/* Subtitle */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="mb-10 max-w-xl text-lg text-muted-foreground sm:text-xl"
-        >
-          Structured progressions across 9 tracks. Objective unlock tests. No guesswork.
-        </motion.p>
-
-        {/* CTA Buttons */}
+        {/* Right: compact stat cards */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="mb-16 flex flex-col gap-4 sm:flex-row"
+          transition={{ delay: 0.1 }}
+          className="flex gap-3"
         >
-          <Button 
-            size="lg"
-            onClick={onStartTraining}
-            className="group relative overflow-hidden bg-primary px-8 py-6 font-chalk text-xl text-primary-foreground transition-all hover:bg-primary/90"
-          >
-            <span className="relative z-10">START TRAINING</span>
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-              initial={{ x: '-100%' }}
-              whileHover={{ x: '100%' }}
-              transition={{ duration: 0.6 }}
-            />
-          </Button>
-          
-          <Button 
-            size="lg"
-            variant="outline"
-            className="border-2 border-border px-8 py-6 font-chalk text-xl hover:border-primary hover:text-primary"
-          >
-            VIEW SKILLS
-          </Button>
-        </motion.div>
-
-        {/* Stats Row */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="grid w-full max-w-3xl grid-cols-1 gap-4 sm:grid-cols-3"
-        >
-          {stats.map((stat, index) => {
+          {stats.map((stat) => {
             const Icon = stat.icon;
             return (
-              <motion.div
+              <div
                 key={stat.label}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4, delay: 0.6 + index * 0.1 }}
-                whileHover={{ scale: 1.02, y: -4 }}
-                className={`card-hover surface-elevated flex flex-col items-center gap-3 rounded-xl p-6 ${
-                  stat.highlight 
-                    ? 'border-primary' 
-                    : ''
-                }`}
+                className="surface-elevated flex items-center gap-3 rounded-lg px-4 py-3"
               >
-                <div className={`flex h-12 w-12 items-center justify-center rounded-lg ${
-                  stat.highlight 
-                    ? 'bg-primary/20' 
-                    : 'bg-surface-2'
-                }`}>
-                  <Icon className="h-6 w-6 text-primary" />
+                <div className="flex h-8 w-8 items-center justify-center rounded-md bg-surface-2">
+                  <Icon className="h-4 w-4 text-primary" />
                 </div>
-                <div className="text-center">
-                  <div className="flex items-baseline justify-center gap-1">
-                    <span className="font-chalk text-4xl text-foreground">{stat.value}</span>
+                <div>
+                  <div className="flex items-baseline gap-0.5">
+                    <span className="font-chalk text-xl text-foreground">{stat.value}</span>
                     {stat.total && (
-                      <span className="font-chalk text-xl text-muted-foreground">/{stat.total}</span>
+                      <span className="font-chalk text-sm text-muted-foreground">/{stat.total}</span>
                     )}
                   </div>
-                  <span className="text-label text-xs text-muted-foreground">
-                    {stat.label}
-                  </span>
+                  <span className="text-label text-[10px] text-muted-foreground">{stat.label}</span>
                 </div>
-              </motion.div>
+              </div>
             );
           })}
         </motion.div>
       </div>
-
-      {/* Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 1 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
-      >
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="flex flex-col items-center gap-2 text-muted-foreground"
-        >
-          <span className="text-label text-xs">SCROLL TO EXPLORE</span>
-          <ChevronDown className="h-5 w-5" />
-        </motion.div>
-      </motion.div>
     </section>
   );
 }
