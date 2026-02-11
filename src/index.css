@@ -4,68 +4,71 @@
 @tailwind components;
 @tailwind utilities;
 
-/* STACKED — BLUEPRINT/INK DESIGN SYSTEM */
+/* STACKED — DESIGN SYSTEM */
 
 @layer base {
+  /* ===== DARK THEME (default) ===== */
   :root {
-    /* Core Colors - Cool Dark Foundation */
-    --background: 220 15% 4%;
+    /* Core Colors - Lifted Dark Navy */
+    --background: 225 15% 10%;
     --foreground: 210 10% 92%;
 
-    /* Surface Scale */
-    --surface-0: 220 15% 4%;
-    --surface-1: 220 12% 7%;
-    --surface-2: 220 12% 10%;
-    --surface-3: 220 14% 13%;
+    /* Surface Scale - Visible layering */
+    --surface-0: 225 14% 10%;
+    --surface-1: 225 12% 14%;
+    --surface-2: 225 12% 18%;
+    --surface-3: 225 14% 22%;
 
     /* Card */
-    --card: 220 12% 7%;
+    --card: 225 12% 14%;
     --card-foreground: 210 10% 92%;
 
     /* Popover */
-    --popover: 220 14% 6%;
+    --popover: 225 14% 12%;
     --popover-foreground: 210 10% 92%;
 
-    /* Primary - Steel Blue */
-    --primary: 210 40% 52%;
-    --primary-foreground: 210 10% 96%;
+    /* Primary - Vibrant Blue */
+    --primary: 220 70% 55%;
+    --primary-foreground: 210 10% 98%;
 
-    /* Secondary - Muted Slate */
-    --secondary: 215 15% 12%;
+    /* Secondary */
+    --secondary: 225 15% 16%;
     --secondary-foreground: 210 10% 85%;
 
     /* Muted */
-    --muted: 215 12% 14%;
-    --muted-foreground: 215 10% 50%;
+    --muted: 225 12% 16%;
+    --muted-foreground: 220 10% 60%;
 
-    /* Accent */
-    --accent: 200 50% 45%;
-    --accent-foreground: 210 10% 96%;
+    /* Accent - Teal */
+    --accent: 185 55% 45%;
+    --accent-foreground: 210 10% 98%;
 
     /* Destructive */
-    --destructive: 0 55% 50%;
-    --destructive-foreground: 210 10% 95%;
+    --destructive: 0 60% 50%;
+    --destructive-foreground: 210 10% 98%;
 
-    /* Success */
-    --success: 160 20% 55%;
+    /* Success - Bright green */
+    --success: 155 60% 50%;
     --success-foreground: 220 15% 5%;
 
-    /* Difficulty Colors - Cool Spectrum */
-    --difficulty-beginner: 215 10% 55%;
-    --difficulty-intermediate: 210 40% 52%;
-    --difficulty-advanced: 0 0% 88%;
+    /* Difficulty Colors - Semantic */
+    --difficulty-easy: 220 10% 55%;
+    --difficulty-beginner: 150 50% 45%;
+    --difficulty-intermediate: 40 80% 55%;
+    --difficulty-advanced: 10 70% 55%;
+    --difficulty-master: 270 55% 60%;
 
-    /* Borders */
-    --border: 215 10% 16%;
-    --border-subtle: 215 10% 10%;
-    --border-active: 210 40% 52%;
-    --input: 215 12% 10%;
-    --ring: 210 40% 52%;
+    /* Borders - Visible */
+    --border: 225 10% 24%;
+    --border-subtle: 225 10% 16%;
+    --border-active: 220 70% 55%;
+    --input: 225 12% 16%;
+    --ring: 220 70% 55%;
 
     --radius: 0.75rem;
 
     /* HUD tokens */
-    --grid-color: 210 40% 52%;
+    --grid-color: 220 70% 55%;
     --grid-size: 60px;
     --scanline-opacity: 0.02;
 
@@ -79,22 +82,80 @@
     --space-3xl: 4rem;
 
     /* Sidebar */
-    --sidebar-background: 220 15% 5%;
+    --sidebar-background: 225 15% 8%;
     --sidebar-foreground: 210 10% 92%;
-    --sidebar-primary: 210 40% 52%;
-    --sidebar-primary-foreground: 210 10% 96%;
-    --sidebar-accent: 215 12% 10%;
+    --sidebar-primary: 220 70% 55%;
+    --sidebar-primary-foreground: 210 10% 98%;
+    --sidebar-accent: 225 12% 14%;
     --sidebar-accent-foreground: 210 10% 92%;
-    --sidebar-border: 215 10% 14%;
-    --sidebar-ring: 210 40% 52%;
+    --sidebar-border: 225 10% 20%;
+    --sidebar-ring: 220 70% 55%;
 
     /* Shadows */
-    --shadow-card: 0 20px 60px hsla(220, 15%, 0%, 0.5);
-    --shadow-card-hover: 0 30px 80px hsla(220, 15%, 0%, 0.6), 0 0 40px hsla(210, 40%, 52%, 0.08);
+    --shadow-card: 0 20px 60px hsla(225, 15%, 0%, 0.5);
+    --shadow-card-hover: 0 30px 80px hsla(225, 15%, 0%, 0.6), 0 0 40px hsla(220, 70%, 55%, 0.08);
   }
 
-  .dark {
-    /* Same as root - app is always dark mode */
+  /* ===== LIGHT THEME ===== */
+  .light {
+    --background: 220 15% 97%;
+    --foreground: 225 15% 12%;
+
+    --surface-0: 220 14% 97%;
+    --surface-1: 220 12% 93%;
+    --surface-2: 0 0% 100%;
+    --surface-3: 0 0% 100%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 225 15% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 225 15% 12%;
+
+    --primary: 220 70% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 12% 90%;
+    --secondary-foreground: 225 15% 20%;
+
+    --muted: 220 12% 92%;
+    --muted-foreground: 220 10% 45%;
+
+    --accent: 185 55% 40%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 60% 48%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 155 55% 40%;
+    --success-foreground: 0 0% 100%;
+
+    --difficulty-easy: 220 10% 50%;
+    --difficulty-beginner: 150 50% 38%;
+    --difficulty-intermediate: 40 80% 42%;
+    --difficulty-advanced: 10 70% 48%;
+    --difficulty-master: 270 55% 50%;
+
+    --border: 220 10% 85%;
+    --border-subtle: 220 10% 90%;
+    --border-active: 220 70% 50%;
+    --input: 220 12% 90%;
+    --ring: 220 70% 50%;
+
+    --grid-color: 220 30% 50%;
+    --scanline-opacity: 0.01;
+
+    --sidebar-background: 220 12% 95%;
+    --sidebar-foreground: 225 15% 12%;
+    --sidebar-primary: 220 70% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 12% 90%;
+    --sidebar-accent-foreground: 225 15% 12%;
+    --sidebar-border: 220 10% 85%;
+    --sidebar-ring: 220 70% 50%;
+
+    --shadow-card: 0 4px 20px hsla(220, 15%, 0%, 0.06);
+    --shadow-card-hover: 0 8px 30px hsla(220, 15%, 0%, 0.1), 0 0 20px hsla(220, 70%, 50%, 0.05);
   }
 }
 
@@ -112,14 +173,12 @@
     font-family: 'Inter', sans-serif;
   }
 
-  /* Technical Display Font */
   .font-chalk {
     font-family: 'Space Grotesk', sans-serif;
     letter-spacing: 0.05em;
     font-weight: 600;
   }
 
-  /* Scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -130,7 +189,7 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: hsl(215, 10%, 20%);
+    background: hsl(var(--border));
     border-radius: 3px;
   }
 
@@ -232,16 +291,14 @@
     border-color: hsl(var(--primary));
   }
 
-  /* Border Styles */
   .border-brutal {
-    border: 1px solid hsla(215, 10%, 20%, 0.5);
+    border: 1px solid hsla(var(--border), 0.5);
   }
 
   .border-brutal-accent {
     border: 1px solid hsl(var(--primary));
   }
 
-  /* Float Animation */
   .animate-float {
     animation: float 4s ease-in-out infinite;
   }
@@ -251,7 +308,6 @@
     50% { transform: translateY(-8px); }
   }
 
-  /* Number Counter Animation */
   .animate-count {
     animation: count-up 0.6s ease-out forwards;
   }
@@ -261,7 +317,6 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* Image Overlay */
   .image-overlay {
     background: linear-gradient(
       to top,
@@ -272,27 +327,38 @@
     );
   }
 
-  /* Difficulty Badge Colors - Cool Spectrum */
+  /* ===== DIFFICULTY BADGES - Semantic Colors ===== */
+  .difficulty-easy {
+    background: hsla(var(--difficulty-easy), 0.15);
+    color: hsl(var(--difficulty-easy));
+    border-color: hsla(var(--difficulty-easy), 0.3);
+  }
+
   .difficulty-beginner {
     background: hsla(var(--difficulty-beginner), 0.15);
-    color: hsl(215, 10%, 70%);
+    color: hsl(var(--difficulty-beginner));
     border-color: hsla(var(--difficulty-beginner), 0.3);
   }
 
   .difficulty-intermediate {
     background: hsla(var(--difficulty-intermediate), 0.15);
-    color: hsl(210, 40%, 65%);
+    color: hsl(var(--difficulty-intermediate));
     border-color: hsla(var(--difficulty-intermediate), 0.3);
   }
 
   .difficulty-advanced {
     background: hsla(var(--difficulty-advanced), 0.15);
-    color: hsl(0, 0%, 92%);
+    color: hsl(var(--difficulty-advanced));
     border-color: hsla(var(--difficulty-advanced), 0.3);
+  }
+
+  .difficulty-master {
+    background: hsla(var(--difficulty-master), 0.15);
+    color: hsl(var(--difficulty-master));
+    border-color: hsla(var(--difficulty-master), 0.3);
   }
 }
 
-/* Hide scrollbar for specific elements */
 .hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -302,7 +368,6 @@
   display: none;
 }
 
-/* Focus States */
 *:focus-visible {
   outline: 2px solid hsl(var(--primary));
   outline-offset: 2px;
