@@ -1,16 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Dumbbell, 
   Flame, 
-  User, 
   Settings, 
   Menu,
   X,
   Home,
   ChevronRight,
   GitBranch,
-  Library
+  Library,
+  Sun,
+  Moon
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -33,8 +33,31 @@ interface NavigationProps {
   onNavigate: (section: string) => void;
 }
 
+function useTheme() {
+  const [theme, setThemeState] = useState<'dark' | 'light'>(() => {
+    if (typeof window !== 'undefined') {
+      return (localStorage.getItem('theme') as 'dark' | 'light') || 'dark';
+    }
+    return 'dark';
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.remove('light', 'dark');
+    if (theme === 'light') {
+      root.classList.add('light');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggle = () => setThemeState(t => t === 'dark' ? 'light' : 'dark');
+  return { theme, toggle };
+}
+
 export function Navigation({ activeSection, onNavigate }: NavigationProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { theme, toggle } = useTheme();
+  const ThemeIcon = theme === 'dark' ? Sun : Moon;
 
   return (
     <>
@@ -73,6 +96,16 @@ export function Navigation({ activeSection, onNavigate }: NavigationProps) {
             );
           })}
         </div>
+
+        {/* Theme Toggle - Desktop */}
+        <motion.button
+          onClick={toggle}
+          className="mt-4 flex h-12 w-12 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-surface-2 hover:text-foreground"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <ThemeIcon className="h-5 w-5" />
+        </motion.button>
       </nav>
 
       {/* Mobile Navigation */}
@@ -126,6 +159,14 @@ export function Navigation({ activeSection, onNavigate }: NavigationProps) {
                   );
                 })}
               </div>
+              {/* Theme Toggle - Mobile */}
+              <button
+                onClick={toggle}
+                className="mt-4 flex items-center gap-4 rounded-lg bg-surface-2 p-4 text-foreground hover:bg-surface-3"
+              >
+                <ThemeIcon className="h-6 w-6" />
+                <span className="font-chalk text-xl">{theme === 'dark' ? 'LIGHT MODE' : 'DARK MODE'}</span>
+              </button>
             </div>
           </motion.div>
         )}

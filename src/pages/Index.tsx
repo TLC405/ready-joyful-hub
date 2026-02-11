@@ -13,11 +13,11 @@ import { cn } from '@/lib/utils';
 type Section = 'home' | 'library' | 'tracks' | 'progress' | 'admin';
 
 const difficultyBadge: Record<string, string> = {
-  easy: 'bg-muted/30 text-muted-foreground',
+  easy: 'difficulty-easy',
   beginner: 'difficulty-beginner',
   intermediate: 'difficulty-intermediate',
   advanced: 'difficulty-advanced',
-  master: 'bg-primary/20 text-primary',
+  master: 'difficulty-master',
 };
 
 // Featured exercises for home preview

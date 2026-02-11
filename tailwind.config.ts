@@ -70,20 +70,12 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        steel: {
-          DEFAULT: "hsl(210, 40%, 52%)",
-          light: "hsl(210, 40%, 65%)",
-          dark: "hsl(210, 40%, 40%)",
-        },
-        slate: {
-          DEFAULT: "hsl(215, 15%, 18%)",
-          light: "hsl(215, 15%, 28%)",
-          dark: "hsl(215, 15%, 12%)",
-        },
-        ice: {
-          DEFAULT: "hsl(195, 50%, 70%)",
-          light: "hsl(195, 50%, 80%)",
-          dark: "hsl(195, 50%, 55%)",
+        difficulty: {
+          easy: "hsl(var(--difficulty-easy))",
+          beginner: "hsl(var(--difficulty-beginner))",
+          intermediate: "hsl(var(--difficulty-intermediate))",
+          advanced: "hsl(var(--difficulty-advanced))",
+          master: "hsl(var(--difficulty-master))",
         },
       },
       borderRadius: {
@@ -128,7 +120,7 @@ export default {
         "fade-in": "fade-in 0.3s ease-out",
       },
       boxShadow: {
-        "steel-glow": "0 0 40px hsla(210, 40%, 52%, 0.15)",
+        "steel-glow": "0 0 40px hsla(220, 70%, 55%, 0.15)",
         "premium": "0 20px 60px -10px hsla(220, 15%, 0%, 0.5)",
       },
     },

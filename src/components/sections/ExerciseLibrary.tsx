@@ -38,11 +38,11 @@ const trackFilters: { id: TrackId | 'all'; label: string }[] = [
 ];
 
 const difficultyBadge: Record<string, string> = {
-  easy: 'bg-muted/30 text-muted-foreground border-muted-foreground/20',
+  easy: 'difficulty-easy',
   beginner: 'difficulty-beginner',
   intermediate: 'difficulty-intermediate',
   advanced: 'difficulty-advanced',
-  master: 'bg-primary/20 text-primary border-primary/40',
+  master: 'difficulty-master',
 };
 
 const ITEMS_PER_PAGE = 20;
