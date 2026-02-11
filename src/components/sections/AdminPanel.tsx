@@ -24,10 +24,10 @@ type NotificationType = 'announcement' | 'streak' | 'motivation' | 'promotion';
 type TargetGroup = 'all' | 'free' | 'premium' | 'inactive';
 
 const notificationTypes: { id: NotificationType; label: string; icon: React.ElementType; color: string }[] = [
-  { id: 'announcement', label: 'ANNOUNCEMENT', icon: Megaphone, color: 'bg-blue-500/20 text-blue-400 border-blue-500/30' },
-  { id: 'streak', label: 'STREAK', icon: Flame, color: 'bg-orange-500/20 text-orange-400 border-orange-500/30' },
-  { id: 'motivation', label: 'MOTIVATION', icon: Heart, color: 'bg-pink-500/20 text-pink-400 border-pink-500/30' },
-  { id: 'promotion', label: 'PROMOTION', icon: Gift, color: 'bg-green-500/20 text-green-400 border-green-500/30' },
+  { id: 'announcement', label: 'ANNOUNCEMENT', icon: Megaphone, color: 'bg-primary/20 text-primary border-primary/30' },
+  { id: 'streak', label: 'STREAK', icon: Flame, color: 'bg-accent/20 text-accent border-accent/30' },
+  { id: 'motivation', label: 'MOTIVATION', icon: Heart, color: 'bg-destructive/20 text-destructive border-destructive/30' },
+  { id: 'promotion', label: 'PROMOTION', icon: Gift, color: 'bg-success/20 text-success border-success/30' },
 ];
 
 const targetGroups: { id: TargetGroup; label: string; count: number }[] = [
@@ -51,7 +51,6 @@ export function AdminPanel() {
   const [notificationMessage, setNotificationMessage] = useState('');
 
   const handleSendNotification = () => {
-    // In real app, this would call an API
     alert(`Notification sent to ${targetGroups.find(g => g.id === selectedTarget)?.count} users!`);
     setNotificationTitle('');
     setNotificationMessage('');
@@ -59,7 +58,6 @@ export function AdminPanel() {
 
   return (
     <section className="relative min-h-screen px-4 py-20 lg:px-8">
-      {/* Section Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -68,9 +66,9 @@ export function AdminPanel() {
       >
         <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2">
           <Crown className="h-4 w-4 text-primary" />
-          <span className="font-chalk text-sm text-primary">ADMIN ACCESS</span>
+          <span className="text-label text-sm text-primary">ADMIN ACCESS</span>
         </div>
-        <h2 className="font-chalk text-5xl sm:text-6xl lg:text-7xl">
+        <h2 className="text-heading text-5xl sm:text-6xl lg:text-7xl">
           <span className="text-primary">COMMAND</span> CENTER
         </h2>
         <p className="mt-2 max-w-lg text-muted-foreground">
@@ -86,54 +84,54 @@ export function AdminPanel() {
         transition={{ delay: 0.1 }}
         className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
       >
-        <div className="rounded-xl border-2 border-border bg-card p-6">
+        <div className="surface-elevated rounded-xl p-6">
           <div className="mb-2 flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500/20">
-              <Users className="h-5 w-5 text-blue-400" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/20">
+              <Users className="h-5 w-5 text-primary" />
             </div>
-            <span className="font-chalk text-sm text-muted-foreground">TOTAL USERS</span>
+            <span className="text-label text-sm text-muted-foreground">TOTAL USERS</span>
           </div>
           <span className="font-chalk text-4xl">12,847</span>
-          <div className="mt-1 flex items-center gap-1 text-green-500">
+          <div className="mt-1 flex items-center gap-1 text-success">
             <TrendingUp className="h-4 w-4" />
             <span className="text-sm">+234 this week</span>
           </div>
         </div>
 
-        <div className="rounded-xl border-2 border-border bg-card p-6">
+        <div className="surface-elevated rounded-xl p-6">
           <div className="mb-2 flex items-center gap-2">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/20">
               <Crown className="h-5 w-5 text-primary" />
             </div>
-            <span className="font-chalk text-sm text-muted-foreground">ACTIVE SUBS</span>
+            <span className="text-label text-sm text-muted-foreground">ACTIVE SUBS</span>
           </div>
           <span className="font-chalk text-4xl">3,613</span>
-          <div className="mt-1 flex items-center gap-1 text-green-500">
+          <div className="mt-1 flex items-center gap-1 text-success">
             <TrendingUp className="h-4 w-4" />
             <span className="text-sm">+89 this week</span>
           </div>
         </div>
 
-        <div className="rounded-xl border-2 border-border bg-card p-6">
+        <div className="surface-elevated rounded-xl p-6">
           <div className="mb-2 flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-500/20">
-              <DollarSign className="h-5 w-5 text-green-400" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-success/20">
+              <DollarSign className="h-5 w-5 text-success" />
             </div>
-            <span className="font-chalk text-sm text-muted-foreground">DAILY VOLUME</span>
+            <span className="text-label text-sm text-muted-foreground">DAILY VOLUME</span>
           </div>
           <span className="font-chalk text-4xl">$2,847</span>
-          <div className="mt-1 flex items-center gap-1 text-green-500">
+          <div className="mt-1 flex items-center gap-1 text-success">
             <TrendingUp className="h-4 w-4" />
             <span className="text-sm">+12% from yesterday</span>
           </div>
         </div>
 
-        <div className="rounded-xl border-2 border-border bg-card p-6">
+        <div className="surface-elevated rounded-xl p-6">
           <div className="mb-2 flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-500/20">
-              <Bell className="h-5 w-5 text-orange-400" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/20">
+              <Bell className="h-5 w-5 text-accent" />
             </div>
-            <span className="font-chalk text-sm text-muted-foreground">NOTIFICATIONS</span>
+            <span className="text-label text-sm text-muted-foreground">NOTIFICATIONS</span>
           </div>
           <span className="font-chalk text-4xl">156</span>
           <div className="mt-1 text-muted-foreground">
@@ -149,20 +147,19 @@ export function AdminPanel() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
-          className="rounded-xl border-2 border-border bg-card p-6"
+          className="surface-elevated rounded-xl p-6"
         >
           <h3 className="mb-6 flex items-center gap-2 font-chalk text-2xl">
             <Send className="h-6 w-6 text-primary" />
             PUSH NOTIFICATION SENDER
           </h3>
 
-          {/* Target Group */}
           <div className="mb-6">
-            <label className="mb-3 block font-chalk text-sm text-muted-foreground">TARGET GROUP</label>
+            <label className="mb-3 block text-label text-sm text-muted-foreground">TARGET GROUP</label>
             <select
               value={selectedTarget}
               onChange={(e) => setSelectedTarget(e.target.value as TargetGroup)}
-              className="w-full rounded-lg border-2 border-border bg-secondary px-4 py-3 font-chalk text-foreground focus:border-primary focus:outline-none"
+              className="w-full rounded-lg border-2 border-border bg-surface-0 px-4 py-3 font-chalk text-foreground focus:border-primary focus:outline-none"
             >
               {targetGroups.map((group) => (
                 <option key={group.id} value={group.id}>
@@ -172,9 +169,8 @@ export function AdminPanel() {
             </select>
           </div>
 
-          {/* Notification Type */}
           <div className="mb-6">
-            <label className="mb-3 block font-chalk text-sm text-muted-foreground">NOTIFICATION TYPE</label>
+            <label className="mb-3 block text-label text-sm text-muted-foreground">NOTIFICATION TYPE</label>
             <div className="flex flex-wrap gap-2">
               {notificationTypes.map((type) => {
                 const Icon = type.icon;
@@ -183,10 +179,10 @@ export function AdminPanel() {
                     key={type.id}
                     onClick={() => setSelectedType(type.id)}
                     className={cn(
-                      "flex items-center gap-2 rounded-lg border-2 px-4 py-2 font-chalk text-sm transition-all",
+                      "flex items-center gap-2 rounded-lg border-2 px-4 py-2 text-label text-sm transition-all",
                       selectedType === type.id
                         ? "border-primary bg-primary text-primary-foreground"
-                        : "border-border bg-secondary text-muted-foreground hover:border-primary/50"
+                        : "border-border bg-surface-1 text-muted-foreground hover:border-primary/50"
                     )}
                   >
                     <Icon className="h-4 w-4" />
@@ -197,30 +193,27 @@ export function AdminPanel() {
             </div>
           </div>
 
-          {/* Title */}
           <div className="mb-4">
-            <label className="mb-2 block font-chalk text-sm text-muted-foreground">TITLE</label>
+            <label className="mb-2 block text-label text-sm text-muted-foreground">TITLE</label>
             <Input
               value={notificationTitle}
               onChange={(e) => setNotificationTitle(e.target.value)}
               placeholder="🔥 Your streak is on fire!"
-              className="border-2 border-border bg-secondary font-chalk focus:border-primary"
+              className="border-2 border-border bg-surface-0 font-chalk focus:border-primary"
             />
           </div>
 
-          {/* Message */}
           <div className="mb-6">
-            <label className="mb-2 block font-chalk text-sm text-muted-foreground">MESSAGE</label>
+            <label className="mb-2 block text-label text-sm text-muted-foreground">MESSAGE</label>
             <Textarea
               value={notificationMessage}
               onChange={(e) => setNotificationMessage(e.target.value)}
               placeholder="Don't let your 7-day streak end! Complete a workout today and keep the momentum going."
               rows={4}
-              className="border-2 border-border bg-secondary font-chalk focus:border-primary"
+              className="border-2 border-border bg-surface-0 font-chalk focus:border-primary"
             />
           </div>
 
-          {/* Send Button */}
           <Button
             onClick={handleSendNotification}
             disabled={!notificationTitle || !notificationMessage}
@@ -237,7 +230,7 @@ export function AdminPanel() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.3 }}
-          className="rounded-xl border-2 border-border bg-card p-6"
+          className="surface-elevated rounded-xl p-6"
         >
           <h3 className="mb-6 flex items-center gap-2 font-chalk text-2xl">
             <Clock className="h-6 w-6 text-primary" />
@@ -256,7 +249,7 @@ export function AdminPanel() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.4 + idx * 0.1 }}
-                  className="rounded-lg border-2 border-border bg-secondary/30 p-4"
+                  className="surface-glass rounded-lg p-4"
                 >
                   <div className="mb-2 flex items-start justify-between">
                     <div className="flex items-center gap-2">
@@ -268,7 +261,7 @@ export function AdminPanel() {
                       </div>
                       <span className="font-chalk">{notification.title}</span>
                     </div>
-                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <CheckCircle className="h-5 w-5 text-success" />
                   </div>
                   <div className="flex items-center justify-between text-sm text-muted-foreground">
                     <span>{notification.recipients}</span>

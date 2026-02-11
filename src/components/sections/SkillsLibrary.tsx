@@ -14,17 +14,14 @@ const difficultyStyles = {
   beginner: {
     badge: 'difficulty-beginner',
     label: 'BEGINNER',
-    accent: 'hsl(215, 10%, 55%)'
   },
   intermediate: {
     badge: 'difficulty-intermediate', 
     label: 'INTERMEDIATE',
-    accent: 'hsl(210, 40%, 52%)'
   },
   advanced: {
     badge: 'difficulty-advanced',
     label: 'ADVANCED',
-    accent: 'hsl(0, 0%, 88%)'
   },
 };
 
@@ -45,7 +42,6 @@ export function SkillsLibrary() {
 
   return (
     <section className="relative min-h-screen px-4 py-20 lg:px-8">
-      {/* Section Header */}
       <div className="mb-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -56,9 +52,9 @@ export function SkillsLibrary() {
           <div>
             <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5">
               <Sparkles className="h-4 w-4 text-primary" />
-              <span className="font-chalk text-sm text-primary">14 ELITE SKILLS</span>
+              <span className="text-label text-sm text-primary">14 ELITE SKILLS</span>
             </div>
-            <h2 className="font-chalk text-5xl sm:text-6xl lg:text-7xl">
+            <h2 className="text-heading text-5xl sm:text-6xl lg:text-7xl">
               <span className="text-primary">SKILL</span> LIBRARY
             </h2>
             <p className="mt-3 max-w-lg text-muted-foreground">
@@ -66,16 +62,16 @@ export function SkillsLibrary() {
             </p>
           </div>
           
-          <div className="flex flex-wrap items-center gap-2 rounded-xl border border-border bg-card/50 p-1.5 backdrop-blur-sm">
+          <div className="surface-glass flex flex-wrap items-center gap-2 rounded-xl p-1.5">
             {filters.map((f) => (
               <button
                 key={f.id}
                 onClick={() => setFilter(f.id)}
                 className={cn(
-                  "rounded-lg px-4 py-2 font-chalk text-sm transition-all duration-300",
+                  "rounded-lg px-4 py-2 text-label text-sm transition-all duration-300",
                   filter === f.id
                     ? "bg-primary text-primary-foreground shadow-lg"
-                    : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                    : "text-muted-foreground hover:bg-surface-2 hover:text-foreground"
                 )}
               >
                 {f.label}
@@ -101,9 +97,8 @@ export function SkillsLibrary() {
               transition={{ duration: 0.4, delay: index * 0.05 }}
               whileHover={{ scale: 1.02, y: -6 }}
               onClick={() => setSelectedSkill(skill)}
-              className="group relative cursor-pointer overflow-hidden rounded-2xl border border-border bg-card transition-all duration-500 hover:border-primary/50 hover:shadow-steel-glow"
+              className="accent-line group cursor-pointer overflow-hidden rounded-2xl surface-elevated transition-all duration-500 hover:border-primary/50 hover:shadow-steel-glow"
             >
-              {/* Skill Image */}
               <div className="relative aspect-[4/3] overflow-hidden">
                 <img
                   src={skill.image}
@@ -112,50 +107,42 @@ export function SkillsLibrary() {
                 />
                 <div className="image-overlay absolute inset-0" />
                 
-                {/* Difficulty Badge */}
                 <div className="absolute left-4 top-4">
                   <div className={cn(
                     "rounded-full border px-3 py-1 text-xs font-medium backdrop-blur-sm",
                     difficultyStyles[skill.difficulty].badge
                   )}>
-                    <span className="font-chalk">{difficultyStyles[skill.difficulty].label}</span>
+                    <span className="text-label">{difficultyStyles[skill.difficulty].label}</span>
                   </div>
                 </div>
 
-                {/* Hover Arrow */}
                 <div className="absolute bottom-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-primary opacity-0 shadow-lg transition-all duration-300 group-hover:opacity-100">
                   <ChevronRight className="h-5 w-5 text-primary-foreground" />
                 </div>
               </div>
 
-              {/* Skill Info */}
               <div className="p-5">
                 <h3 className="mb-2 font-chalk text-2xl tracking-wide">{skill.name}</h3>
                 <p className="mb-4 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
                   {skill.description}
                 </p>
 
-                {/* Muscle Groups */}
                 <div className="flex flex-wrap gap-1.5">
                   {skill.muscleGroups.slice(0, 3).map((muscle) => (
                     <span
                       key={muscle}
-                      className="rounded-md border border-border bg-secondary/50 px-2.5 py-1 text-xs text-muted-foreground"
+                      className="rounded-md border border-border bg-surface-1 px-2.5 py-1 text-xs text-muted-foreground"
                     >
                       {muscle}
                     </span>
                   ))}
                 </div>
               </div>
-
-              {/* Premium Gold Accent Line */}
-              <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-primary transition-all duration-500 group-hover:w-full" />
             </motion.div>
           ))}
         </AnimatePresence>
       </motion.div>
 
-      {/* Skill Detail Modal */}
       <AnimatePresence>
         {selectedSkill && (
           <SkillDetailModal 

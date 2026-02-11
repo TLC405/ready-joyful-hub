@@ -15,18 +15,6 @@ export function HeroSection({ onStartTraining }: HeroSectionProps) {
 
   return (
     <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 py-20 lg:px-8">
-      {/* Background - Blueprint Grid Only */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div 
-          className="absolute inset-0 opacity-[0.04]"
-          style={{
-            backgroundImage: `linear-gradient(hsl(var(--primary)) 1px, transparent 1px),
-                             linear-gradient(90deg, hsl(var(--primary)) 1px, transparent 1px)`,
-            backgroundSize: '60px 60px'
-          }}
-        />
-      </div>
-
       {/* Main Content */}
       <div className="relative z-10 flex flex-col items-center text-center">
         {/* Badge */}
@@ -37,7 +25,7 @@ export function HeroSection({ onStartTraining }: HeroSectionProps) {
           className="mb-6 flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2"
         >
           <Crosshair className="h-4 w-4 text-primary" />
-          <span className="font-chalk text-sm tracking-wider text-primary">BODYWEIGHT SKILL SYSTEM</span>
+          <span className="text-label text-sm text-primary">BODYWEIGHT SKILL SYSTEM</span>
         </motion.div>
 
         {/* Main Headline */}
@@ -45,7 +33,7 @@ export function HeroSection({ onStartTraining }: HeroSectionProps) {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="mb-2 font-chalk text-6xl leading-none tracking-tight sm:text-7xl md:text-8xl lg:text-9xl"
+          className="text-heading mb-2 text-6xl leading-none sm:text-7xl md:text-8xl lg:text-9xl"
         >
           <span className="text-primary">MASTER</span>
         </motion.h1>
@@ -54,7 +42,7 @@ export function HeroSection({ onStartTraining }: HeroSectionProps) {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="mb-6 font-chalk text-6xl leading-none tracking-tight sm:text-7xl md:text-8xl lg:text-9xl"
+          className="text-heading mb-6 text-6xl leading-none sm:text-7xl md:text-8xl lg:text-9xl"
         >
           YOUR STACK
         </motion.h1>
@@ -66,7 +54,7 @@ export function HeroSection({ onStartTraining }: HeroSectionProps) {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="mb-10 max-w-xl text-lg text-muted-foreground sm:text-xl"
         >
-          Structured progressions across 6 tracks. Objective unlock tests. No guesswork.
+          Structured progressions across 9 tracks. Objective unlock tests. No guesswork.
         </motion.p>
 
         {/* CTA Buttons */}
@@ -115,16 +103,16 @@ export function HeroSection({ onStartTraining }: HeroSectionProps) {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.4, delay: 0.6 + index * 0.1 }}
                 whileHover={{ scale: 1.02, y: -4 }}
-                className={`card-hover flex flex-col items-center gap-3 rounded-xl border-2 p-6 ${
+                className={`card-hover surface-elevated flex flex-col items-center gap-3 rounded-xl p-6 ${
                   stat.highlight 
-                    ? 'border-primary bg-primary/5' 
-                    : 'border-border bg-card'
+                    ? 'border-primary' 
+                    : ''
                 }`}
               >
                 <div className={`flex h-12 w-12 items-center justify-center rounded-lg ${
                   stat.highlight 
                     ? 'bg-primary/20' 
-                    : 'bg-secondary'
+                    : 'bg-surface-2'
                 }`}>
                   <Icon className="h-6 w-6 text-primary" />
                 </div>
@@ -135,7 +123,7 @@ export function HeroSection({ onStartTraining }: HeroSectionProps) {
                       <span className="font-chalk text-xl text-muted-foreground">/{stat.total}</span>
                     )}
                   </div>
-                  <span className="font-chalk text-xs tracking-wider text-muted-foreground">
+                  <span className="text-label text-xs text-muted-foreground">
                     {stat.label}
                   </span>
                 </div>
@@ -157,7 +145,7 @@ export function HeroSection({ onStartTraining }: HeroSectionProps) {
           transition={{ duration: 2, repeat: Infinity }}
           className="flex flex-col items-center gap-2 text-muted-foreground"
         >
-          <span className="font-chalk text-xs tracking-widest">SCROLL TO EXPLORE</span>
+          <span className="text-label text-xs">SCROLL TO EXPLORE</span>
           <ChevronDown className="h-5 w-5" />
         </motion.div>
       </motion.div>
