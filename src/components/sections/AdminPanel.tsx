@@ -57,24 +57,16 @@ export function AdminPanel() {
   };
 
   return (
-    <section className="relative min-h-screen px-4 py-20 lg:px-8">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="mb-8"
-      >
-        <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2">
-          <Crown className="h-4 w-4 text-primary" />
-          <span className="text-label text-sm text-primary">ADMIN ACCESS</span>
+    <section className="relative px-4 py-8 lg:px-8">
+      <div className="mb-4 flex items-center gap-3">
+        <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1">
+          <Crown className="h-3 w-3 text-primary" />
+          <span className="text-label text-[10px] text-primary">ADMIN</span>
         </div>
-        <h2 className="text-heading text-5xl sm:text-6xl lg:text-7xl">
+        <h2 className="font-chalk text-2xl sm:text-3xl">
           <span className="text-primary">COMMAND</span> CENTER
         </h2>
-        <p className="mt-2 max-w-lg text-muted-foreground">
-          Send notifications, track metrics, and manage your community
-        </p>
-      </motion.div>
+      </div>
 
       {/* Quick Stats */}
       <motion.div
