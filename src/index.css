@@ -12,6 +12,12 @@
     --background: 220 15% 4%;
     --foreground: 210 10% 92%;
 
+    /* Surface Scale */
+    --surface-0: 220 15% 4%;
+    --surface-1: 220 12% 7%;
+    --surface-2: 220 12% 10%;
+    --surface-3: 220 14% 13%;
+
     /* Card */
     --card: 220 12% 7%;
     --card-foreground: 210 10% 92%;
@@ -49,12 +55,28 @@
     --difficulty-intermediate: 210 40% 52%;
     --difficulty-advanced: 0 0% 88%;
 
-    /* Borders & Inputs */
+    /* Borders */
     --border: 215 10% 16%;
+    --border-subtle: 215 10% 10%;
+    --border-active: 210 40% 52%;
     --input: 215 12% 10%;
     --ring: 210 40% 52%;
 
     --radius: 0.75rem;
+
+    /* HUD tokens */
+    --grid-color: 210 40% 52%;
+    --grid-size: 60px;
+    --scanline-opacity: 0.02;
+
+    /* Spacing scale */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-2xl: 3rem;
+    --space-3xl: 4rem;
 
     /* Sidebar */
     --sidebar-background: 220 15% 5%;
@@ -104,7 +126,7 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: hsl(220, 15%, 4%);
+    background: hsl(var(--surface-0));
   }
 
   ::-webkit-scrollbar-thumb {
@@ -113,25 +135,93 @@
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: hsl(210, 40%, 52%);
+    background: hsl(var(--primary));
   }
 }
 
 @layer utilities {
-  /* Glass Morphism - Cool */
-  .glass {
-    background: hsla(220, 12%, 7%, 0.85);
+  /* ===== SURFACE UTILITIES ===== */
+  .surface-glass {
+    background: hsla(var(--surface-1), 0.85);
     backdrop-filter: blur(20px);
-    border: 1px solid hsla(210, 10%, 92%, 0.06);
+    border: 1px solid hsla(var(--foreground), 0.06);
+  }
+
+  .surface-elevated {
+    background: hsl(var(--surface-2));
+    box-shadow: var(--shadow-card);
+    border: 1px solid hsl(var(--border));
   }
 
   .glass-premium {
-    background: linear-gradient(135deg, hsla(220, 12%, 10%, 0.9) 0%, hsla(220, 12%, 5%, 0.95) 100%);
+    background: linear-gradient(135deg, hsla(var(--surface-2), 0.9) 0%, hsla(var(--surface-0), 0.95) 100%);
     backdrop-filter: blur(24px);
-    border: 1px solid hsla(210, 40%, 52%, 0.1);
+    border: 1px solid hsla(var(--primary), 0.1);
   }
 
-  /* Card Effects */
+  /* ===== TYPOGRAPHY UTILITIES ===== */
+  .text-label {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .text-heading {
+    font-family: 'Space Grotesk', sans-serif;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+  }
+
+  /* ===== HUD UTILITIES ===== */
+  .hud-grid {
+    background-image:
+      linear-gradient(hsla(var(--grid-color), 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, hsla(var(--grid-color), 0.04) 1px, transparent 1px);
+    background-size: var(--grid-size) var(--grid-size);
+  }
+
+  .scanline {
+    position: relative;
+  }
+
+  .scanline::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      hsla(var(--foreground), var(--scanline-opacity)) 2px,
+      hsla(var(--foreground), var(--scanline-opacity)) 4px
+    );
+    z-index: 1;
+  }
+
+  /* ===== ACCENT LINE ===== */
+  .accent-line {
+    position: relative;
+  }
+
+  .accent-line::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 0;
+    background: hsl(var(--primary));
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .accent-line:hover::after {
+    width: 100%;
+  }
+
+  /* ===== CARD EFFECTS ===== */
   .card-hover {
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -139,7 +229,7 @@
   .card-hover:hover {
     transform: translateY(-8px);
     box-shadow: var(--shadow-card-hover);
-    border-color: hsl(210, 40%, 52%);
+    border-color: hsl(var(--primary));
   }
 
   /* Border Styles */
@@ -148,7 +238,7 @@
   }
 
   .border-brutal-accent {
-    border: 1px solid hsl(210, 40%, 52%);
+    border: 1px solid hsl(var(--primary));
   }
 
   /* Float Animation */
@@ -157,12 +247,8 @@
   }
 
   @keyframes float {
-    0%, 100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-8px);
-    }
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
   }
 
   /* Number Counter Animation */
@@ -171,44 +257,38 @@
   }
 
   @keyframes count-up {
-    from {
-      opacity: 0;
-      transform: translateY(15px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   /* Image Overlay */
   .image-overlay {
     background: linear-gradient(
       to top,
-      hsl(220, 15%, 4%) 0%,
-      hsla(220, 15%, 4%, 0.9) 20%,
-      hsla(220, 15%, 4%, 0.4) 60%,
+      hsl(var(--surface-0)) 0%,
+      hsla(var(--surface-0), 0.9) 20%,
+      hsla(var(--surface-0), 0.4) 60%,
       transparent 100%
     );
   }
 
   /* Difficulty Badge Colors - Cool Spectrum */
   .difficulty-beginner {
-    background: hsla(215, 10%, 55%, 0.15);
+    background: hsla(var(--difficulty-beginner), 0.15);
     color: hsl(215, 10%, 70%);
-    border-color: hsla(215, 10%, 55%, 0.3);
+    border-color: hsla(var(--difficulty-beginner), 0.3);
   }
 
   .difficulty-intermediate {
-    background: hsla(210, 40%, 52%, 0.15);
+    background: hsla(var(--difficulty-intermediate), 0.15);
     color: hsl(210, 40%, 65%);
-    border-color: hsla(210, 40%, 52%, 0.3);
+    border-color: hsla(var(--difficulty-intermediate), 0.3);
   }
 
   .difficulty-advanced {
-    background: hsla(0, 0%, 88%, 0.15);
+    background: hsla(var(--difficulty-advanced), 0.15);
     color: hsl(0, 0%, 92%);
-    border-color: hsla(0, 0%, 88%, 0.3);
+    border-color: hsla(var(--difficulty-advanced), 0.3);
   }
 }
 
@@ -224,6 +304,6 @@
 
 /* Focus States */
 *:focus-visible {
-  outline: 2px solid hsl(210, 40%, 52%);
+  outline: 2px solid hsl(var(--primary));
   outline-offset: 2px;
 }

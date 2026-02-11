@@ -44,7 +44,8 @@ export function SkillDetailModal({ skill, onClose }: SkillDetailModalProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-background/98 p-4 backdrop-blur-xl"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-xl"
+      style={{ background: 'hsla(var(--surface-0), 0.98)' }}
       onClick={onClose}
     >
       <motion.div
@@ -52,34 +53,25 @@ export function SkillDetailModal({ skill, onClose }: SkillDetailModalProps) {
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.9, y: 20 }}
         onClick={(e) => e.stopPropagation()}
-        className="relative max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-3xl border border-border bg-card p-6 shadow-2xl lg:p-10"
+        className="surface-elevated relative max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-3xl p-6 shadow-2xl lg:p-10"
       >
-        {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 z-10 flex h-12 w-12 items-center justify-center rounded-xl bg-secondary transition-colors hover:bg-muted"
+          className="absolute right-4 top-4 z-10 flex h-12 w-12 items-center justify-center rounded-xl bg-surface-2 transition-colors hover:bg-surface-3"
         >
           <X className="h-5 w-5" />
         </button>
 
-        {/* Header Section */}
         <div className="grid gap-8 lg:grid-cols-2">
-          {/* Image */}
           <div className="relative overflow-hidden rounded-2xl">
-            <img
-              src={skill.image}
-              alt={skill.name}
-              className="h-full w-full object-cover"
-            />
+            <img src={skill.image} alt={skill.name} className="h-full w-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-card/80 to-transparent" />
           </div>
 
-          {/* Content */}
           <div>
-            {/* Header */}
             <div className="mb-6">
               {skill.protocol_name && (
-                <div className="mb-2 font-chalk text-xs tracking-widest text-primary/80">
+                <div className="mb-2 text-label text-xs text-primary/80">
                   {skill.protocol_name}
                 </div>
               )}
@@ -87,16 +79,15 @@ export function SkillDetailModal({ skill, onClose }: SkillDetailModalProps) {
                 "mb-3 inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-medium",
                 difficultyStyles[skill.difficulty].badge
               )}>
-                <span className="font-chalk">{difficultyStyles[skill.difficulty].label}</span>
+                <span className="text-label">{difficultyStyles[skill.difficulty].label}</span>
               </div>
-              <h2 className="font-chalk text-3xl lg:text-4xl">{skill.name}</h2>
+              <h2 className="text-heading text-3xl lg:text-4xl">{skill.name}</h2>
               {skill.objective && (
-                <p className="mt-2 font-chalk text-sm text-primary">{skill.objective}</p>
+                <p className="mt-2 text-label text-sm text-primary">{skill.objective}</p>
               )}
               <p className="mt-3 leading-relaxed text-muted-foreground">{skill.description}</p>
             </div>
 
-            {/* Progression Targets */}
             <div className="mb-6">
               <h3 className="mb-3 flex items-center gap-2 font-chalk text-lg text-primary">
                 <Target className="h-5 w-5" />
@@ -110,17 +101,16 @@ export function SkillDetailModal({ skill, onClose }: SkillDetailModalProps) {
                       "flex items-center gap-2 rounded-lg border px-3 py-1.5 text-sm",
                       idx === 0 
                         ? "border-primary bg-primary/10 text-primary" 
-                        : "border-border bg-secondary/50"
+                        : "border-border bg-surface-1"
                     )}
                   >
                     {idx === 0 && <CheckCircle className="h-4 w-4" />}
-                    <span className="font-chalk">{target}</span>
+                    <span className="text-label">{target}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Intensity Markers */}
             {skill.intensity_markers && skill.intensity_markers.length > 0 && (
               <div className="mb-6">
                 <h3 className="mb-3 flex items-center gap-2 font-chalk text-lg text-primary">
@@ -140,7 +130,6 @@ export function SkillDetailModal({ skill, onClose }: SkillDetailModalProps) {
           </div>
         </div>
 
-        {/* Movement Briefings (Premium Protocol Content) */}
         {hasMovements ? (
           <div className="mt-10">
             <h3 className="mb-6 flex items-center gap-2 font-chalk text-2xl text-primary">
@@ -154,10 +143,9 @@ export function SkillDetailModal({ skill, onClose }: SkillDetailModalProps) {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: idx * 0.1 }}
-                  className="overflow-hidden rounded-2xl border border-border bg-secondary/20"
+                  className="surface-glass overflow-hidden rounded-2xl"
                 >
-                  {/* Movement Header */}
-                  <div className="flex items-center gap-4 border-b border-border bg-secondary/40 p-4">
+                  <div className="flex items-center gap-4 border-b border-border bg-surface-2 p-4">
                     <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary font-chalk text-lg text-primary-foreground">
                       {idx + 1}
                     </span>
@@ -167,16 +155,16 @@ export function SkillDetailModal({ skill, onClose }: SkillDetailModalProps) {
                   <div className="p-5">
                     <Tabs defaultValue="mechanic" className="w-full">
                       <TabsList className="mb-4 grid w-full grid-cols-3 lg:grid-cols-6">
-                        <TabsTrigger value="mechanic" className="font-chalk text-xs">MECHANIC</TabsTrigger>
-                        <TabsTrigger value="brutality" className="font-chalk text-xs">BRUTALITY</TabsTrigger>
-                        <TabsTrigger value="progression" className="font-chalk text-xs">PROGRESSION</TabsTrigger>
-                        <TabsTrigger value="volume" className="font-chalk text-xs">VOLUME</TabsTrigger>
-                        <TabsTrigger value="watchout" className="font-chalk text-xs">WATCH OUT</TabsTrigger>
-                        <TabsTrigger value="recovery" className="font-chalk text-xs">RECOVERY</TabsTrigger>
+                        <TabsTrigger value="mechanic" className="text-label text-xs">MECHANIC</TabsTrigger>
+                        <TabsTrigger value="brutality" className="text-label text-xs">BRUTALITY</TabsTrigger>
+                        <TabsTrigger value="progression" className="text-label text-xs">PROGRESSION</TabsTrigger>
+                        <TabsTrigger value="volume" className="text-label text-xs">VOLUME</TabsTrigger>
+                        <TabsTrigger value="watchout" className="text-label text-xs">WATCH OUT</TabsTrigger>
+                        <TabsTrigger value="recovery" className="text-label text-xs">RECOVERY</TabsTrigger>
                       </TabsList>
 
                       <TabsContent value="mechanic" className="mt-0">
-                        <div className="rounded-xl bg-secondary/30 p-4">
+                        <div className="rounded-xl bg-surface-1 p-4">
                           <p className="leading-relaxed text-foreground">{movement.mechanic}</p>
                         </div>
                       </TabsContent>
@@ -191,7 +179,7 @@ export function SkillDetailModal({ skill, onClose }: SkillDetailModalProps) {
                       </TabsContent>
 
                       <TabsContent value="progression" className="mt-0">
-                        <div className="rounded-xl bg-secondary/30 p-4">
+                        <div className="rounded-xl bg-surface-1 p-4">
                           <div className="flex items-start gap-3">
                             <TrendingUp className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
                             <p className="leading-relaxed text-foreground">{movement.progression}</p>
@@ -200,7 +188,7 @@ export function SkillDetailModal({ skill, onClose }: SkillDetailModalProps) {
                       </TabsContent>
 
                       <TabsContent value="volume" className="mt-0">
-                        <div className="rounded-xl bg-secondary/30 p-4">
+                        <div className="rounded-xl bg-surface-1 p-4">
                           <p className="font-chalk text-lg text-foreground">{movement.volume}</p>
                         </div>
                       </TabsContent>
@@ -215,7 +203,7 @@ export function SkillDetailModal({ skill, onClose }: SkillDetailModalProps) {
                       </TabsContent>
 
                       <TabsContent value="recovery" className="mt-0">
-                        <div className="rounded-xl bg-secondary/30 p-4">
+                        <div className="rounded-xl bg-surface-1 p-4">
                           <div className="flex items-start gap-3">
                             <RotateCcw className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
                             <p className="leading-relaxed text-foreground">{movement.movement_recovery}</p>
@@ -229,7 +217,6 @@ export function SkillDetailModal({ skill, onClose }: SkillDetailModalProps) {
             </div>
           </div>
         ) : (
-          /* Legacy Instructions */
           <div className="mt-8">
             <h3 className="mb-4 flex items-center gap-2 font-chalk text-xl text-primary">
               <Play className="h-5 w-5" />
@@ -242,7 +229,7 @@ export function SkillDetailModal({ skill, onClose }: SkillDetailModalProps) {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: idx * 0.1 }}
-                  className="flex gap-4 rounded-xl bg-secondary/30 p-4"
+                  className="flex gap-4 rounded-xl bg-surface-1 p-4"
                 >
                   <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary font-chalk text-sm text-primary-foreground">
                     {idx + 1}
@@ -254,7 +241,6 @@ export function SkillDetailModal({ skill, onClose }: SkillDetailModalProps) {
           </div>
         )}
 
-        {/* Recovery Vector */}
         {skill.recovery_vector && skill.recovery_vector.length > 0 && (
           <div className="mt-8">
             <h3 className="mb-4 flex items-center gap-2 font-chalk text-xl text-primary">
@@ -263,10 +249,7 @@ export function SkillDetailModal({ skill, onClose }: SkillDetailModalProps) {
             </h3>
             <div className="grid gap-3 sm:grid-cols-3">
               {skill.recovery_vector.map((tip, idx) => (
-                <div
-                  key={idx}
-                  className="rounded-xl border border-primary/20 bg-primary/5 p-4"
-                >
+                <div key={idx} className="rounded-xl border border-primary/20 bg-primary/5 p-4">
                   <span className="text-sm text-muted-foreground">{tip}</span>
                 </div>
               ))}
@@ -274,7 +257,6 @@ export function SkillDetailModal({ skill, onClose }: SkillDetailModalProps) {
           </div>
         )}
 
-        {/* Tips (for legacy skills without recovery_vector) */}
         {!skill.recovery_vector && skill.tips && skill.tips.length > 0 && (
           <div className="mt-8">
             <h3 className="mb-4 flex items-center gap-2 font-chalk text-xl text-primary">
@@ -283,10 +265,7 @@ export function SkillDetailModal({ skill, onClose }: SkillDetailModalProps) {
             </h3>
             <div className="grid gap-3 sm:grid-cols-3">
               {skill.tips.map((tip, idx) => (
-                <div
-                  key={idx}
-                  className="rounded-xl border border-primary/20 bg-primary/5 p-4"
-                >
+                <div key={idx} className="rounded-xl border border-primary/20 bg-primary/5 p-4">
                   <span className="text-sm text-muted-foreground">{tip}</span>
                 </div>
               ))}
@@ -294,7 +273,6 @@ export function SkillDetailModal({ skill, onClose }: SkillDetailModalProps) {
           </div>
         )}
 
-        {/* Action Button */}
         <div className="mt-10">
           <Button className="w-full bg-primary py-7 font-chalk text-xl text-primary-foreground shadow-lg transition-all hover:bg-primary/90 hover:shadow-steel-glow">
             START PRACTICING

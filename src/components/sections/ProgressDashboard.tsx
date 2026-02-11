@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 
 const weekDays = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-const activityData = [true, true, true, false, true, true, true]; // Current week
+const activityData = [true, true, true, false, true, true, true];
 
 const monthData = Array.from({ length: 30 }, (_, i) => ({
   day: i + 1,
@@ -39,14 +39,13 @@ export function ProgressDashboard() {
 
   return (
     <section className="relative min-h-screen px-4 py-20 lg:px-8">
-      {/* Section Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         className="mb-12"
       >
-        <h2 className="font-chalk text-5xl sm:text-6xl lg:text-7xl">
+        <h2 className="text-heading text-5xl sm:text-6xl lg:text-7xl">
           YOUR <span className="text-primary">PROGRESS</span>
         </h2>
         <p className="mt-2 max-w-lg text-muted-foreground">
@@ -63,13 +62,13 @@ export function ProgressDashboard() {
         className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
       >
         {/* Streak Card - Featured */}
-        <div className="relative overflow-hidden rounded-xl border-2 border-primary bg-primary/5 p-6 sm:col-span-2 lg:col-span-1">
+        <div className="surface-elevated relative overflow-hidden rounded-xl border-primary p-6 sm:col-span-2 lg:col-span-1">
           <div className="relative">
             <div className="mb-2 flex items-center gap-2">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/20">
                 <Zap className="h-6 w-6 text-primary" />
               </div>
-              <span className="font-chalk text-sm text-muted-foreground">CURRENT STREAK</span>
+              <span className="text-label text-sm text-muted-foreground">CURRENT STREAK</span>
             </div>
             <div className="flex items-baseline gap-2">
               <span className="font-chalk text-6xl text-foreground">{currentStreak}</span>
@@ -79,24 +78,22 @@ export function ProgressDashboard() {
           </div>
         </div>
 
-        {/* Total Workouts */}
-        <div className="rounded-xl border-2 border-border bg-card p-6 transition-all hover:border-primary">
+        <div className="surface-elevated rounded-xl p-6 transition-all hover:border-primary">
           <div className="mb-2 flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-2">
               <Zap className="h-5 w-5 text-primary" />
             </div>
-            <span className="font-chalk text-sm text-muted-foreground">TOTAL WORKOUTS</span>
+            <span className="text-label text-sm text-muted-foreground">TOTAL WORKOUTS</span>
           </div>
           <span className="font-chalk text-5xl text-foreground">{totalWorkouts}</span>
         </div>
 
-        {/* Skills Unlocked */}
-        <div className="rounded-xl border-2 border-border bg-card p-6 transition-all hover:border-primary">
+        <div className="surface-elevated rounded-xl p-6 transition-all hover:border-primary">
           <div className="mb-2 flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-2">
               <Target className="h-5 w-5 text-primary" />
             </div>
-            <span className="font-chalk text-sm text-muted-foreground">SKILLS UNLOCKED</span>
+            <span className="text-label text-sm text-muted-foreground">SKILLS UNLOCKED</span>
           </div>
           <div className="flex items-baseline gap-1">
             <span className="font-chalk text-5xl text-foreground">{skillsUnlocked}</span>
@@ -104,13 +101,12 @@ export function ProgressDashboard() {
           </div>
         </div>
 
-        {/* Global Rank */}
-        <div className="rounded-xl border-2 border-border bg-card p-6 transition-all hover:border-primary">
+        <div className="surface-elevated rounded-xl p-6 transition-all hover:border-primary">
           <div className="mb-2 flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-2">
               <Trophy className="h-5 w-5 text-primary" />
             </div>
-            <span className="font-chalk text-sm text-muted-foreground">GLOBAL RANK</span>
+            <span className="text-label text-sm text-muted-foreground">GLOBAL RANK</span>
           </div>
           <span className="font-chalk text-5xl text-foreground">#142</span>
         </div>
@@ -124,25 +120,24 @@ export function ProgressDashboard() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
-          className="rounded-xl border-2 border-border bg-card p-6 lg:col-span-2"
+          className="surface-elevated rounded-xl p-6 lg:col-span-2"
         >
           <div className="mb-6 flex items-center justify-between">
             <h3 className="flex items-center gap-2 font-chalk text-xl">
               <Calendar className="h-5 w-5 text-primary" />
               ACTIVITY CALENDAR
             </h3>
-            <span className="rounded-full bg-secondary px-3 py-1 font-chalk text-sm text-muted-foreground">
+            <span className="rounded-full bg-surface-1 px-3 py-1 text-label text-sm text-muted-foreground">
               JANUARY 2026
             </span>
           </div>
 
-          {/* Week Strip */}
           <div className="mb-6">
             <p className="mb-3 text-sm text-muted-foreground">This Week</p>
             <div className="flex gap-2">
               {weekDays.map((day, idx) => (
                 <div key={idx} className="flex flex-1 flex-col items-center gap-2">
-                  <span className="font-chalk text-xs text-muted-foreground">{day}</span>
+                  <span className="text-label text-xs text-muted-foreground">{day}</span>
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
@@ -150,7 +145,7 @@ export function ProgressDashboard() {
                     className={`flex h-12 w-12 items-center justify-center rounded-lg border-2 ${
                       activityData[idx]
                         ? 'border-primary bg-primary/20'
-                        : 'border-border bg-secondary'
+                        : 'border-border bg-surface-1'
                     }`}
                   >
                     {activityData[idx] && (
@@ -162,7 +157,6 @@ export function ProgressDashboard() {
             </div>
           </div>
 
-          {/* Month Grid */}
           <div>
             <p className="mb-3 text-sm text-muted-foreground">Monthly Overview</p>
             <div className="grid grid-cols-7 gap-2">
@@ -175,7 +169,7 @@ export function ProgressDashboard() {
                   className={`aspect-square rounded-md ${
                     day.active 
                       ? 'bg-primary/40' 
-                      : 'bg-secondary'
+                      : 'bg-surface-1'
                   }`}
                   title={`Day ${day.day}`}
                 />
@@ -190,7 +184,7 @@ export function ProgressDashboard() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.3 }}
-          className="rounded-xl border-2 border-border bg-card p-6"
+          className="surface-elevated rounded-xl p-6"
         >
           <h3 className="mb-6 flex items-center gap-2 font-chalk text-xl">
             <Award className="h-5 w-5 text-primary" />
@@ -205,12 +199,12 @@ export function ProgressDashboard() {
                 transition={{ delay: 0.4 + idx * 0.1 }}
                 className={`flex flex-col items-center gap-2 rounded-lg border-2 p-3 ${
                   achievement.unlocked
-                    ? 'border-primary bg-primary/10'
-                    : 'border-border bg-secondary/50 opacity-50'
+                    ? 'surface-elevated border-primary'
+                    : 'border-border bg-surface-0 opacity-50'
                 }`}
               >
                 <Award className="h-6 w-6 text-primary" />
-                <span className="text-center font-chalk text-xs">{achievement.name}</span>
+                <span className="text-center text-label text-xs">{achievement.name}</span>
               </motion.div>
             ))}
           </div>
@@ -222,7 +216,7 @@ export function ProgressDashboard() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.4 }}
-          className="rounded-xl border-2 border-border bg-card p-6 lg:col-span-3"
+          className="surface-elevated rounded-xl p-6 lg:col-span-3"
         >
           <div className="mb-6 flex items-center justify-between">
             <h3 className="flex items-center gap-2 font-chalk text-xl">
@@ -247,7 +241,7 @@ export function ProgressDashboard() {
                     <span className="text-muted-foreground">{skill.target}</span>
                   </div>
                 </div>
-                <div className="relative h-4 overflow-hidden rounded-full bg-secondary">
+                <div className="relative h-4 overflow-hidden rounded-full bg-surface-1">
                   <motion.div
                     initial={{ width: 0 }}
                     whileInView={{ width: `${skill.progress}%` }}
