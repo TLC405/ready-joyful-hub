@@ -19,6 +19,14 @@ const stateConfig: Record<UnlockState, { icon: React.ElementType; label: string;
   coach_override: { icon: CheckCircle, label: 'Coach Override', className: 'border-accent bg-accent/10' },
 };
 
+const nodeVariants = {
+  hidden: { opacity: 0, x: -15 },
+  visible: (i: number) => ({
+    opacity: 1, x: 0,
+    transition: { delay: i * 0.04, type: 'spring' as const, stiffness: 350, damping: 22 }
+  })
+};
+
 export function TrackLadder() {
   const [activeTrack, setActiveTrack] = useState<string>('planche');
   const currentTrack = tracks.find(t => t.id === activeTrack)!;
@@ -26,25 +34,36 @@ export function TrackLadder() {
 
   return (
     <section className="relative px-4 py-8 lg:px-8">
-      <h2 className="mb-4 font-chalk text-2xl sm:text-3xl">
+      <motion.h2 
+        initial={{ opacity: 0, x: -10 }}
+        animate={{ opacity: 1, x: 0 }}
+        className="mb-4 font-chalk text-2xl sm:text-3xl"
+      >
         <span className="text-primary">TRACK</span> LADDER
-      </h2>
+      </motion.h2>
 
       {/* Two-panel layout */}
       <div className="flex flex-col gap-4 lg:flex-row">
         {/* Left: track menu */}
-        <div className="w-full shrink-0 space-y-1 lg:w-60">
-          {tracks.map((track) => {
+        <motion.div 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 24 }}
+          className="w-full shrink-0 space-y-1 lg:w-60"
+        >
+          {tracks.map((track, i) => {
             const Icon = trackIcons[track.icon] || Zap;
             const isActive = activeTrack === track.id;
             return (
-              <button
+              <motion.button
                 key={track.id}
+                whileHover={{ x: 4, transition: { duration: 0.15 } }}
+                whileTap={{ scale: 0.98 }}
                 onClick={() => setActiveTrack(track.id)}
                 className={cn(
                   "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-all",
                   isActive
-                    ? "border border-primary bg-primary/10 text-primary"
+                    ? "border border-primary bg-primary/10 text-primary shadow-steel-glow"
                     : "text-muted-foreground hover:bg-surface-1 hover:text-foreground"
                 )}
               >
@@ -53,14 +72,16 @@ export function TrackLadder() {
                 <span className="rounded bg-surface-1 px-1.5 py-0.5 text-label text-[10px] text-muted-foreground">
                   {track.nodes.length}
                 </span>
-              </button>
+              </motion.button>
             );
           })}
-          {/* Track description */}
-          <div className="mt-3 rounded-lg bg-surface-1 p-3">
+          <motion.div 
+            layout
+            className="mt-3 rounded-lg bg-surface-1 p-3"
+          >
             <p className="text-xs text-muted-foreground">{currentTrack.description}</p>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Right: ladder nodes */}
         <div className="relative min-w-0 flex-1">
@@ -77,13 +98,15 @@ export function TrackLadder() {
               return (
                 <motion.div
                   key={node.exerciseId}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: idx * 0.05 }}
+                  custom={idx}
+                  variants={nodeVariants}
+                  initial="hidden"
+                  animate="visible"
+                  whileHover={state !== 'locked' ? { x: 4, transition: { duration: 0.15 } } : {}}
                   className={cn(
                     "relative ml-2 flex items-center gap-3 rounded-lg border p-3 transition-all",
                     config.className,
-                    state !== 'locked' && "cursor-pointer hover:border-primary"
+                    state !== 'locked' && "cursor-pointer hover:border-primary hover:shadow-steel-glow"
                   )}
                 >
                   <div className={cn(

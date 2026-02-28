@@ -22,24 +22,45 @@ const skillProgress = [
   { name: 'Headstand', progress: 40, target: '30 sec', current: '12 sec' },
 ];
 
+const cardVariants = {
+  hidden: { opacity: 0, y: 15 },
+  visible: (i: number) => ({
+    opacity: 1, y: 0,
+    transition: { delay: i * 0.08, type: 'spring' as const, stiffness: 300, damping: 24 }
+  })
+};
+
 export function ProgressDashboard() {
   return (
     <section className="relative px-4 py-8 lg:px-8">
-      <h2 className="mb-4 font-chalk text-2xl sm:text-3xl">
+      <motion.h2 
+        initial={{ opacity: 0, x: -10 }}
+        animate={{ opacity: 1, x: 0 }}
+        className="mb-4 font-chalk text-2xl sm:text-3xl"
+      >
         YOUR <span className="text-primary">PROGRESS</span>
-      </h2>
+      </motion.h2>
 
-      {/* Stats Row - all equal */}
+      {/* Stats Row */}
       <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
         {[
           { label: 'STREAK', value: '7', sub: 'days', icon: Zap },
           { label: 'WORKOUTS', value: '34', icon: Zap },
           { label: 'SKILLS', value: '3/14', icon: Target },
           { label: 'RANK', value: '#142', icon: Trophy },
-        ].map((stat) => {
+        ].map((stat, i) => {
           const Icon = stat.icon;
           return (
-            <div key={stat.label} className="surface-elevated rounded-lg p-4">
+            <motion.div 
+              key={stat.label} 
+              custom={i}
+              variants={cardVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              whileHover={{ y: -3, transition: { duration: 0.15 } }}
+              className="surface-elevated rounded-lg p-4 transition-shadow hover:shadow-steel-glow"
+            >
               <div className="mb-1 flex items-center gap-2">
                 <div className="flex h-7 w-7 items-center justify-center rounded bg-surface-2">
                   <Icon className="h-3.5 w-3.5 text-primary" />
@@ -50,14 +71,20 @@ export function ProgressDashboard() {
                 <span className="font-chalk text-2xl text-foreground">{stat.value}</span>
                 {stat.sub && <span className="text-xs text-muted-foreground">{stat.sub}</span>}
               </div>
-            </div>
+            </motion.div>
           );
         })}
       </div>
 
       {/* Calendar + Achievements */}
       <div className="mb-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <div className="surface-elevated rounded-lg p-4 lg:col-span-2">
+        <motion.div 
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ type: 'spring', stiffness: 300, damping: 24 }}
+          className="surface-elevated rounded-lg p-4 lg:col-span-2"
+        >
           <h3 className="mb-3 flex items-center gap-2 font-chalk text-base">
             <Calendar className="h-4 w-4 text-primary" /> ACTIVITY
             <span className="ml-auto rounded bg-surface-1 px-2 py-0.5 text-label text-[10px] text-muted-foreground">JAN 2026</span>
@@ -66,40 +93,73 @@ export function ProgressDashboard() {
             {weekDays.map((day, idx) => (
               <div key={idx} className="flex flex-1 flex-col items-center gap-1">
                 <span className="text-label text-[10px] text-muted-foreground">{day}</span>
-                <div className={`flex h-8 w-8 items-center justify-center rounded border ${
-                  activityData[idx] ? 'border-primary bg-primary/20' : 'border-border bg-surface-1'
-                }`}>
+                <motion.div 
+                  initial={{ scale: 0 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.05, type: 'spring', stiffness: 500, damping: 20 }}
+                  className={`flex h-8 w-8 items-center justify-center rounded border ${
+                    activityData[idx] ? 'border-primary bg-primary/20' : 'border-border bg-surface-1'
+                  }`}
+                >
                   {activityData[idx] && <div className="h-2 w-2 rounded-full bg-primary" />}
-                </div>
+                </motion.div>
               </div>
             ))}
           </div>
           <div className="grid grid-cols-7 gap-1">
             {monthData.map((day, idx) => (
-              <div key={idx} className={`aspect-square rounded-sm ${day.active ? 'bg-primary/40' : 'bg-surface-1'}`} />
+              <motion.div 
+                key={idx} 
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.01 }}
+                className={`aspect-square rounded-sm transition-colors ${day.active ? 'bg-primary/40 hover:bg-primary/60' : 'bg-surface-1 hover:bg-surface-2'}`} 
+              />
             ))}
           </div>
-        </div>
+        </motion.div>
 
-        <div className="surface-elevated rounded-lg p-4">
+        <motion.div 
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ type: 'spring', stiffness: 300, damping: 24, delay: 0.1 }}
+          className="surface-elevated rounded-lg p-4"
+        >
           <h3 className="mb-3 flex items-center gap-2 font-chalk text-base">
             <Award className="h-4 w-4 text-primary" /> ACHIEVEMENTS
           </h3>
           <div className="grid grid-cols-3 gap-2">
-            {achievements.map((a) => (
-              <div key={a.id} className={`flex flex-col items-center gap-1 rounded border p-2 text-center ${
-                a.unlocked ? 'surface-elevated border-primary' : 'border-border bg-surface-0 opacity-50'
-              }`}>
+            {achievements.map((a, i) => (
+              <motion.div 
+                key={a.id} 
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.06, type: 'spring', stiffness: 400 }}
+                whileHover={a.unlocked ? { scale: 1.08, transition: { duration: 0.15 } } : {}}
+                className={`flex flex-col items-center gap-1 rounded border p-2 text-center transition-shadow ${
+                  a.unlocked ? 'surface-elevated border-primary hover:shadow-steel-glow' : 'border-border bg-surface-0 opacity-50'
+                }`}
+              >
                 <Award className="h-4 w-4 text-primary" />
                 <span className="text-label text-[9px]">{a.name}</span>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
 
-      {/* Skill Progress - compact */}
-      <div className="surface-elevated rounded-lg p-4">
+      {/* Skill Progress */}
+      <motion.div 
+        initial={{ opacity: 0, y: 15 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ type: 'spring', stiffness: 300, damping: 24 }}
+        className="surface-elevated rounded-lg p-4"
+      >
         <h3 className="mb-3 flex items-center gap-2 font-chalk text-base">
           <TrendingUp className="h-4 w-4 text-primary" /> SKILL PROGRESSION
         </h3>
@@ -115,14 +175,14 @@ export function ProgressDashboard() {
                   initial={{ width: 0 }}
                   whileInView={{ width: `${skill.progress}%` }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.8 }}
-                  className="h-full rounded-full bg-primary"
+                  transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  className="h-full rounded-full bg-gradient-to-r from-primary to-accent"
                 />
               </div>
             </div>
           ))}
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }
