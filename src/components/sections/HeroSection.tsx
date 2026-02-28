@@ -1,11 +1,20 @@
 import { motion } from 'framer-motion';
-import { Target, Dumbbell, Trophy, Crosshair } from 'lucide-react';
+import { Target, Dumbbell, Trophy, Crosshair, Zap } from 'lucide-react';
+
+const statVariants = {
+  hidden: { opacity: 0, y: 15, scale: 0.95 },
+  visible: (i: number) => ({
+    opacity: 1, y: 0, scale: 1,
+    transition: { delay: 0.15 + i * 0.08, type: 'spring' as const, stiffness: 400, damping: 22 }
+  })
+};
 
 export function HeroSection() {
   const stats = [
-    { label: 'SKILLS', value: '3', total: '14', icon: Dumbbell },
-    { label: 'SESSIONS', value: '34', icon: Target },
-    { label: 'RANK', value: '#142', icon: Trophy },
+    { label: 'SKILLS', value: '3', total: '14', icon: Dumbbell, color: 'text-primary' },
+    { label: 'SESSIONS', value: '34', icon: Target, color: 'text-accent' },
+    { label: 'STREAK', value: '7d', icon: Zap, color: 'text-primary' },
+    { label: 'RANK', value: '#142', icon: Trophy, color: 'text-accent' },
   ];
 
   return (
@@ -13,35 +22,39 @@ export function HeroSection() {
       <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
         {/* Left: headline */}
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, x: -15 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 25 }}
           className="flex items-center gap-4"
         >
-          <div className="flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1">
+          <motion.div 
+            className="flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1"
+            whileHover={{ scale: 1.05 }}
+          >
             <Crosshair className="h-3 w-3 text-primary" />
             <span className="text-label text-[10px] text-primary">BODYWEIGHT SKILL SYSTEM</span>
-          </div>
+          </motion.div>
           <h1 className="font-chalk text-2xl sm:text-3xl tracking-tight">
             <span className="text-primary">MASTER</span> YOUR STACK
           </h1>
         </motion.div>
 
         {/* Right: compact stat cards */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="flex gap-3"
-        >
-          {stats.map((stat) => {
+        <div className="flex gap-3">
+          {stats.map((stat, i) => {
             const Icon = stat.icon;
             return (
-              <div
+              <motion.div
                 key={stat.label}
-                className="surface-elevated flex items-center gap-3 rounded-lg px-4 py-3"
+                custom={i}
+                variants={statVariants}
+                initial="hidden"
+                animate="visible"
+                whileHover={{ y: -3, transition: { duration: 0.15 } }}
+                className="surface-elevated flex items-center gap-3 rounded-lg px-4 py-3 transition-shadow hover:shadow-steel-glow"
               >
                 <div className="flex h-8 w-8 items-center justify-center rounded-md bg-surface-2">
-                  <Icon className="h-4 w-4 text-primary" />
+                  <Icon className={`h-4 w-4 ${stat.color}`} />
                 </div>
                 <div>
                   <div className="flex items-baseline gap-0.5">
@@ -52,10 +65,10 @@ export function HeroSection() {
                   </div>
                   <span className="text-label text-[10px] text-muted-foreground">{stat.label}</span>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
-        </motion.div>
+        </div>
       </div>
     </section>
   );
