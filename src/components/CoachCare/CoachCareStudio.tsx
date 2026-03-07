@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
-import { Drawer, DrawerContent, DrawerTrigger } from 'vaul';
+import { Drawer } from 'vaul';
 import { ChatPanel } from './ChatPanel';
 import { CanvasRouter } from './Canvas/CanvasRouter';
 import { useCanvasState } from './hooks/useCanvasState';
