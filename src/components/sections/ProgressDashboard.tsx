@@ -36,12 +36,12 @@ export function ProgressDashboard() {
       <motion.h2 
         initial={{ opacity: 0, x: -10 }}
         animate={{ opacity: 1, x: 0 }}
-        className="mb-4 font-chalk text-2xl sm:text-3xl"
+        className="mb-4 font-chalk text-2xl text-embossed sm:text-3xl"
       >
         YOUR <span className="text-primary">PROGRESS</span>
       </motion.h2>
 
-      {/* Stats Row */}
+      {/* Stats Row — raised cards */}
       <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
         {[
           { label: 'STREAK', value: '7', sub: 'days', icon: Zap },
@@ -59,10 +59,10 @@ export function ProgressDashboard() {
               whileInView="visible"
               viewport={{ once: true }}
               whileHover={{ y: -3, transition: { duration: 0.15 } }}
-              className="surface-elevated rounded-lg p-4 transition-shadow hover:shadow-steel-glow"
+              className="surface-raised rounded-lg p-4"
             >
               <div className="mb-1 flex items-center gap-2">
-                <div className="flex h-7 w-7 items-center justify-center rounded bg-surface-2">
+                <div className="surface-inset flex h-7 w-7 items-center justify-center rounded">
                   <Icon className="h-3.5 w-3.5 text-primary" />
                 </div>
                 <span className="text-label text-[10px] text-muted-foreground">{stat.label}</span>
@@ -83,7 +83,7 @@ export function ProgressDashboard() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ type: 'spring', stiffness: 300, damping: 24 }}
-          className="surface-elevated rounded-lg p-4 lg:col-span-2"
+          className="surface-raised rounded-lg p-4 lg:col-span-2"
         >
           <h3 className="mb-3 flex items-center gap-2 font-chalk text-base">
             <Calendar className="h-4 w-4 text-primary" /> ACTIVITY
@@ -98,8 +98,8 @@ export function ProgressDashboard() {
                   whileInView={{ scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.05, type: 'spring', stiffness: 500, damping: 20 }}
-                  className={`flex h-8 w-8 items-center justify-center rounded border ${
-                    activityData[idx] ? 'border-primary bg-primary/20' : 'border-border bg-surface-1'
+                  className={`flex h-8 w-8 items-center justify-center rounded ${
+                    activityData[idx] ? 'surface-raised border-primary/30 bg-primary/20' : 'surface-inset'
                   }`}
                 >
                   {activityData[idx] && <div className="h-2 w-2 rounded-full bg-primary" />}
@@ -115,7 +115,7 @@ export function ProgressDashboard() {
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.01 }}
-                className={`aspect-square rounded-sm transition-colors ${day.active ? 'bg-primary/40 hover:bg-primary/60' : 'bg-surface-1 hover:bg-surface-2'}`} 
+                className={`aspect-square rounded-sm transition-colors ${day.active ? 'bg-primary/40 hover:bg-primary/60' : 'surface-inset hover:bg-surface-2'}`} 
               />
             ))}
           </div>
@@ -126,7 +126,7 @@ export function ProgressDashboard() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ type: 'spring', stiffness: 300, damping: 24, delay: 0.1 }}
-          className="surface-elevated rounded-lg p-4"
+          className="surface-raised rounded-lg p-4"
         >
           <h3 className="mb-3 flex items-center gap-2 font-chalk text-base">
             <Award className="h-4 w-4 text-primary" /> ACHIEVEMENTS
@@ -140,8 +140,8 @@ export function ProgressDashboard() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.06, type: 'spring', stiffness: 400 }}
                 whileHover={a.unlocked ? { scale: 1.08, transition: { duration: 0.15 } } : {}}
-                className={`flex flex-col items-center gap-1 rounded border p-2 text-center transition-shadow ${
-                  a.unlocked ? 'surface-elevated border-primary hover:shadow-steel-glow' : 'border-border bg-surface-0 opacity-50'
+                className={`flex flex-col items-center gap-1 rounded p-2 text-center ${
+                  a.unlocked ? 'badge-coin' : 'surface-inset opacity-50'
                 }`}
               >
                 <Award className="h-4 w-4 text-primary" />
@@ -152,13 +152,13 @@ export function ProgressDashboard() {
         </motion.div>
       </div>
 
-      {/* Skill Progress */}
+      {/* Skill Progress — inset tracks with raised bars */}
       <motion.div 
         initial={{ opacity: 0, y: 15 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ type: 'spring', stiffness: 300, damping: 24 }}
-        className="surface-elevated rounded-lg p-4"
+        className="surface-raised rounded-lg p-4"
       >
         <h3 className="mb-3 flex items-center gap-2 font-chalk text-base">
           <TrendingUp className="h-4 w-4 text-primary" /> SKILL PROGRESSION
@@ -170,13 +170,13 @@ export function ProgressDashboard() {
                 <span className="font-chalk">{skill.name}</span>
                 <span className="text-xs"><span className="text-primary">{skill.current}</span> <span className="text-muted-foreground">/ {skill.target}</span></span>
               </div>
-              <div className="h-2 overflow-hidden rounded-full bg-surface-1">
+              <div className="track-inset h-3 overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
                   whileInView={{ width: `${skill.progress}%` }}
                   viewport={{ once: true }}
                   transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
-                  className="h-full rounded-full bg-gradient-to-r from-primary to-accent"
+                  className="bar-raised h-full bg-gradient-to-r from-primary to-accent"
                 />
               </div>
             </div>

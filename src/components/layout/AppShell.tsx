@@ -25,6 +25,14 @@ export function AppShell({ children }: AppShellProps) {
         }}
       />
 
+      {/* Subtle vignette for depth */}
+      <div 
+        className="pointer-events-none fixed inset-0 z-0"
+        style={{
+          background: 'radial-gradient(ellipse 80% 80% at 50% 50%, transparent 40%, hsla(0, 0%, 0%, 0.3) 100%)',
+        }}
+      />
+
       {/* Noise texture */}
       <svg className="pointer-events-none fixed inset-0 z-0 h-full w-full opacity-[0.025]">
         <filter id="noise">
@@ -33,32 +41,22 @@ export function AppShell({ children }: AppShellProps) {
         <rect width="100%" height="100%" filter="url(#noise)" />
       </svg>
 
-      {/* Corner brackets with subtle animation */}
+      {/* Corner brackets */}
       <div className="pointer-events-none fixed inset-0 z-0">
-        <motion.div 
-          initial={{ opacity: 0 }} 
-          animate={{ opacity: 1 }} 
-          transition={{ delay: 0.5, duration: 1 }}
-          className="absolute left-4 top-4 h-8 w-8 border-l-2 border-t-2 border-primary/15"
-        />
-        <motion.div 
-          initial={{ opacity: 0 }} 
-          animate={{ opacity: 1 }} 
-          transition={{ delay: 0.6, duration: 1 }}
-          className="absolute right-4 top-4 h-8 w-8 border-r-2 border-t-2 border-primary/15"
-        />
-        <motion.div 
-          initial={{ opacity: 0 }} 
-          animate={{ opacity: 1 }} 
-          transition={{ delay: 0.7, duration: 1 }}
-          className="absolute bottom-4 left-4 h-8 w-8 border-b-2 border-l-2 border-primary/15"
-        />
-        <motion.div 
-          initial={{ opacity: 0 }} 
-          animate={{ opacity: 1 }} 
-          transition={{ delay: 0.8, duration: 1 }}
-          className="absolute bottom-4 right-4 h-8 w-8 border-b-2 border-r-2 border-primary/15"
-        />
+        {[
+          'left-4 top-4 border-l-2 border-t-2',
+          'right-4 top-4 border-r-2 border-t-2',
+          'bottom-4 left-4 border-b-2 border-l-2',
+          'bottom-4 right-4 border-b-2 border-r-2'
+        ].map((cls, i) => (
+          <motion.div 
+            key={i}
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            transition={{ delay: 0.5 + i * 0.1, duration: 1 }}
+            className={`absolute h-8 w-8 border-primary/15 ${cls}`}
+          />
+        ))}
       </div>
 
       {/* Content */}

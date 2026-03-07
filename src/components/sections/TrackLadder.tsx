@@ -37,12 +37,11 @@ export function TrackLadder() {
       <motion.h2 
         initial={{ opacity: 0, x: -10 }}
         animate={{ opacity: 1, x: 0 }}
-        className="mb-4 font-chalk text-2xl sm:text-3xl"
+        className="mb-4 font-chalk text-2xl text-embossed sm:text-3xl"
       >
         <span className="text-primary">TRACK</span> LADDER
       </motion.h2>
 
-      {/* Two-panel layout */}
       <div className="flex flex-col gap-4 lg:flex-row">
         {/* Left: track menu */}
         <motion.div 
@@ -51,7 +50,7 @@ export function TrackLadder() {
           transition={{ type: 'spring', stiffness: 300, damping: 24 }}
           className="w-full shrink-0 space-y-1 lg:w-60"
         >
-          {tracks.map((track, i) => {
+          {tracks.map((track) => {
             const Icon = trackIcons[track.icon] || Zap;
             const isActive = activeTrack === track.id;
             return (
@@ -63,8 +62,8 @@ export function TrackLadder() {
                 className={cn(
                   "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-all",
                   isActive
-                    ? "border border-primary bg-primary/10 text-primary shadow-steel-glow"
-                    : "text-muted-foreground hover:bg-surface-1 hover:text-foreground"
+                    ? "surface-inset text-primary"
+                    : "btn-raised text-muted-foreground hover:text-foreground"
                 )}
               >
                 <Icon className="h-4 w-4 shrink-0" />
@@ -77,7 +76,7 @@ export function TrackLadder() {
           })}
           <motion.div 
             layout
-            className="mt-3 rounded-lg bg-surface-1 p-3"
+            className="surface-inset mt-3 rounded-lg p-3"
           >
             <p className="text-xs text-muted-foreground">{currentTrack.description}</p>
           </motion.div>
@@ -106,12 +105,12 @@ export function TrackLadder() {
                   className={cn(
                     "relative ml-2 flex items-center gap-3 rounded-lg border p-3 transition-all",
                     config.className,
-                    state !== 'locked' && "cursor-pointer hover:border-primary hover:shadow-steel-glow"
+                    state !== 'locked' && "cursor-pointer surface-raised"
                   )}
                 >
                   <div className={cn(
                     "absolute -left-2 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border",
-                    state === 'unlocked' ? "border-primary bg-primary text-primary-foreground" :
+                    state === 'unlocked' ? "badge-coin border-primary bg-primary text-primary-foreground" :
                     state === 'try_mode' ? "border-primary bg-surface-1 text-primary" :
                     state === 'preview' ? "border-muted-foreground bg-surface-1 text-muted-foreground" :
                     "border-border bg-surface-0 text-muted-foreground"
@@ -120,7 +119,7 @@ export function TrackLadder() {
                   </div>
 
                   {exercise.image && (
-                    <div className="hidden h-10 w-10 shrink-0 overflow-hidden rounded sm:block">
+                    <div className="hidden h-10 w-10 shrink-0 overflow-hidden rounded sm:block" style={{ boxShadow: 'var(--shadow-card)' }}>
                       <img src={exercise.image} alt={exercise.name} className="h-full w-full object-cover" />
                     </div>
                   )}

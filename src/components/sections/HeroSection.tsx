@@ -20,7 +20,6 @@ export function HeroSection() {
   return (
     <section className="px-4 py-6 lg:px-8 lg:py-8">
       <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-        {/* Left: headline */}
         <motion.div
           initial={{ opacity: 0, x: -15 }}
           animate={{ opacity: 1, x: 0 }}
@@ -28,18 +27,17 @@ export function HeroSection() {
           className="flex items-center gap-4"
         >
           <motion.div 
-            className="flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1"
+            className="surface-raised flex items-center gap-2 rounded-full px-3 py-1"
             whileHover={{ scale: 1.05 }}
           >
             <Crosshair className="h-3 w-3 text-primary" />
             <span className="text-label text-[10px] text-primary">BODYWEIGHT SKILL SYSTEM</span>
           </motion.div>
-          <h1 className="font-chalk text-2xl sm:text-3xl tracking-tight">
+          <h1 className="font-chalk text-2xl text-embossed sm:text-3xl tracking-tight">
             <span className="text-primary">MASTER</span> YOUR STACK
           </h1>
         </motion.div>
 
-        {/* Right: compact stat cards */}
         <div className="flex gap-3">
           {stats.map((stat, i) => {
             const Icon = stat.icon;
@@ -51,9 +49,9 @@ export function HeroSection() {
                 initial="hidden"
                 animate="visible"
                 whileHover={{ y: -3, transition: { duration: 0.15 } }}
-                className="surface-elevated flex items-center gap-3 rounded-lg px-4 py-3 transition-shadow hover:shadow-steel-glow"
+                className="surface-raised flex items-center gap-3 rounded-lg px-4 py-3"
               >
-                <div className="flex h-8 w-8 items-center justify-center rounded-md bg-surface-2">
+                <div className="surface-inset flex h-8 w-8 items-center justify-center rounded-md">
                   <Icon className={`h-4 w-4 ${stat.color}`} />
                 </div>
                 <div>
