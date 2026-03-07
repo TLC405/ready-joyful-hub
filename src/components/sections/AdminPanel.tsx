@@ -1,19 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
-  Bell, 
-  Users, 
-  DollarSign, 
-  Send, 
-  Crown,
-  TrendingUp,
-  Clock,
-  CheckCircle,
-  AlertCircle,
-  Megaphone,
-  Flame,
-  Heart,
-  Gift
+  Bell, Users, DollarSign, Send, Crown, TrendingUp, Clock, CheckCircle, Megaphone, Flame, Heart, Gift
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -59,11 +47,11 @@ export function AdminPanel() {
   return (
     <section className="relative px-4 py-8 lg:px-8">
       <div className="mb-4 flex items-center gap-3">
-        <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3 py-1">
+        <div className="badge-coin inline-flex items-center gap-1.5 rounded-full px-3 py-1">
           <Crown className="h-3 w-3 text-primary" />
           <span className="text-label text-[10px] text-primary">ADMIN</span>
         </div>
-        <h2 className="font-chalk text-2xl sm:text-3xl">
+        <h2 className="font-chalk text-2xl text-embossed sm:text-3xl">
           <span className="text-primary">COMMAND</span> CENTER
         </h2>
       </div>
@@ -76,60 +64,29 @@ export function AdminPanel() {
         transition={{ delay: 0.1 }}
         className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
       >
-        <div className="surface-elevated rounded-xl p-6">
-          <div className="mb-2 flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/20">
-              <Users className="h-5 w-5 text-primary" />
+        {[
+          { icon: Users, label: 'TOTAL USERS', value: '12,847', sub: '+234 this week', subColor: 'text-success', bgColor: 'bg-primary/20' },
+          { icon: Crown, label: 'ACTIVE SUBS', value: '3,613', sub: '+89 this week', subColor: 'text-success', bgColor: 'bg-primary/20' },
+          { icon: DollarSign, label: 'DAILY VOLUME', value: '$2,847', sub: '+12% from yesterday', subColor: 'text-success', bgColor: 'bg-success/20' },
+          { icon: Bell, label: 'NOTIFICATIONS', value: '156', sub: 'Sent this month', subColor: 'text-muted-foreground', bgColor: 'bg-accent/20' },
+        ].map((stat) => {
+          const Icon = stat.icon;
+          return (
+            <div key={stat.label} className="surface-raised rounded-xl p-6">
+              <div className="mb-2 flex items-center gap-2">
+                <div className={cn("surface-inset flex h-10 w-10 items-center justify-center rounded-lg", stat.bgColor)}>
+                  <Icon className="h-5 w-5 text-primary" />
+                </div>
+                <span className="text-label text-sm text-muted-foreground">{stat.label}</span>
+              </div>
+              <span className="font-chalk text-4xl">{stat.value}</span>
+              <div className={cn("mt-1 flex items-center gap-1", stat.subColor)}>
+                {stat.subColor === 'text-success' && <TrendingUp className="h-4 w-4" />}
+                <span className="text-sm">{stat.sub}</span>
+              </div>
             </div>
-            <span className="text-label text-sm text-muted-foreground">TOTAL USERS</span>
-          </div>
-          <span className="font-chalk text-4xl">12,847</span>
-          <div className="mt-1 flex items-center gap-1 text-success">
-            <TrendingUp className="h-4 w-4" />
-            <span className="text-sm">+234 this week</span>
-          </div>
-        </div>
-
-        <div className="surface-elevated rounded-xl p-6">
-          <div className="mb-2 flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/20">
-              <Crown className="h-5 w-5 text-primary" />
-            </div>
-            <span className="text-label text-sm text-muted-foreground">ACTIVE SUBS</span>
-          </div>
-          <span className="font-chalk text-4xl">3,613</span>
-          <div className="mt-1 flex items-center gap-1 text-success">
-            <TrendingUp className="h-4 w-4" />
-            <span className="text-sm">+89 this week</span>
-          </div>
-        </div>
-
-        <div className="surface-elevated rounded-xl p-6">
-          <div className="mb-2 flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-success/20">
-              <DollarSign className="h-5 w-5 text-success" />
-            </div>
-            <span className="text-label text-sm text-muted-foreground">DAILY VOLUME</span>
-          </div>
-          <span className="font-chalk text-4xl">$2,847</span>
-          <div className="mt-1 flex items-center gap-1 text-success">
-            <TrendingUp className="h-4 w-4" />
-            <span className="text-sm">+12% from yesterday</span>
-          </div>
-        </div>
-
-        <div className="surface-elevated rounded-xl p-6">
-          <div className="mb-2 flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/20">
-              <Bell className="h-5 w-5 text-accent" />
-            </div>
-            <span className="text-label text-sm text-muted-foreground">NOTIFICATIONS</span>
-          </div>
-          <span className="font-chalk text-4xl">156</span>
-          <div className="mt-1 text-muted-foreground">
-            <span className="text-sm">Sent this month</span>
-          </div>
-        </div>
+          );
+        })}
       </motion.div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -139,9 +96,9 @@ export function AdminPanel() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
-          className="surface-elevated rounded-xl p-6"
+          className="surface-raised rounded-xl p-6"
         >
-          <h3 className="mb-6 flex items-center gap-2 font-chalk text-2xl">
+          <h3 className="mb-6 flex items-center gap-2 font-chalk text-2xl text-embossed">
             <Send className="h-6 w-6 text-primary" />
             PUSH NOTIFICATION SENDER
           </h3>
@@ -151,7 +108,7 @@ export function AdminPanel() {
             <select
               value={selectedTarget}
               onChange={(e) => setSelectedTarget(e.target.value as TargetGroup)}
-              className="w-full rounded-lg border-2 border-border bg-surface-0 px-4 py-3 font-chalk text-foreground focus:border-primary focus:outline-none"
+              className="surface-inset w-full rounded-lg px-4 py-3 font-chalk text-foreground focus:outline-none"
             >
               {targetGroups.map((group) => (
                 <option key={group.id} value={group.id}>
@@ -171,10 +128,10 @@ export function AdminPanel() {
                     key={type.id}
                     onClick={() => setSelectedType(type.id)}
                     className={cn(
-                      "flex items-center gap-2 rounded-lg border-2 px-4 py-2 text-label text-sm transition-all",
+                      "flex items-center gap-2 rounded-lg px-4 py-2 text-label text-sm transition-all",
                       selectedType === type.id
-                        ? "border-primary bg-primary text-primary-foreground"
-                        : "border-border bg-surface-1 text-muted-foreground hover:border-primary/50"
+                        ? "surface-inset text-primary"
+                        : "btn-raised text-muted-foreground"
                     )}
                   >
                     <Icon className="h-4 w-4" />
@@ -191,7 +148,7 @@ export function AdminPanel() {
               value={notificationTitle}
               onChange={(e) => setNotificationTitle(e.target.value)}
               placeholder="🔥 Your streak is on fire!"
-              className="border-2 border-border bg-surface-0 font-chalk focus:border-primary"
+              className="surface-inset border-0 font-chalk focus:ring-1 focus:ring-primary"
             />
           </div>
 
@@ -200,16 +157,16 @@ export function AdminPanel() {
             <Textarea
               value={notificationMessage}
               onChange={(e) => setNotificationMessage(e.target.value)}
-              placeholder="Don't let your 7-day streak end! Complete a workout today and keep the momentum going."
+              placeholder="Don't let your 7-day streak end!"
               rows={4}
-              className="border-2 border-border bg-surface-0 font-chalk focus:border-primary"
+              className="surface-inset border-0 font-chalk focus:ring-1 focus:ring-primary"
             />
           </div>
 
           <Button
             onClick={handleSendNotification}
             disabled={!notificationTitle || !notificationMessage}
-            className="w-full bg-primary py-6 font-chalk text-xl text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+            className="btn-raised w-full bg-primary py-6 font-chalk text-xl text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
           >
             <Send className="mr-2 h-5 w-5" />
             DEPLOY NOTIFICATION
@@ -222,9 +179,9 @@ export function AdminPanel() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.3 }}
-          className="surface-elevated rounded-xl p-6"
+          className="surface-raised rounded-xl p-6"
         >
-          <h3 className="mb-6 flex items-center gap-2 font-chalk text-2xl">
+          <h3 className="mb-6 flex items-center gap-2 font-chalk text-2xl text-embossed">
             <Clock className="h-6 w-6 text-primary" />
             NOTIFICATION HISTORY
           </h3>
@@ -241,7 +198,7 @@ export function AdminPanel() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.4 + idx * 0.1 }}
-                  className="surface-glass rounded-lg p-4"
+                  className="surface-inset rounded-lg p-4"
                 >
                   <div className="mb-2 flex items-start justify-between">
                     <div className="flex items-center gap-2">

@@ -2,8 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ChevronRight, 
-  Sparkles,
-  Flame
+  Sparkles
 } from 'lucide-react';
 import { skills, Skill } from '@/lib/skills-data';
 import { cn } from '@/lib/utils';
@@ -12,25 +11,14 @@ import { SkillDetailModal } from './skills/SkillDetailModal';
 type DifficultyFilter = 'all' | 'beginner' | 'intermediate' | 'advanced';
 
 const difficultyStyles = {
-  beginner: {
-    badge: 'difficulty-beginner',
-    label: 'BEGINNER',
-  },
-  intermediate: {
-    badge: 'difficulty-intermediate', 
-    label: 'INTERMEDIATE',
-  },
-  advanced: {
-    badge: 'difficulty-advanced',
-    label: 'ADVANCED',
-  },
+  beginner: { badge: 'difficulty-beginner', label: 'BEGINNER' },
+  intermediate: { badge: 'difficulty-intermediate', label: 'INTERMEDIATE' },
+  advanced: { badge: 'difficulty-advanced', label: 'ADVANCED' },
 };
 
 const containerVariants = {
   hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.06 }
-  }
+  visible: { transition: { staggerChildren: 0.06 } }
 };
 
 const cardVariants = {
@@ -59,7 +47,6 @@ export function SkillsLibrary() {
 
   return (
     <section className="relative px-4 py-8 lg:px-8">
-      {/* Header - compact, matches other sections */}
       <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <motion.div
           initial={{ opacity: 0, x: -10 }}
@@ -67,11 +54,11 @@ export function SkillsLibrary() {
           transition={{ type: 'spring', stiffness: 400, damping: 25 }}
         >
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1">
+            <div className="badge-coin flex items-center gap-2 rounded-full px-3 py-1">
               <Sparkles className="h-3 w-3 text-primary" />
               <span className="text-label text-[10px] text-primary">{skills.length} SKILLS</span>
             </div>
-            <h2 className="font-chalk text-2xl sm:text-3xl">
+            <h2 className="font-chalk text-2xl text-embossed sm:text-3xl">
               <span className="text-primary">SKILL</span> LIBRARY
             </h2>
           </div>
@@ -84,7 +71,7 @@ export function SkillsLibrary() {
           initial={{ opacity: 0, x: 10 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ type: 'spring', stiffness: 400, damping: 25, delay: 0.1 }}
-          className="surface-glass flex flex-wrap items-center gap-1 rounded-lg p-1"
+          className="surface-raised flex flex-wrap items-center gap-1 rounded-lg p-1"
         >
           {filters.map((f) => (
             <button
@@ -100,7 +87,8 @@ export function SkillsLibrary() {
               {filter === f.id && (
                 <motion.div
                   layoutId="skillFilterActive"
-                  className="absolute inset-0 rounded-md bg-primary shadow-lg"
+                  className="absolute inset-0 rounded-md bg-primary"
+                  style={{ boxShadow: 'inset 0 1px 0 0 hsla(0,0%,100%,0.2), 0 2px 4px hsla(0,0%,0%,0.3)' }}
                   transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                 />
               )}
@@ -110,7 +98,6 @@ export function SkillsLibrary() {
         </motion.div>
       </div>
 
-      {/* Skills Grid */}
       <motion.div 
         variants={containerVariants}
         initial="hidden"
@@ -126,7 +113,7 @@ export function SkillsLibrary() {
               layout
               whileHover={{ y: -4, transition: { duration: 0.2 } }}
               onClick={() => setSelectedSkill(skill)}
-              className="group cursor-pointer overflow-hidden rounded-xl surface-elevated transition-all duration-300 hover:border-primary/40 hover:shadow-steel-glow"
+              className="group cursor-pointer overflow-hidden rounded-xl surface-raised transition-all duration-300"
             >
               <div className="relative aspect-[4/3] overflow-hidden">
                 <motion.img
@@ -138,7 +125,6 @@ export function SkillsLibrary() {
                 />
                 <div className="image-overlay absolute inset-0" />
                 
-                {/* Difficulty badge */}
                 <div className="absolute left-3 top-3">
                   <div className={cn(
                     "rounded-full border px-2.5 py-0.5 text-[10px] font-medium backdrop-blur-md",
@@ -148,17 +134,7 @@ export function SkillsLibrary() {
                   </div>
                 </div>
 
-                {/* Hover reveal arrow */}
-                <motion.div 
-                  className="absolute bottom-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-primary shadow-lg"
-                  initial={{ opacity: 0, scale: 0.5 }}
-                  whileHover={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.2 }}
-                  style={{ opacity: 0 }}
-                >
-                  <ChevronRight className="h-4 w-4 text-primary-foreground" />
-                </motion.div>
-                <div className="absolute bottom-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-primary shadow-lg opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100 scale-75">
+                <div className="absolute bottom-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-primary opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100 scale-75" style={{ boxShadow: 'var(--shadow-brutal)' }}>
                   <ChevronRight className="h-4 w-4 text-primary-foreground" />
                 </div>
               </div>
@@ -169,7 +145,6 @@ export function SkillsLibrary() {
                   {skill.description}
                 </p>
 
-                {/* Muscle group tags */}
                 <div className="flex flex-wrap gap-1">
                   {skill.muscleGroups.slice(0, 3).map((muscle) => (
                     <span
@@ -182,7 +157,6 @@ export function SkillsLibrary() {
                 </div>
               </div>
 
-              {/* Accent line at bottom */}
               <div className="h-0.5 w-0 bg-primary transition-all duration-500 group-hover:w-full" />
             </motion.div>
           ))}

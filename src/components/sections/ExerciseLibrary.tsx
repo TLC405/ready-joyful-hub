@@ -69,7 +69,6 @@ export function ExerciseLibrary() {
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
   const paginated = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
 
-  // Reset page when filters change
   const updateFilter = <T,>(setter: React.Dispatch<React.SetStateAction<T>>, value: T) => {
     setter(value);
     setPage(1);
@@ -77,31 +76,30 @@ export function ExerciseLibrary() {
 
   return (
     <section className="relative px-4 py-8 lg:px-8">
-      {/* Header */}
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="font-chalk text-2xl sm:text-3xl">
+        <h2 className="font-chalk text-2xl text-embossed sm:text-3xl">
           <span className="text-primary">EXERCISE</span> LIBRARY
           <span className="ml-3 text-sm text-muted-foreground font-normal">{filtered.length} exercises</span>
         </h2>
         <div className="flex gap-1">
           <button
             onClick={() => setViewMode('list')}
-            className={cn("rounded-md p-2 transition-colors", viewMode === 'list' ? "bg-primary/20 text-primary" : "text-muted-foreground hover:text-foreground")}
+            className={cn("btn-raised rounded-md p-2 transition-colors", viewMode === 'list' ? "surface-inset text-primary" : "text-muted-foreground hover:text-foreground")}
           >
             <LayoutList className="h-4 w-4" />
           </button>
           <button
             onClick={() => setViewMode('grid')}
-            className={cn("rounded-md p-2 transition-colors", viewMode === 'grid' ? "bg-primary/20 text-primary" : "text-muted-foreground hover:text-foreground")}
+            className={cn("btn-raised rounded-md p-2 transition-colors", viewMode === 'grid' ? "surface-inset text-primary" : "text-muted-foreground hover:text-foreground")}
           >
             <LayoutGrid className="h-4 w-4" />
           </button>
         </div>
       </div>
 
-      {/* Search + Filter Bar */}
+      {/* Search + Filter Bar — inset wells */}
       <div className="sticky top-0 z-20 -mx-4 mb-4 flex flex-wrap items-center gap-2 bg-background/95 px-4 py-3 backdrop-blur-sm lg:-mx-8 lg:px-8">
-        <div className="flex flex-1 items-center gap-2 rounded-lg border border-border bg-surface-0 px-3 py-2">
+        <div className="surface-inset flex flex-1 items-center gap-2 rounded-lg px-3 py-2">
           <Search className="h-4 w-4 text-muted-foreground" />
           <input
             type="text"
@@ -114,21 +112,21 @@ export function ExerciseLibrary() {
         <select
           value={categoryFilter}
           onChange={(e) => updateFilter(setCategoryFilter, e.target.value as Category | 'all')}
-          className="rounded-lg border border-border bg-surface-0 px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none"
+          className="surface-inset rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none"
         >
           {categories.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
         </select>
         <select
           value={difficultyFilter}
           onChange={(e) => updateFilter(setDifficultyFilter, e.target.value as Difficulty | 'all')}
-          className="rounded-lg border border-border bg-surface-0 px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none"
+          className="surface-inset rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none"
         >
           {difficulties.map(d => <option key={d.id} value={d.id}>{d.label}</option>)}
         </select>
         <select
           value={trackFilter}
           onChange={(e) => updateFilter(setTrackFilter, e.target.value as TrackId | 'all')}
-          className="rounded-lg border border-border bg-surface-0 px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none"
+          className="surface-inset rounded-lg px-3 py-2 text-sm text-foreground focus:outline-none"
         >
           {trackFilters.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}
         </select>
@@ -136,14 +134,14 @@ export function ExerciseLibrary() {
 
       {/* List View */}
       {viewMode === 'list' ? (
-        <div className="overflow-hidden rounded-lg border border-border">
+        <div className="surface-raised overflow-hidden rounded-lg">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-border bg-surface-1 text-left">
-                <th className="px-4 py-2 text-label text-xs text-muted-foreground">EXERCISE</th>
-                <th className="hidden px-4 py-2 text-label text-xs text-muted-foreground sm:table-cell">DIFFICULTY</th>
-                <th className="hidden px-4 py-2 text-label text-xs text-muted-foreground md:table-cell">CATEGORY</th>
-                <th className="hidden px-4 py-2 text-label text-xs text-muted-foreground lg:table-cell">TRACKS</th>
+              <tr className="border-b border-border text-left" style={{ background: 'linear-gradient(180deg, hsl(var(--surface-2)) 0%, hsl(var(--surface-1)) 100%)' }}>
+                <th className="px-4 py-2.5 text-label text-xs text-muted-foreground">EXERCISE</th>
+                <th className="hidden px-4 py-2.5 text-label text-xs text-muted-foreground sm:table-cell">DIFFICULTY</th>
+                <th className="hidden px-4 py-2.5 text-label text-xs text-muted-foreground md:table-cell">CATEGORY</th>
+                <th className="hidden px-4 py-2.5 text-label text-xs text-muted-foreground lg:table-cell">TRACKS</th>
               </tr>
             </thead>
             <tbody>
@@ -151,7 +149,7 @@ export function ExerciseLibrary() {
                 <tr
                   key={exercise.id}
                   onClick={() => setSelectedExercise(exercise)}
-                  className="cursor-pointer border-b border-border/50 transition-colors hover:bg-surface-1"
+                  className="cursor-pointer border-b border-border/30 transition-colors hover:bg-surface-2/50"
                 >
                   <td className="px-4 py-2.5">
                     <div className="font-chalk">{exercise.name}</div>
@@ -176,7 +174,6 @@ export function ExerciseLibrary() {
           </table>
         </div>
       ) : (
-        /* Grid View */
         <motion.div layout className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           <AnimatePresence mode="popLayout">
             {paginated.map((exercise) => (
@@ -187,7 +184,7 @@ export function ExerciseLibrary() {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.97 }}
                 onClick={() => setSelectedExercise(exercise)}
-                className="accent-line group cursor-pointer overflow-hidden rounded-xl surface-elevated transition-all hover:border-primary/50"
+                className="accent-line group cursor-pointer overflow-hidden rounded-xl surface-raised transition-all"
               >
                 {exercise.image ? (
                   <div className="relative aspect-[16/9] overflow-hidden">
@@ -225,7 +222,7 @@ export function ExerciseLibrary() {
           <button
             onClick={() => setPage(p => Math.max(1, p - 1))}
             disabled={page === 1}
-            className="flex items-center gap-1 rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground disabled:opacity-30"
+            className="btn-raised flex items-center gap-1 rounded-md px-3 py-1.5 text-sm text-muted-foreground disabled:opacity-30"
           >
             <ChevronLeft className="h-4 w-4" /> Prev
           </button>
@@ -235,7 +232,7 @@ export function ExerciseLibrary() {
           <button
             onClick={() => setPage(p => Math.min(totalPages, p + 1))}
             disabled={page === totalPages}
-            className="flex items-center gap-1 rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground disabled:opacity-30"
+            className="btn-raised flex items-center gap-1 rounded-md px-3 py-1.5 text-sm text-muted-foreground disabled:opacity-30"
           >
             Next <ChevronRight className="h-4 w-4" />
           </button>
@@ -263,15 +260,16 @@ function ExerciseDetailModal({ exercise, onClose }: { exercise: Exercise; onClos
       <motion.div
         initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }}
         onClick={e => e.stopPropagation()}
-        className="surface-elevated relative max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl p-6 lg:p-8"
+        className="glass-premium relative max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl p-6 lg:p-8"
+        style={{ boxShadow: 'var(--shadow-deep)' }}
       >
-        <button onClick={onClose} className="absolute right-4 top-4 rounded-lg bg-surface-2 p-2 hover:bg-surface-3">
+        <button onClick={onClose} className="btn-raised absolute right-4 top-4 rounded-lg p-2">
           ✕
         </button>
 
         <div className="grid gap-6 lg:grid-cols-2">
           {exercise.image && (
-            <div className="overflow-hidden rounded-xl">
+            <div className="overflow-hidden rounded-xl" style={{ boxShadow: 'var(--shadow-brutal)' }}>
               <img src={exercise.image} alt={exercise.name} className="h-full w-full object-cover" />
             </div>
           )}
@@ -279,10 +277,10 @@ function ExerciseDetailModal({ exercise, onClose }: { exercise: Exercise; onClos
             <span className={cn("mb-2 inline-block rounded-full border px-3 py-0.5 text-label text-xs", difficultyBadge[exercise.difficulty])}>
               {exercise.difficulty.toUpperCase()}
             </span>
-            <h2 className="font-chalk text-2xl">{exercise.name}</h2>
+            <h2 className="font-chalk text-2xl text-embossed">{exercise.name}</h2>
             <p className="mt-2 text-sm text-muted-foreground">{exercise.description}</p>
 
-            <div className="mt-4 rounded-lg bg-surface-1 p-4">
+            <div className="surface-inset mt-4 rounded-lg p-4">
               <h4 className="mb-2 text-label text-sm text-primary">DO THIS</h4>
               <div className="space-y-1 text-sm">
                 <p><span className="text-muted-foreground">Sets:</span> {exercise.doThis.setsRange}</p>
@@ -314,19 +312,19 @@ function ExerciseDetailModal({ exercise, onClose }: { exercise: Exercise; onClos
 
         {exercise.coachNotes && (
           <div className="mt-6 grid gap-3 sm:grid-cols-2">
-            <div className="rounded-lg bg-surface-1 p-4">
+            <div className="surface-inset rounded-lg p-4">
               <h4 className="mb-1 text-label text-xs text-primary">MECHANIC</h4>
               <p className="text-sm text-foreground">{exercise.coachNotes.mechanic}</p>
             </div>
-            <div className="rounded-lg border border-primary/20 bg-primary/5 p-4">
+            <div className="surface-raised rounded-lg border border-primary/20 p-4">
               <h4 className="mb-1 text-label text-xs text-primary">BRUTALITY</h4>
               <p className="text-sm text-foreground">{exercise.coachNotes.brutality}</p>
             </div>
-            <div className="rounded-lg border border-destructive/20 bg-destructive/5 p-4">
+            <div className="surface-raised rounded-lg border border-destructive/20 p-4">
               <h4 className="mb-1 text-label text-xs text-destructive">WATCH OUT</h4>
               <p className="text-sm text-foreground">{exercise.coachNotes.watchOut}</p>
             </div>
-            <div className="rounded-lg bg-surface-1 p-4">
+            <div className="surface-inset rounded-lg p-4">
               <h4 className="mb-1 text-label text-xs text-primary">RECOVERY</h4>
               <p className="text-sm text-foreground">{exercise.coachNotes.recoveryVector}</p>
             </div>

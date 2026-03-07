@@ -1,155 +1,108 @@
 
 
-# Skeuomorphic Visual Overhaul + Coach Care Studio
+# Visual Refresh: Color Palette, Theme Toggle, and Polish
 
-## Part 1: Brutal Elegant Skeuomorphism — Design System
+## What's Wrong Right Now
 
-### New CSS Tokens and Utilities (`src/index.css`)
+1. **Blackwash**: Background is 4% lightness, surfaces go from 4% to 13% -- everything blends into a near-black void with almost no visual separation between cards, backgrounds, and borders
+2. **One-color palette**: Steel blue (`210 40% 52%`) is the only accent. Difficulty badges (beginner, intermediate, advanced) are all the same grayish-blue. No color diversity at all
+3. **No light theme**: The app is locked to dark mode with no toggle. The `.dark` class is empty and `:root` is the same dark palette
+4. **Muted foreground too dark**: `215 10% 50%` for secondary text is barely readable on these dark surfaces
+5. **Difficulty colors have no meaning**: Beginner is gray, intermediate is steel blue, advanced is white -- there's no intuitive color coding (green/yellow/red or similar)
 
-Add skeuomorphic utility classes that create physical depth:
+## The Fix
 
-```css
-/* Raised surface — like a physical button/card sitting above the desk */
-.surface-raised {
-  background: linear-gradient(180deg, hsl(var(--surface-2)) 0%, hsl(var(--surface-1)) 100%);
-  box-shadow: 
-    0 1px 0 0 hsla(var(--foreground), 0.05) inset,   /* top bevel highlight */
-    0 -1px 0 0 hsla(0, 0%, 0%, 0.15) inset,          /* bottom inner shadow */
-    0 4px 12px hsla(0, 0%, 0%, 0.3),                   /* drop shadow */
-    0 1px 3px hsla(0, 0%, 0%, 0.2);
-  border: 1px solid hsla(var(--foreground), 0.06);
-}
+### 1. New Color System with Actual Color
 
-/* Pressed/inset — like a recessed input or indicator well */
-.surface-inset {
-  background: hsl(var(--surface-0));
-  box-shadow: 
-    0 2px 4px hsla(0, 0%, 0%, 0.3) inset,
-    0 1px 2px hsla(0, 0%, 0%, 0.2) inset;
-  border: 1px solid hsla(0, 0%, 0%, 0.15);
-}
+Replace the monochrome steel-blue-only palette with meaningful, distinct accent colors:
 
-/* Embossed text */
-.text-embossed {
-  text-shadow: 0 1px 0 hsla(var(--foreground), 0.1), 0 -1px 0 hsla(0, 0%, 0%, 0.3);
-}
+- **Primary**: Shift from cold steel blue to a warmer, more vibrant blue (`220 70% 55%`) -- punchier, more modern
+- **Difficulty beginner**: Green-tinted (`150 50% 45%`) -- intuitive "easy/go" signal
+- **Difficulty intermediate**: Amber/gold (`40 80% 55%`) -- intuitive "caution/mid" signal
+- **Difficulty advanced**: Red-orange (`10 70% 55%`) -- intuitive "hard/stop" signal
+- **Success**: Brighter green (`155 60% 50%`) instead of the current muddy teal
+- **Accent**: A distinct secondary color, warm purple or teal, to differentiate from primary
 
-/* Brushed metal texture overlay */
-.texture-brushed { ... }
-```
+### 2. Lifted Dark Theme (Not a Blackwash)
 
-The light theme gets inverse bevels (light highlights on top, dark shadows below).
+Raise all surface lightness values so the app feels rich and layered, not flat-black:
 
-### Component Upgrades
+- `--background`: `225 15% 10%` (was 4% -- now a visible dark navy)
+- `--surface-0`: `225 14% 10%`
+- `--surface-1`: `225 12% 14%` (was 7%)
+- `--surface-2`: `225 12% 18%` (was 10%)
+- `--surface-3`: `225 14% 22%` (was 13%)
+- `--border`: `225 10% 24%` (was 16% -- now actually visible)
+- `--muted-foreground`: `220 10% 60%` (was 50% -- now readable)
 
-Every card, button, stat block, nav item, filter bar, modal, badge, and table gets the skeuomorphic treatment:
+This gives each card, each row, and each panel a visible difference from its background.
 
-| Element | Treatment |
-|---------|-----------|
-| **Cards** (stat cards, achievement cards, exercise cards) | `surface-raised` with top bevel highlight, physical drop shadow, subtle gradient |
-| **Navigation sidebar** | Brushed metal texture, active item gets `surface-inset` pressed state |
-| **Buttons** | Raised 3D with pressed `:active` state that shifts shadow inward |
-| **Filter dropdowns & search** | `surface-inset` recessed wells, raised dropdown arrows |
-| **Table rows** | Subtle inner shadow on header, separator lines with bevel |
-| **Progress bars** | Inset track with raised glossy fill bar |
-| **Badges** (difficulty, status) | Embossed with inner glow and slight bevel |
-| **Modals** | Deep layered shadow (4+ shadow layers), beveled close button |
-| **Tab triggers** | Raised inactive, pressed active state |
-| **Activity calendar cells** | Inset wells, active cells raised with glow |
-| **Achievement badges** | Coin-like circular bevel with metallic gradient |
+### 3. Light Theme
 
-### Files Changed for Skeuomorphism
-- `src/index.css` — New utility classes, updated shadow/surface tokens
-- `src/components/layout/Navigation.tsx` — Pressed active states, brushed sidebar
-- `src/components/layout/AppShell.tsx` — Richer background texture
-- `src/components/sections/HeroSection.tsx` — Raised stat cards, embossed headings
-- `src/components/sections/ExerciseLibrary.tsx` — Inset search/filters, raised cards, beveled table
-- `src/components/sections/TrackLadder.tsx` — Raised track items, inset track line
-- `src/components/sections/ProgressDashboard.tsx` — Raised stats, inset progress tracks, coin achievements
-- `src/components/sections/AdminPanel.tsx` — Raised stat cards, inset form fields
-- `src/components/sections/SkillsLibrary.tsx` — Raised skill cards, beveled filter pills
-- `src/components/sections/skills/SkillDetailModal.tsx` — Deep shadow modal, raised tab triggers
-- `src/pages/Index.tsx` — Featured cards get raised treatment
+Add a proper light theme under `.light` (or `:root` with dark as `.dark`) with:
 
----
+- **Background**: `220 15% 97%` (soft off-white with a cool tint)
+- **Surface-0**: `220 14% 97%`
+- **Surface-1**: `220 12% 93%`
+- **Surface-2**: `0 0% 100%` (white cards on gray bg)
+- **Surface-3**: `0 0% 100%`
+- **Foreground**: `225 15% 12%` (near-black text)
+- **Muted-foreground**: `220 10% 45%`
+- **Border**: `220 10% 85%`
+- **Primary/accent/difficulty colors**: Same hues, adjusted for light-bg contrast
 
-## Part 2: Coach Care Studio — Split-Pane AI Workspace
+### 4. Theme Toggle
 
-### New Navigation Tab
-Add "COACH" tab to Navigation between TRACKS and PROGRESS (using `MessageSquare` icon).
+Add a theme toggle button to the Navigation component:
 
-### File Structure
-```
-src/components/CoachCare/
-├── CoachCareStudio.tsx     — Main split-pane (ResizablePanel)
-├── ChatPanel.tsx           — Messages + smart input
-├── ChatMessage.tsx         — Rich typed message bubbles
-├── ChatInput.tsx           — Input + action buttons + URL detection
-├── Canvas/
-│   ├── CanvasRouter.tsx    — Switches canvas mode
-│   ├── IdleCanvas.tsx      — Quick-action card grid
-│   ├── VideoCanvas.tsx     — YouTube/IG/TikTok embed
-│   ├── ExerciseCanvas.tsx  — Exercise detail from database
-│   ├── TemplateCanvas.tsx  — Workout template builder
-│   ├── DocumentCanvas.tsx  — Editable markdown doc
-│   └── AnalyticsCanvas.tsx — Recharts dashboard
-├── hooks/
-│   ├── useCanvasState.ts   — Canvas mode + data state
-│   └── useChatHistory.ts   — localStorage-persisted messages
-└── types.ts                — All interfaces
-```
+- Desktop: Place a Sun/Moon icon button at the bottom of the sidebar
+- Mobile: Add to the "More" menu overlay
+- Use `next-themes` (already installed) or a simple `useState` + `localStorage` + `document.documentElement.classList` approach
+- Toggle between `dark` and `light` class on `<html>`
+- Persist preference to `localStorage`
 
-### Layout
-Desktop: `ResizablePanelGroup` with chat (35% default) and canvas (65%), resizable handle between them.
+### 5. Difficulty Badge Color Overhaul
 
-Mobile: Chat fills the screen, canvas opens as a `vaul` drawer from bottom.
+Update the difficulty badge utility classes across all components:
 
-### Chat Intelligence (Prototype)
-Smart pattern matching for polished prototype responses:
+- **Easy**: Soft neutral (gray with slight green tint)
+- **Beginner**: Green badge (bg-green/15, text-green, border-green/30)
+- **Intermediate**: Amber badge (bg-amber/15, text-amber, border-amber/30)
+- **Advanced**: Red-orange badge (bg-red/15, text-red-orange, border-red/30)
+- **Master**: Purple or gold badge for elite feel
 
-- Paste YouTube/IG/TikTok URL → Detects platform, opens VideoCanvas with embed, returns mock form analysis
-- Type exercise name (fuzzy matched against `exerciseDatabase`) → Opens ExerciseCanvas with full detail
-- "build me a [X] template/program" → Opens TemplateCanvas with pre-filled blocks from exercise database
-- "show my stats/progress" → Opens AnalyticsCanvas with mock recharts
-- "write/create [document]" → Opens DocumentCanvas
-- General fitness questions → Smart contextual text responses referencing canvas state
+These colors will be defined as CSS variables so they auto-switch with the theme.
 
-### Canvas Modes
+### 6. Surface Contrast and Card Polish
 
-1. **Idle** — 6 quick-action cards in a grid ("Analyze Video", "Build Program", "Create Template", "Explore Exercise", "View Stats", "Search Social")
-2. **Video** — iframe embed + mock timestamp analysis overlay
-3. **Exercise** — Full exercise card from database (reuses existing detail layout)
-4. **Template** — Draggable blocks (exercise name, sets, reps, rest, notes) with add/remove/reorder. Save to localStorage
-5. **Document** — Textarea with markdown preview (split or toggle). Generated content from chat
-6. **Analytics** — Recharts area/bar/donut charts with mock training data
-
-### Rich Message Types
-Messages render as typed cards:
-- `text` — Normal bubble
-- `video-card` — Thumbnail + "Open on Canvas →"
-- `exercise-card` — Mini card with difficulty badge + "Explore →"
-- `template-preview` — Block count summary + "Open Builder →"
-- `chart` — Inline sparkline + "Full View →"
-
-### Two-Way Sync
-- Clicking a quick action on canvas sends a contextual message to chat
-- Chat responses can update canvas state
-- Editing template blocks on canvas reflects in chat log
+- Increase `--shadow-card` visibility so elevated cards actually pop
+- Add subtle warm tint to card borders on hover (not just primary blue)
+- Make `surface-glass` backdrop more visible with slightly higher opacity
+- Increase `--scanline-opacity` very slightly or keep as-is (it's fine)
 
 ---
 
-## Implementation Order (within one pass)
+## Files to Change
 
-1. CSS skeuomorphic utilities + updated tokens in `index.css`
-2. `AppShell.tsx` + `Navigation.tsx` — structural skeuo + new Coach tab
-3. All section components — apply raised/inset/embossed treatments
-4. Coach Care types + hooks
-5. Chat components (ChatPanel, ChatInput, ChatMessage)
-6. Canvas components (CanvasRouter, all 6 canvas modes)
-7. CoachCareStudio main layout
-8. Wire into Index.tsx routing
+| File | Changes |
+|------|---------|
+| `src/index.css` | Rewrite `:root` color values for lifted dark palette. Add light theme variables. Update difficulty badge utility classes with green/amber/red colors |
+| `tailwind.config.ts` | Add difficulty color tokens (beginner, intermediate, advanced, master) to Tailwind config |
+| `src/components/layout/Navigation.tsx` | Add theme toggle button (Sun/Moon icon) to desktop sidebar and mobile menu |
+| `src/components/sections/ExerciseLibrary.tsx` | Update `difficultyBadge` map to use new color tokens |
+| `src/components/sections/SkillsLibrary.tsx` | Update `difficultyStyles` to use new color tokens |
+| `src/components/sections/skills/SkillDetailModal.tsx` | Update `difficultyStyles` to match |
+| `src/pages/Index.tsx` | Update `difficultyBadge` map for featured cards |
+| `src/components/layout/AppShell.tsx` | Ensure HUD grid and scanline colors adapt to light/dark theme |
+| `src/App.tsx` | Wrap app in ThemeProvider or add theme initialization logic |
 
-## Summary
+**Total: 9 files edited, 0 new files**
 
-**~18 files changed/created, 0 new dependencies** (uses existing `react-resizable-panels`, `vaul`, `recharts`, `framer-motion`). All AI responses are smart hardcoded prototype — no backend needed.
+## What Does NOT Change
+
+- Layout structure (already overhauled in previous pass)
+- Exercise data, track data, progression engine
+- Navigation layout and section routing
+- Framer Motion animations
+- All shadcn/ui primitives (they already consume CSS variables)
 

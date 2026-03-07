@@ -10,7 +10,8 @@ import {
   GitBranch,
   Library,
   Sun,
-  Moon
+  Moon,
+  MessageSquare
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -24,6 +25,7 @@ const navItems: NavItem[] = [
   { id: 'home', label: 'HOME', icon: Home },
   { id: 'library', label: 'LIBRARY', icon: Library },
   { id: 'tracks', label: 'TRACKS', icon: GitBranch },
+  { id: 'coach', label: 'COACH', icon: MessageSquare },
   { id: 'progress', label: 'PROGRESS', icon: Flame },
   { id: 'admin', label: 'ADMIN', icon: Settings },
 ];
@@ -61,15 +63,15 @@ export function Navigation({ activeSection, onNavigate }: NavigationProps) {
 
   return (
     <>
-      {/* Desktop Navigation */}
-      <nav className="surface-glass fixed left-0 top-0 z-50 hidden h-screen w-20 flex-col items-center border-r border-border py-8 lg:flex">
-        <motion.div className="mb-12" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-          <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-primary/30 bg-primary">
+      {/* Desktop Navigation — brushed metal sidebar */}
+      <nav className="texture-brushed surface-raised fixed left-0 top-0 z-50 hidden h-screen w-20 flex-col items-center border-r border-border py-8 lg:flex">
+        <motion.div className="relative z-10 mb-12" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
+          <div className="badge-coin flex h-12 w-12 items-center justify-center rounded-lg bg-primary">
             <span className="font-chalk text-lg text-primary-foreground">STK</span>
           </div>
         </motion.div>
 
-        <div className="flex flex-1 flex-col items-center gap-2">
+        <div className="relative z-10 flex flex-1 flex-col items-center gap-2">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeSection === item.id;
@@ -79,13 +81,15 @@ export function Navigation({ activeSection, onNavigate }: NavigationProps) {
                 onClick={() => onNavigate(item.id)}
                 className={cn(
                   "group relative flex h-14 w-14 items-center justify-center rounded-lg transition-all duration-300",
-                  isActive ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-surface-2 hover:text-foreground"
+                  isActive 
+                    ? "surface-inset text-primary" 
+                    : "btn-raised text-muted-foreground hover:text-foreground"
                 )}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
                 <Icon className="h-5 w-5" />
-                <div className="surface-elevated pointer-events-none absolute left-full ml-3 flex items-center gap-2 rounded-md px-3 py-2 opacity-0 transition-opacity group-hover:opacity-100">
+                <div className="surface-raised pointer-events-none absolute left-full ml-3 flex items-center gap-2 rounded-md px-3 py-2 opacity-0 transition-opacity group-hover:opacity-100">
                   <span className="whitespace-nowrap text-label">{item.label}</span>
                   <ChevronRight className="h-3 w-3 text-muted-foreground" />
                 </div>
@@ -97,10 +101,10 @@ export function Navigation({ activeSection, onNavigate }: NavigationProps) {
           })}
         </div>
 
-        {/* Theme Toggle - Desktop */}
+        {/* Theme Toggle */}
         <motion.button
           onClick={toggle}
-          className="mt-4 flex h-12 w-12 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-surface-2 hover:text-foreground"
+          className="btn-raised relative z-10 mt-4 flex h-12 w-12 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
@@ -132,16 +136,16 @@ export function Navigation({ activeSection, onNavigate }: NavigationProps) {
       {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {mobileMenuOpen && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="surface-glass fixed inset-0 z-50 lg:hidden" style={{ background: 'hsla(var(--surface-0), 0.95)' }}>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 lg:hidden" style={{ background: 'hsla(var(--surface-0), 0.98)' }}>
             <div className="flex h-full flex-col p-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
+                  <div className="badge-coin flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
                     <span className="font-chalk text-xl text-primary-foreground">STK</span>
                   </div>
-                  <span className="font-chalk text-2xl">STACKED</span>
+                  <span className="font-chalk text-2xl text-embossed">STACKED</span>
                 </div>
-                <button onClick={() => setMobileMenuOpen(false)} className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-2">
+                <button onClick={() => setMobileMenuOpen(false)} className="btn-raised flex h-10 w-10 items-center justify-center rounded-lg">
                   <X className="h-5 w-5" />
                 </button>
               </div>
@@ -152,17 +156,16 @@ export function Navigation({ activeSection, onNavigate }: NavigationProps) {
                   return (
                     <motion.button key={item.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.1 }}
                       onClick={() => { onNavigate(item.id); setMobileMenuOpen(false); }}
-                      className={cn("flex items-center gap-4 rounded-lg p-4 transition-all", isActive ? "bg-primary text-primary-foreground" : "bg-surface-2 text-foreground hover:bg-surface-3")}>
+                      className={cn("flex items-center gap-4 rounded-lg p-4 transition-all", isActive ? "surface-inset text-primary" : "surface-raised text-foreground")}>
                       <Icon className="h-6 w-6" />
                       <span className="font-chalk text-xl">{item.label}</span>
                     </motion.button>
                   );
                 })}
               </div>
-              {/* Theme Toggle - Mobile */}
               <button
                 onClick={toggle}
-                className="mt-4 flex items-center gap-4 rounded-lg bg-surface-2 p-4 text-foreground hover:bg-surface-3"
+                className="surface-raised mt-4 flex items-center gap-4 rounded-lg p-4 text-foreground"
               >
                 <ThemeIcon className="h-6 w-6" />
                 <span className="font-chalk text-xl">{theme === 'dark' ? 'LIGHT MODE' : 'DARK MODE'}</span>
