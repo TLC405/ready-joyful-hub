@@ -7,10 +7,11 @@ import { ExerciseLibrary } from '@/components/sections/ExerciseLibrary';
 import { TrackLadder } from '@/components/sections/TrackLadder';
 import { ProgressDashboard } from '@/components/sections/ProgressDashboard';
 import { AdminPanel } from '@/components/sections/AdminPanel';
+import { CoachCareStudio } from '@/components/CoachCare/CoachCareStudio';
 import { exercises } from '@/lib/exercises';
 import { cn } from '@/lib/utils';
 
-type Section = 'home' | 'library' | 'tracks' | 'progress' | 'admin';
+type Section = 'home' | 'library' | 'tracks' | 'coach' | 'progress' | 'admin';
 
 const difficultyBadge: Record<string, string> = {
   easy: 'difficulty-easy',
@@ -47,10 +48,9 @@ const Index = () => {
             {activeSection === 'home' && (
               <motion.div key="home" {...pageTransition}>
                 <HeroSection />
-                {/* Featured preview row */}
                 <section className="px-4 pb-8 lg:px-8">
                   <div className="mb-3 flex items-center justify-between">
-                    <h3 className="font-chalk text-lg text-muted-foreground">FEATURED SKILLS</h3>
+                    <h3 className="font-chalk text-lg text-embossed text-muted-foreground">FEATURED SKILLS</h3>
                     <motion.button 
                       onClick={() => handleNavigate('library')} 
                       className="text-label text-xs text-primary hover:underline"
@@ -68,7 +68,7 @@ const Index = () => {
                         transition={{ delay: 0.2 + i * 0.05, type: 'spring', stiffness: 300, damping: 24 }}
                         whileHover={{ y: -4, transition: { duration: 0.15 } }}
                         onClick={() => handleNavigate('library')} 
-                        className="group cursor-pointer overflow-hidden rounded-lg surface-elevated transition-all hover:border-primary/50 hover:shadow-steel-glow"
+                        className="group cursor-pointer overflow-hidden rounded-lg surface-raised transition-all"
                       >
                         <div className="relative aspect-[16/10] overflow-hidden">
                           <img src={ex.image} alt={ex.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
@@ -98,6 +98,12 @@ const Index = () => {
             {activeSection === 'tracks' && (
               <motion.div key="tracks" {...pageTransition}>
                 <TrackLadder />
+              </motion.div>
+            )}
+
+            {activeSection === 'coach' && (
+              <motion.div key="coach" {...pageTransition}>
+                <CoachCareStudio />
               </motion.div>
             )}
 
