@@ -11,9 +11,9 @@ const achievements = [
   { id: 1, name: 'First Workout', unlocked: true },
   { id: 2, name: '7 Day Streak', unlocked: true },
   { id: 3, name: 'First Skill', unlocked: true },
-  { id: 4, name: '30 Day Streak', unlocked: false },
-  { id: 5, name: 'All Beginner', unlocked: false },
-  { id: 6, name: 'Flagmaster', unlocked: false },
+  { id: 4, name: '30 Day Streak', unlocked: true },
+  { id: 5, name: 'All Beginner', unlocked: true },
+  { id: 6, name: 'Flagmaster', unlocked: true },
 ];
 
 const skillProgress = [
