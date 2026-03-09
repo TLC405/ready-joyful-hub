@@ -1,4 +1,4 @@
-// ==================== STACKED — Progression Engine ====================
+// ==================== TLC Calisthenics — Progression Engine ====================
 import type { Track, TrackNode, UnlockState } from './types';
 import { tracks } from './tracks';
 

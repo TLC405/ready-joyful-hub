@@ -1,54 +1,108 @@
 
 
-# Rebrand to TLC + Unlock Everything + Add Settings with Download
+# Visual Refresh: Color Palette, Theme Toggle, and Polish
 
-## What Changes
+## What's Wrong Right Now
 
-### 1. Rebrand: Remove all Lovable/STK/STACKED → TLC
+1. **Blackwash**: Background is 4% lightness, surfaces go from 4% to 13% -- everything blends into a near-black void with almost no visual separation between cards, backgrounds, and borders
+2. **One-color palette**: Steel blue (`210 40% 52%`) is the only accent. Difficulty badges (beginner, intermediate, advanced) are all the same grayish-blue. No color diversity at all
+3. **No light theme**: The app is locked to dark mode with no toggle. The `.dark` class is empty and `:root` is the same dark palette
+4. **Muted foreground too dark**: `215 10% 50%` for secondary text is barely readable on these dark surfaces
+5. **Difficulty colors have no meaning**: Beginner is gray, intermediate is steel blue, advanced is white -- there's no intuitive color coding (green/yellow/red or similar)
 
-| Location | Current | New |
-|----------|---------|-----|
-| `index.html` | "Lovable App", Lovable meta tags, lovable OG images | "TLC Calisthenics", TLC meta, remove lovable OG image URLs |
-| `Navigation.tsx` | `STK` logo, `STACKED` text | `TLC` logo, `TLC CALISTHENICS` text |
-| `DownloadSection.tsx` | "Built with ❤️ using Lovable" | "Built with ❤️ by TLC" |
-| `HeroSection.tsx` | "MASTER YOUR STACK" | "MASTER YOUR BODY" |
+## The Fix
 
-### 2. Unlock Everything — Remove All Gating
+### 1. New Color System with Actual Color
 
-- **SubscriptionPlans.tsx**: Remove locked features arrays. Show single "ALL ACCESS" plan with everything included, no paywall UI
-- **ProgressDashboard.tsx**: Set all achievements to `unlocked: true`, remove opacity/disabled states
-- **SkillsLibrary.tsx / ExerciseLibrary.tsx**: Remove any lock icons or premium badges — all exercises fully accessible
-- **HeroSection.tsx**: Stats show full counts (e.g., `14/14` skills instead of `3/14`)
+Replace the monochrome steel-blue-only palette with meaningful, distinct accent colors:
 
-### 3. Replace ADMIN with SETTINGS Section
+- **Primary**: Shift from cold steel blue to a warmer, more vibrant blue (`220 70% 55%`) -- punchier, more modern
+- **Difficulty beginner**: Green-tinted (`150 50% 45%`) -- intuitive "easy/go" signal
+- **Difficulty intermediate**: Amber/gold (`40 80% 55%`) -- intuitive "caution/mid" signal
+- **Difficulty advanced**: Red-orange (`10 70% 55%`) -- intuitive "hard/stop" signal
+- **Success**: Brighter green (`155 60% 50%`) instead of the current muddy teal
+- **Accent**: A distinct secondary color, warm purple or teal, to differentiate from primary
 
-Rename the "ADMIN" nav item to "SETTINGS". Replace the current `AdminPanel` content with a full Settings page containing:
+### 2. Lifted Dark Theme (Not a Blackwash)
 
-- **Profile section** — Display name, bio, units preference (mock editable fields)
-- **Appearance** — Theme toggle (reuse existing dark/light), accent color selector
-- **Training preferences** — Rest timer default, difficulty filter default, notification toggles
-- **Data** — Export training data (JSON), clear local data button
-- **App Download** — Integrate `DownloadSection` content here (ZIP download, GitHub link, what's included grid, Capacitor info)
-- **About** — App version, "TLC Calisthenics v1.0", credits
+Raise all surface lightness values so the app feels rich and layered, not flat-black:
 
-All wrapped in skeuomorphic `surface-raised` cards with `surface-inset` form fields.
+- `--background`: `225 15% 10%` (was 4% -- now a visible dark navy)
+- `--surface-0`: `225 14% 10%`
+- `--surface-1`: `225 12% 14%` (was 7%)
+- `--surface-2`: `225 12% 18%` (was 10%)
+- `--surface-3`: `225 14% 22%` (was 13%)
+- `--border`: `225 10% 24%` (was 16% -- now actually visible)
+- `--muted-foreground`: `220 10% 60%` (was 50% -- now readable)
 
-### 4. Navigation Icon Update
+This gives each card, each row, and each panel a visible difference from its background.
 
-Change ADMIN's `Settings` icon stays the same, just relabel to "SETTINGS".
+### 3. Light Theme
 
-## Files Changed
+Add a proper light theme under `.light` (or `:root` with dark as `.dark`) with:
 
-| File | Change |
-|------|--------|
-| `index.html` | Replace all Lovable branding with TLC |
-| `src/components/layout/Navigation.tsx` | `STK` → `TLC`, `STACKED` → `TLC CALISTHENICS`, `ADMIN` → `SETTINGS`, nav id `admin` → `settings` |
-| `src/components/sections/HeroSection.tsx` | "MASTER YOUR STACK" → "MASTER YOUR BODY", stats `3/14` → `14/14` |
-| `src/components/sections/DownloadSection.tsx` | Remove Lovable footer text → "Built with ❤️ by TLC" |
-| `src/components/sections/ProgressDashboard.tsx` | All achievements `unlocked: true` |
-| `src/components/sections/SubscriptionPlans.tsx` | Remove locked arrays, single unlocked plan, or delete file entirely |
-| `src/components/sections/AdminPanel.tsx` | **Full rewrite** → `SettingsPanel.tsx`: Profile, Appearance, Training, Data/Download, About sections |
-| `src/pages/Index.tsx` | Update Section type `admin` → `settings`, render `SettingsPanel` instead of `AdminPanel`, remove SubscriptionPlans if unused |
+- **Background**: `220 15% 97%` (soft off-white with a cool tint)
+- **Surface-0**: `220 14% 97%`
+- **Surface-1**: `220 12% 93%`
+- **Surface-2**: `0 0% 100%` (white cards on gray bg)
+- **Surface-3**: `0 0% 100%`
+- **Foreground**: `225 15% 12%` (near-black text)
+- **Muted-foreground**: `220 10% 45%`
+- **Border**: `220 10% 85%`
+- **Primary/accent/difficulty colors**: Same hues, adjusted for light-bg contrast
 
-**~8 files changed, 0 new files, 0 new dependencies**
+### 4. Theme Toggle
+
+Add a theme toggle button to the Navigation component:
+
+- Desktop: Place a Sun/Moon icon button at the bottom of the sidebar
+- Mobile: Add to the "More" menu overlay
+- Use `next-themes` (already installed) or a simple `useState` + `localStorage` + `document.documentElement.classList` approach
+- Toggle between `dark` and `light` class on `<html>`
+- Persist preference to `localStorage`
+
+### 5. Difficulty Badge Color Overhaul
+
+Update the difficulty badge utility classes across all components:
+
+- **Easy**: Soft neutral (gray with slight green tint)
+- **Beginner**: Green badge (bg-green/15, text-green, border-green/30)
+- **Intermediate**: Amber badge (bg-amber/15, text-amber, border-amber/30)
+- **Advanced**: Red-orange badge (bg-red/15, text-red-orange, border-red/30)
+- **Master**: Purple or gold badge for elite feel
+
+These colors will be defined as CSS variables so they auto-switch with the theme.
+
+### 6. Surface Contrast and Card Polish
+
+- Increase `--shadow-card` visibility so elevated cards actually pop
+- Add subtle warm tint to card borders on hover (not just primary blue)
+- Make `surface-glass` backdrop more visible with slightly higher opacity
+- Increase `--scanline-opacity` very slightly or keep as-is (it's fine)
+
+---
+
+## Files to Change
+
+| File | Changes |
+|------|---------|
+| `src/index.css` | Rewrite `:root` color values for lifted dark palette. Add light theme variables. Update difficulty badge utility classes with green/amber/red colors |
+| `tailwind.config.ts` | Add difficulty color tokens (beginner, intermediate, advanced, master) to Tailwind config |
+| `src/components/layout/Navigation.tsx` | Add theme toggle button (Sun/Moon icon) to desktop sidebar and mobile menu |
+| `src/components/sections/ExerciseLibrary.tsx` | Update `difficultyBadge` map to use new color tokens |
+| `src/components/sections/SkillsLibrary.tsx` | Update `difficultyStyles` to use new color tokens |
+| `src/components/sections/skills/SkillDetailModal.tsx` | Update `difficultyStyles` to match |
+| `src/pages/Index.tsx` | Update `difficultyBadge` map for featured cards |
+| `src/components/layout/AppShell.tsx` | Ensure HUD grid and scanline colors adapt to light/dark theme |
+| `src/App.tsx` | Wrap app in ThemeProvider or add theme initialization logic |
+
+**Total: 9 files edited, 0 new files**
+
+## What Does NOT Change
+
+- Layout structure (already overhauled in previous pass)
+- Exercise data, track data, progression engine
+- Navigation layout and section routing
+- Framer Motion animations
+- All shadcn/ui primitives (they already consume CSS variables)
 

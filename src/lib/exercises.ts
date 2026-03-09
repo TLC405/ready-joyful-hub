@@ -1,4 +1,4 @@
-// ==================== STACKED — Full Exercise Library ====================
+// ==================== TLC Calisthenics — Full Exercise Library ====================
 // Merged: existing skills (with images) + new exercises from spec
 // Ab Wheel Rollout: REMOVED per equipment policy
 
@@ -813,7 +813,7 @@ export const exercises: Exercise[] = [
     shortPurpose: 'Active shoulder elevation strength.',
     description: 'In chest-to-wall HS, shrug up and depress down. Builds the active support.',
     doThis: { setsRange: '3–4', repsRange: '8–12', restSecRange: '60s' },
-    cueStack: ['Shrug UP hard', 'Depress with control', 'Stay stacked'],
+    cueStack: ['Shrug UP hard', 'Depress with control', 'Stay aligned'],
     failSigns: ['Arching during movement', 'Rushed reps', 'Losing wall contact'],
     regressTo: ['chest-to-wall-handstand'],
     progressTo: ['wall-pull-aways', 'freestanding-handstand'],

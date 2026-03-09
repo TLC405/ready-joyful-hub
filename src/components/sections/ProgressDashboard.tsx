@@ -11,9 +11,9 @@ const achievements = [
   { id: 1, name: 'First Workout', unlocked: true },
   { id: 2, name: '7 Day Streak', unlocked: true },
   { id: 3, name: 'First Skill', unlocked: true },
-  { id: 4, name: '30 Day Streak', unlocked: false },
-  { id: 5, name: 'All Beginner', unlocked: false },
-  { id: 6, name: 'Flagmaster', unlocked: false },
+  { id: 4, name: '30 Day Streak', unlocked: true },
+  { id: 5, name: 'All Beginner', unlocked: true },
+  { id: 6, name: 'Flagmaster', unlocked: true },
 ];
 
 const skillProgress = [
@@ -46,7 +46,7 @@ export function ProgressDashboard() {
         {[
           { label: 'STREAK', value: '7', sub: 'days', icon: Zap },
           { label: 'WORKOUTS', value: '34', icon: Zap },
-          { label: 'SKILLS', value: '3/14', icon: Target },
+          { label: 'SKILLS', value: '14/14', icon: Target },
           { label: 'RANK', value: '#142', icon: Trophy },
         ].map((stat, i) => {
           const Icon = stat.icon;

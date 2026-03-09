@@ -6,12 +6,12 @@ import { HeroSection } from '@/components/sections/HeroSection';
 import { ExerciseLibrary } from '@/components/sections/ExerciseLibrary';
 import { TrackLadder } from '@/components/sections/TrackLadder';
 import { ProgressDashboard } from '@/components/sections/ProgressDashboard';
-import { AdminPanel } from '@/components/sections/AdminPanel';
+import { SettingsPanel } from '@/components/sections/SettingsPanel';
 import { CoachCareStudio } from '@/components/CoachCare/CoachCareStudio';
 import { exercises } from '@/lib/exercises';
 import { cn } from '@/lib/utils';
 
-type Section = 'home' | 'library' | 'tracks' | 'coach' | 'progress' | 'admin';
+type Section = 'home' | 'library' | 'tracks' | 'coach' | 'progress' | 'settings';
 
 const difficultyBadge: Record<string, string> = {
   easy: 'difficulty-easy',
@@ -113,9 +113,9 @@ const Index = () => {
               </motion.div>
             )}
 
-            {activeSection === 'admin' && (
-              <motion.div key="admin" {...pageTransition}>
-                <AdminPanel />
+            {activeSection === 'settings' && (
+              <motion.div key="settings" {...pageTransition}>
+                <SettingsPanel />
               </motion.div>
             )}
           </AnimatePresence>

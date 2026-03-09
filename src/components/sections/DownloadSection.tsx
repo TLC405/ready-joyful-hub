@@ -129,7 +129,7 @@ export function DownloadSection() {
           transition={{ delay: 0.5 }}
           className="mt-8 text-center text-sm text-muted-foreground"
         >
-          Built with ❤️ using Lovable • React • Tailwind CSS • Framer Motion
+          Built with ❤️ by TLC • React • Tailwind CSS • Framer Motion
         </motion.p>
       </motion.div>
     </section>

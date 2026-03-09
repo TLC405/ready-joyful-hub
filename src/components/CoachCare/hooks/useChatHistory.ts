@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import type { ChatMessage } from '../types';
 
-const STORAGE_KEY = 'stacked-coach-chat';
+const STORAGE_KEY = 'tlc-coach-chat';
 
 const welcomeMessage: ChatMessage = {
   id: 'welcome',

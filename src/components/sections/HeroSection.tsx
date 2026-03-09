@@ -11,7 +11,7 @@ const statVariants = {
 
 export function HeroSection() {
   const stats = [
-    { label: 'SKILLS', value: '3', total: '14', icon: Dumbbell, color: 'text-primary' },
+    { label: 'SKILLS', value: '14', total: '14', icon: Dumbbell, color: 'text-primary' },
     { label: 'SESSIONS', value: '34', icon: Target, color: 'text-accent' },
     { label: 'STREAK', value: '7d', icon: Zap, color: 'text-primary' },
     { label: 'RANK', value: '#142', icon: Trophy, color: 'text-accent' },
@@ -31,10 +31,10 @@ export function HeroSection() {
             whileHover={{ scale: 1.05 }}
           >
             <Crosshair className="h-3 w-3 text-primary" />
-            <span className="text-label text-[10px] text-primary">BODYWEIGHT SKILL SYSTEM</span>
+            <span className="text-label text-[10px] text-primary">TLC CALISTHENICS</span>
           </motion.div>
           <h1 className="font-chalk text-2xl text-embossed sm:text-3xl tracking-tight">
-            <span className="text-primary">MASTER</span> YOUR STACK
+            <span className="text-primary">MASTER</span> YOUR BODY
           </h1>
         </motion.div>
 

@@ -27,7 +27,7 @@ const navItems: NavItem[] = [
   { id: 'tracks', label: 'TRACKS', icon: GitBranch },
   { id: 'coach', label: 'COACH', icon: MessageSquare },
   { id: 'progress', label: 'PROGRESS', icon: Flame },
-  { id: 'admin', label: 'ADMIN', icon: Settings },
+  { id: 'settings', label: 'SETTINGS', icon: Settings },
 ];
 
 interface NavigationProps {
@@ -67,7 +67,7 @@ export function Navigation({ activeSection, onNavigate }: NavigationProps) {
       <nav className="texture-brushed surface-raised fixed left-0 top-0 z-50 hidden h-screen w-20 flex-col items-center border-r border-border py-8 lg:flex">
         <motion.div className="relative z-10 mb-12" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
           <div className="badge-coin flex h-12 w-12 items-center justify-center rounded-lg bg-primary">
-            <span className="font-chalk text-lg text-primary-foreground">STK</span>
+            <span className="font-chalk text-lg text-primary-foreground">TLC</span>
           </div>
         </motion.div>
 
@@ -141,9 +141,9 @@ export function Navigation({ activeSection, onNavigate }: NavigationProps) {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="badge-coin flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-                    <span className="font-chalk text-xl text-primary-foreground">STK</span>
+                    <span className="font-chalk text-xl text-primary-foreground">TLC</span>
                   </div>
-                  <span className="font-chalk text-2xl text-embossed">STACKED</span>
+                  <span className="font-chalk text-2xl text-embossed">TLC CALISTHENICS</span>
                 </div>
                 <button onClick={() => setMobileMenuOpen(false)} className="btn-raised flex h-10 w-10 items-center justify-center rounded-lg">
                   <X className="h-5 w-5" />
