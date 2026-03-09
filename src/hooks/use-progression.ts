@@ -15,7 +15,7 @@ import {
 } from '@/lib/progression-engine';
 import type { UnlockState } from '@/lib/types';
 
-const STORAGE_KEY = 'stacked-progression-state';
+const STORAGE_KEY = 'tlc-progression-state';
 
 function loadState(): ProgressionState {
   try {

@@ -1,4 +1,4 @@
-// ==================== STACKED — Core Types ====================
+// ==================== TLC Calisthenics — Core Types ====================
 
 export type Category = 'push' | 'pull' | 'legs' | 'core' | 'mobility' | 'skills';
 export type Difficulty = 'easy' | 'beginner' | 'intermediate' | 'advanced' | 'master';

@@ -38,11 +38,11 @@ export function TemplateCanvas({ data }: TemplateCanvasProps) {
       blocks,
       lastModified: new Date().toISOString(),
     };
-    const saved = JSON.parse(localStorage.getItem('stacked-templates') || '[]');
+    const saved = JSON.parse(localStorage.getItem('tlc-templates') || '[]');
     const idx = saved.findIndex((t: any) => t.id === template.id);
     if (idx >= 0) saved[idx] = template;
     else saved.push(template);
-    localStorage.setItem('stacked-templates', JSON.stringify(saved));
+    localStorage.setItem('tlc-templates', JSON.stringify(saved));
   };
 
   return (
