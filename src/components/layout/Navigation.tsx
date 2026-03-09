@@ -27,7 +27,7 @@ const navItems: NavItem[] = [
   { id: 'tracks', label: 'TRACKS', icon: GitBranch },
   { id: 'coach', label: 'COACH', icon: MessageSquare },
   { id: 'progress', label: 'PROGRESS', icon: Flame },
-  { id: 'admin', label: 'ADMIN', icon: Settings },
+  { id: 'settings', label: 'SETTINGS', icon: Settings },
 ];
 
 interface NavigationProps {
