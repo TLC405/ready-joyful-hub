@@ -11,7 +11,7 @@ const statVariants = {
 
 export function HeroSection() {
   const stats = [
-    { label: 'SKILLS', value: '3', total: '14', icon: Dumbbell, color: 'text-primary' },
+    { label: 'SKILLS', value: '14', total: '14', icon: Dumbbell, color: 'text-primary' },
     { label: 'SESSIONS', value: '34', icon: Target, color: 'text-accent' },
     { label: 'STREAK', value: '7d', icon: Zap, color: 'text-primary' },
     { label: 'RANK', value: '#142', icon: Trophy, color: 'text-accent' },
