@@ -1,4 +1,4 @@
-// ==================== STACKED — Full Exercise Library ====================
+// ==================== TLC Calisthenics — Full Exercise Library ====================
 // Merged: existing skills (with images) + new exercises from spec
 // Ab Wheel Rollout: REMOVED per equipment policy
 
