@@ -141,9 +141,9 @@ export function Navigation({ activeSection, onNavigate }: NavigationProps) {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="badge-coin flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-                    <span className="font-chalk text-xl text-primary-foreground">STK</span>
+                    <span className="font-chalk text-xl text-primary-foreground">TLC</span>
                   </div>
-                  <span className="font-chalk text-2xl text-embossed">STACKED</span>
+                  <span className="font-chalk text-2xl text-embossed">TLC CALISTHENICS</span>
                 </div>
                 <button onClick={() => setMobileMenuOpen(false)} className="btn-raised flex h-10 w-10 items-center justify-center rounded-lg">
                   <X className="h-5 w-5" />

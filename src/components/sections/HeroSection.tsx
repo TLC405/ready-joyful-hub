@@ -31,10 +31,10 @@ export function HeroSection() {
             whileHover={{ scale: 1.05 }}
           >
             <Crosshair className="h-3 w-3 text-primary" />
-            <span className="text-label text-[10px] text-primary">BODYWEIGHT SKILL SYSTEM</span>
+            <span className="text-label text-[10px] text-primary">TLC CALISTHENICS</span>
           </motion.div>
           <h1 className="font-chalk text-2xl text-embossed sm:text-3xl tracking-tight">
-            <span className="text-primary">MASTER</span> YOUR STACK
+            <span className="text-primary">MASTER</span> YOUR BODY
           </h1>
         </motion.div>
 

@@ -46,7 +46,7 @@ export function ProgressDashboard() {
         {[
           { label: 'STREAK', value: '7', sub: 'days', icon: Zap },
           { label: 'WORKOUTS', value: '34', icon: Zap },
-          { label: 'SKILLS', value: '3/14', icon: Target },
+          { label: 'SKILLS', value: '14/14', icon: Target },
           { label: 'RANK', value: '#142', icon: Trophy },
         ].map((stat, i) => {
           const Icon = stat.icon;
