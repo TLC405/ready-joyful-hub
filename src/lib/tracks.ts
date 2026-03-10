@@ -49,7 +49,7 @@ export const tracks: Track[] = [
   {
     id: 'compression',
     name: 'Compression',
-    description: 'Hanging raises to L-sit. Active hip flexion under control.',
+    description: 'Hanging raises to press handstand. Active hip flexion, pike and straddle compression mastery.',
     icon: 'Minimize2',
     nodes: [
       { exerciseId: 'hollow-body-hold', prereqs: [], unlockTest: { type: 'hold', value: 30, unit: 'sec' } },
@@ -57,7 +57,11 @@ export const tracks: Track[] = [
       { exerciseId: 'tuck-sit', prereqs: ['hollow-body-hold'], unlockTest: { type: 'hold', value: 15, unit: 'sec' } },
       { exerciseId: 'seated-pike-lift', prereqs: ['hollow-body-hold'], unlockTest: { type: 'reps', value: 8, unit: 'reps' } },
       { exerciseId: 'seated-straddle-lift', prereqs: ['tuck-sit'], unlockTest: { type: 'reps', value: 8, unit: 'reps' } },
-      { exerciseId: 'l-sit', prereqs: ['tuck-sit'] },
+      { exerciseId: 'l-sit', prereqs: ['tuck-sit'], unlockTest: { type: 'hold', value: 10, unit: 'sec' } },
+      { exerciseId: 'wall-compression-stretch', prereqs: ['seated-pike-lift'], unlockTest: { type: 'hold', value: 30, unit: 'sec' } },
+      { exerciseId: 'elevated-chair-compression', prereqs: ['wall-compression-stretch', 'l-sit'], unlockTest: { type: 'hold', value: 20, unit: 'sec' } },
+      { exerciseId: 'straddle-press-to-hs', prereqs: ['elevated-chair-compression'], unlockTest: { type: 'reps', value: 3, unit: 'reps' } },
+      { exerciseId: 'stalder-press-to-hs', prereqs: ['straddle-press-to-hs'] },
     ],
   },
   {
