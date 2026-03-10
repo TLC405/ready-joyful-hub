@@ -1097,6 +1097,7 @@ export const exercises: Exercise[] = [
     shortPurpose: 'Lateral body hold on a pole.',
     description: 'An impressive display of lateral core strength and shoulder stability.',
     image: clutchFlagImg,
+    instagramUrl: 'https://www.instagram.com/p/DTHBsV-jtej/',
     doThis: { setsRange: '4–6', timeSecRange: '3–10s', restSecRange: '120s' },
     cueStack: ['Bottom arm pushes', 'Top arm pulls', 'Full body straight'],
     failSigns: ['Hips dropping', 'Bending at waist', 'Grip failure'],
