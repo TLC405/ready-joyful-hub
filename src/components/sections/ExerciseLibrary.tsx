@@ -4,6 +4,7 @@ import { Search, LayoutGrid, LayoutList, ChevronLeft, ChevronRight } from 'lucid
 import { exercises } from '@/lib/exercises';
 import type { Exercise, Category, Difficulty, TrackId } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { ExerciseDetailModal } from '@/components/shared/ExerciseDetailModal';
 
 const categories: { id: Category | 'all'; label: string }[] = [
   { id: 'all', label: 'All Categories' },
