@@ -29,6 +29,7 @@ const nodeVariants = {
 
 export function TrackLadder() {
   const [activeTrack, setActiveTrack] = useState<string>('planche');
+  const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
   const currentTrack = tracks.find(t => t.id === activeTrack)!;
   const { getState } = useProgression();
 
