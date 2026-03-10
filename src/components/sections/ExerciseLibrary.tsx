@@ -31,11 +31,13 @@ const trackFilters: { id: TrackId | 'all'; label: string }[] = [
   { id: 'handstand', label: 'Handstand' },
   { id: 'rings', label: 'Rings' },
   { id: 'compression', label: 'Compression' },
+  { id: 'press', label: 'Press' },
   { id: 'pull-strength', label: 'Pull' },
   { id: 'legs', label: 'Legs' },
   { id: 'forearm-stand', label: 'Forearm Stand' },
   { id: 'elbow-stand', label: 'Elbow Stand' },
   { id: 'grip', label: 'Grip' },
+  { id: 'yoga-flow', label: 'Yoga Flow' },
 ];
 
 const difficultyBadge: Record<string, string> = {
