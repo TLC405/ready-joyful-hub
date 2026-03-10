@@ -49,6 +49,10 @@ export interface Exercise {
   thumbnailUrl?: string;
   needsUpload?: boolean;
 
+  // Creator credit
+  creator?: string;
+  instagramUrl?: string;
+
   // Premium coach notes (optional)
   coachNotes?: {
     mechanic: string;
