@@ -240,11 +240,11 @@ export const exercises: Exercise[] = [
   {
     id: 'cat-cow-stretch',
     name: 'Cat-Cow Stretch',
-    category: 'mobility',
+    category: 'yoga',
     difficulty: 'easy',
     muscles: ['Spine', 'Core'],
     equipment: ['floor'],
-    tracks: ['general'],
+    tracks: ['general', 'yoga-flow'],
     shortPurpose: 'Spinal articulation warm-up.',
     description: 'Flow between spinal flexion and extension. Breath-driven, slow.',
     doThis: { setsRange: '2–3', repsRange: '8–12', restSecRange: '30s' },
