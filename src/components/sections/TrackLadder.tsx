@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Lock, Eye, FlaskConical, CheckCircle, ChevronRight, Zap, ArrowUp, Circle, Minimize2, ArrowDown, Footprints, Hand, Triangle, GripVertical, TrendingUp, Flower2 } from 'lucide-react';
 import { tracks } from '@/lib/tracks';
 import { getExerciseById } from '@/lib/exercises';
-import type { UnlockState } from '@/lib/types';
+import type { Exercise, UnlockState } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { useProgression } from '@/hooks/use-progression';
+import { ExerciseDetailModal } from '@/components/shared/ExerciseDetailModal';
 
 const trackIcons: Record<string, React.ElementType> = {
   Zap, ArrowUp, Circle, Minimize2, ArrowDown, Footprints, Hand, Triangle, Grip: GripVertical, TrendingUp, Flower2,
@@ -29,6 +30,7 @@ const nodeVariants = {
 
 export function TrackLadder() {
   const [activeTrack, setActiveTrack] = useState<string>('planche');
+  const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
   const currentTrack = tracks.find(t => t.id === activeTrack)!;
   const { getState } = useProgression();
 
@@ -102,10 +104,11 @@ export function TrackLadder() {
                   initial="hidden"
                   animate="visible"
                   whileHover={state !== 'locked' ? { x: 4, transition: { duration: 0.15 } } : {}}
+                  onClick={() => state !== 'locked' && setSelectedExercise(exercise)}
                   className={cn(
                     "relative ml-2 flex items-center gap-3 rounded-lg border p-3 transition-all",
                     config.className,
-                    state !== 'locked' && "cursor-pointer surface-raised"
+                    state !== 'locked' && "cursor-pointer surface-raised active:scale-[0.98]"
                   )}
                 >
                   <div className={cn(
@@ -141,8 +144,16 @@ export function TrackLadder() {
                         Unlock: {node.unlockTest.value} {node.unlockTest.unit}
                       </p>
                     )}
+                    {state === 'locked' && node.prereqs.length > 0 && (
+                      <p className="text-label text-[10px] text-muted-foreground/60">
+                        Unlock prerequisite first
+                      </p>
+                    )}
                   </div>
 
+                  {state !== 'locked' && (
+                    <span className="text-[9px] text-muted-foreground/50 shrink-0 hidden sm:block">TAP</span>
+                  )}
                   <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
                 </motion.div>
               );
@@ -150,6 +161,12 @@ export function TrackLadder() {
           </div>
         </div>
       </div>
+
+      <AnimatePresence>
+        {selectedExercise && (
+          <ExerciseDetailModal exercise={selectedExercise} onClose={() => setSelectedExercise(null)} />
+        )}
+      </AnimatePresence>
     </section>
   );
 }

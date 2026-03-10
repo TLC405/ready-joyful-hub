@@ -1,60 +1,108 @@
 
 
-# Clickable Exercises Everywhere + Mobile Overflow Fix + Progression UX Upgrade
+# Visual Refresh: Color Palette, Theme Toggle, and Polish
 
-## Problems
+## What's Wrong Right Now
 
-1. **Track Ladder nodes aren't clickable** — tapping an exercise in Tracks does nothing, no detail view opens
-2. **Home featured cards** navigate to Library instead of opening the exercise detail
-3. **Horizontal overflow on mobile** — the app can scroll sideways, showing empty space
-4. **Progression info is hidden** — unlock requirements and progress aren't visible enough
+1. **Blackwash**: Background is 4% lightness, surfaces go from 4% to 13% -- everything blends into a near-black void with almost no visual separation between cards, backgrounds, and borders
+2. **One-color palette**: Steel blue (`210 40% 52%`) is the only accent. Difficulty badges (beginner, intermediate, advanced) are all the same grayish-blue. No color diversity at all
+3. **No light theme**: The app is locked to dark mode with no toggle. The `.dark` class is empty and `:root` is the same dark palette
+4. **Muted foreground too dark**: `215 10% 50%` for secondary text is barely readable on these dark surfaces
+5. **Difficulty colors have no meaning**: Beginner is gray, intermediate is steel blue, advanced is white -- there's no intuitive color coding (green/yellow/red or similar)
 
-## Changes
+## The Fix
 
-### 1. Shared Exercise Detail Modal (new file)
+### 1. New Color System with Actual Color
 
-Create `src/components/shared/ExerciseDetailModal.tsx` — extract the existing `ExerciseDetailModal` from `ExerciseLibrary.tsx` into its own shared component. Every page imports and uses the same modal.
+Replace the monochrome steel-blue-only palette with meaningful, distinct accent colors:
 
-### 2. Make Track Ladder nodes open the modal
+- **Primary**: Shift from cold steel blue to a warmer, more vibrant blue (`220 70% 55%`) -- punchier, more modern
+- **Difficulty beginner**: Green-tinted (`150 50% 45%`) -- intuitive "easy/go" signal
+- **Difficulty intermediate**: Amber/gold (`40 80% 55%`) -- intuitive "caution/mid" signal
+- **Difficulty advanced**: Red-orange (`10 70% 55%`) -- intuitive "hard/stop" signal
+- **Success**: Brighter green (`155 60% 50%`) instead of the current muddy teal
+- **Accent**: A distinct secondary color, warm purple or teal, to differentiate from primary
 
-In `TrackLadder.tsx`:
-- Add `selectedExercise` state
-- On node click (when not locked), call `setSelectedExercise(exercise)`
-- Render the shared modal
-- Show unlock progress bar on each node (e.g., "2/3 sets logged toward unlock")
+### 2. Lifted Dark Theme (Not a Blackwash)
 
-### 3. Make Home featured cards open the modal
+Raise all surface lightness values so the app feels rich and layered, not flat-black:
 
-In `Index.tsx`:
-- Add `selectedExercise` state
-- Featured card `onClick` → open modal instead of navigating to library
-- Import shared modal
+- `--background`: `225 15% 10%` (was 4% -- now a visible dark navy)
+- `--surface-0`: `225 14% 10%`
+- `--surface-1`: `225 12% 14%` (was 7%)
+- `--surface-2`: `225 12% 18%` (was 10%)
+- `--surface-3`: `225 14% 22%` (was 13%)
+- `--border`: `225 10% 24%` (was 16% -- now actually visible)
+- `--muted-foreground`: `220 10% 60%` (was 50% -- now readable)
 
-### 4. Fix mobile horizontal overflow
+This gives each card, each row, and each panel a visible difference from its background.
 
-In `src/index.css` or `AppShell.tsx`:
-- Add `overflow-x: hidden` to `html` and `body`
-- Audit any elements with negative margins (`-mx-4`, `-mx-8`) that cause overflow — constrain them with `overflow-hidden` on parent
+### 3. Light Theme
 
-In `ExerciseLibrary.tsx`:
-- The sticky filter bar uses `-mx-4` / `-mx-8` which can cause horizontal scroll — wrap in `overflow-hidden` container
+Add a proper light theme under `.light` (or `:root` with dark as `.dark`) with:
 
-### 5. Upgrade progression display on Track nodes
+- **Background**: `220 15% 97%` (soft off-white with a cool tint)
+- **Surface-0**: `220 14% 97%`
+- **Surface-1**: `220 12% 93%`
+- **Surface-2**: `0 0% 100%` (white cards on gray bg)
+- **Surface-3**: `0 0% 100%`
+- **Foreground**: `225 15% 12%` (near-black text)
+- **Muted-foreground**: `220 10% 45%`
+- **Border**: `220 10% 85%`
+- **Primary/accent/difficulty colors**: Same hues, adjusted for light-bg contrast
 
-In `TrackLadder.tsx`, for each node:
-- Show a mini progress indicator (e.g., "2/3 qualifying sets") when in `try_mode` or `preview`
-- Add a tap hint (subtle arrow or "Tap to view") for unlocked/try_mode exercises
-- Locked nodes show what's needed: "Unlock [prerequisite] first"
+### 4. Theme Toggle
 
-## Files
+Add a theme toggle button to the Navigation component:
 
-| File | Action |
-|------|--------|
-| `src/components/shared/ExerciseDetailModal.tsx` | **New** — extracted shared modal |
-| `src/components/sections/ExerciseLibrary.tsx` | Remove inline modal, import shared one; fix overflow on filter bar |
-| `src/components/sections/TrackLadder.tsx` | Add click → open modal; show progression info on nodes |
-| `src/pages/Index.tsx` | Featured cards open modal instead of navigating |
-| `src/components/layout/AppShell.tsx` | Add `overflow-x-hidden` to root container |
+- Desktop: Place a Sun/Moon icon button at the bottom of the sidebar
+- Mobile: Add to the "More" menu overlay
+- Use `next-themes` (already installed) or a simple `useState` + `localStorage` + `document.documentElement.classList` approach
+- Toggle between `dark` and `light` class on `<html>`
+- Persist preference to `localStorage`
 
-**5 files, 1 new, 0 new dependencies**
+### 5. Difficulty Badge Color Overhaul
+
+Update the difficulty badge utility classes across all components:
+
+- **Easy**: Soft neutral (gray with slight green tint)
+- **Beginner**: Green badge (bg-green/15, text-green, border-green/30)
+- **Intermediate**: Amber badge (bg-amber/15, text-amber, border-amber/30)
+- **Advanced**: Red-orange badge (bg-red/15, text-red-orange, border-red/30)
+- **Master**: Purple or gold badge for elite feel
+
+These colors will be defined as CSS variables so they auto-switch with the theme.
+
+### 6. Surface Contrast and Card Polish
+
+- Increase `--shadow-card` visibility so elevated cards actually pop
+- Add subtle warm tint to card borders on hover (not just primary blue)
+- Make `surface-glass` backdrop more visible with slightly higher opacity
+- Increase `--scanline-opacity` very slightly or keep as-is (it's fine)
+
+---
+
+## Files to Change
+
+| File | Changes |
+|------|---------|
+| `src/index.css` | Rewrite `:root` color values for lifted dark palette. Add light theme variables. Update difficulty badge utility classes with green/amber/red colors |
+| `tailwind.config.ts` | Add difficulty color tokens (beginner, intermediate, advanced, master) to Tailwind config |
+| `src/components/layout/Navigation.tsx` | Add theme toggle button (Sun/Moon icon) to desktop sidebar and mobile menu |
+| `src/components/sections/ExerciseLibrary.tsx` | Update `difficultyBadge` map to use new color tokens |
+| `src/components/sections/SkillsLibrary.tsx` | Update `difficultyStyles` to use new color tokens |
+| `src/components/sections/skills/SkillDetailModal.tsx` | Update `difficultyStyles` to match |
+| `src/pages/Index.tsx` | Update `difficultyBadge` map for featured cards |
+| `src/components/layout/AppShell.tsx` | Ensure HUD grid and scanline colors adapt to light/dark theme |
+| `src/App.tsx` | Wrap app in ThemeProvider or add theme initialization logic |
+
+**Total: 9 files edited, 0 new files**
+
+## What Does NOT Change
+
+- Layout structure (already overhauled in previous pass)
+- Exercise data, track data, progression engine
+- Navigation layout and section routing
+- Framer Motion animations
+- All shadcn/ui primitives (they already consume CSS variables)
 
