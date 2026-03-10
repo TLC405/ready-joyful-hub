@@ -291,11 +291,11 @@ export const exercises: Exercise[] = [
   {
     id: 'downward-dog',
     name: 'Downward Dog',
-    category: 'mobility',
+    category: 'yoga',
     difficulty: 'easy',
     muscles: ['Shoulders', 'Hamstrings', 'Calves'],
     equipment: ['floor'],
-    tracks: ['handstand', 'general'],
+    tracks: ['handstand', 'general', 'yoga-flow'],
     shortPurpose: 'Shoulder overhead prep + posterior chain.',
     description: 'Inverted V shape. Push hips high, heels toward floor. Active shoulders.',
     doThis: { setsRange: '2–3', timeSecRange: '30–60s', restSecRange: '30s' },
