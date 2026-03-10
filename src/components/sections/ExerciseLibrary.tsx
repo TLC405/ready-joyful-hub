@@ -102,7 +102,7 @@ export function ExerciseLibrary() {
       </div>
 
       {/* Search + Filter Bar — inset wells */}
-      <div className="sticky top-0 z-20 -mx-4 mb-4 flex flex-wrap items-center gap-2 bg-background/95 px-4 py-3 backdrop-blur-sm lg:-mx-8 lg:px-8">
+      <div className="sticky top-0 z-20 mb-4 flex flex-wrap items-center gap-2 bg-background/95 px-4 py-3 backdrop-blur-sm -mx-4 lg:-mx-8 lg:px-8" style={{ width: 'calc(100% + 2rem)' }}>
         <div className="surface-inset flex flex-1 items-center gap-2 rounded-lg px-3 py-2">
           <Search className="h-4 w-4 text-muted-foreground" />
           <input
