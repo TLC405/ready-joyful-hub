@@ -34,6 +34,7 @@ const pageTransition = {
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState<Section>('home');
+  const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
 
   const handleNavigate = (section: string) => {
     setActiveSection(section as Section);
