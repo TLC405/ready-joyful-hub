@@ -1,8 +1,8 @@
 // ==================== TLC Calisthenics — Core Types ====================
 
-export type Category = 'push' | 'pull' | 'legs' | 'core' | 'mobility' | 'skills';
+export type Category = 'push' | 'pull' | 'legs' | 'core' | 'mobility' | 'skills' | 'yoga';
 export type Difficulty = 'easy' | 'beginner' | 'intermediate' | 'advanced' | 'master';
-export type TrackId = 'planche' | 'handstand' | 'rings' | 'compression' | 'pull-strength' | 'legs' | 'flag' | 'general' | 'forearm-stand' | 'elbow-stand' | 'grip';
+export type TrackId = 'planche' | 'handstand' | 'rings' | 'compression' | 'pull-strength' | 'legs' | 'flag' | 'general' | 'forearm-stand' | 'elbow-stand' | 'grip' | 'press' | 'yoga-flow';
 export type Equipment = 'floor' | 'wall' | 'pull-up bar' | 'rings' | 'chair' | 'towel' | 'resistance band' | 'parallettes';
 export type UnlockState = 'locked' | 'preview' | 'try_mode' | 'unlocked' | 'coach_override';
 
@@ -48,6 +48,10 @@ export interface Exercise {
   videoUrl?: string;
   thumbnailUrl?: string;
   needsUpload?: boolean;
+
+  // Creator credit
+  creator?: string;
+  instagramUrl?: string;
 
   // Premium coach notes (optional)
   coachNotes?: {

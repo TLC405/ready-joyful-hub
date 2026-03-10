@@ -13,6 +13,7 @@ const categories: { id: Category | 'all'; label: string }[] = [
   { id: 'core', label: 'Core' },
   { id: 'mobility', label: 'Mobility' },
   { id: 'skills', label: 'Skills' },
+  { id: 'yoga', label: 'Yoga' },
 ];
 
 const difficulties: { id: Difficulty | 'all'; label: string }[] = [
@@ -30,11 +31,13 @@ const trackFilters: { id: TrackId | 'all'; label: string }[] = [
   { id: 'handstand', label: 'Handstand' },
   { id: 'rings', label: 'Rings' },
   { id: 'compression', label: 'Compression' },
+  { id: 'press', label: 'Press' },
   { id: 'pull-strength', label: 'Pull' },
   { id: 'legs', label: 'Legs' },
   { id: 'forearm-stand', label: 'Forearm Stand' },
   { id: 'elbow-stand', label: 'Elbow Stand' },
   { id: 'grip', label: 'Grip' },
+  { id: 'yoga-flow', label: 'Yoga Flow' },
 ];
 
 const difficultyBadge: Record<string, string> = {
@@ -307,6 +310,23 @@ function ExerciseDetailModal({ exercise, onClose }: { exercise: Exercise; onClos
                 ))}
               </ul>
             </div>
+            {exercise.creator && (
+              <div className="mt-3 surface-inset rounded-lg p-3">
+                <p className="text-xs text-muted-foreground">
+                  Credit: <span className="text-foreground font-medium">{exercise.creator}</span>
+                </p>
+                {exercise.instagramUrl && (
+                  <a
+                    href={exercise.instagramUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-1 inline-flex items-center gap-1 text-xs text-primary hover:underline"
+                  >
+                    📸 Watch on Instagram →
+                  </a>
+                )}
+              </div>
+            )}
           </div>
         </div>
 

@@ -1,102 +1,108 @@
 
 
-# Add Instagram Reel Exercises + Expand Compression Track + Yoga Integration
+# Visual Refresh: Color Palette, Theme Toggle, and Polish
 
-## What Changes
+## What's Wrong Right Now
 
-### 1. Add `creator` and `instagramUrl` fields to Exercise type
+1. **Blackwash**: Background is 4% lightness, surfaces go from 4% to 13% -- everything blends into a near-black void with almost no visual separation between cards, backgrounds, and borders
+2. **One-color palette**: Steel blue (`210 40% 52%`) is the only accent. Difficulty badges (beginner, intermediate, advanced) are all the same grayish-blue. No color diversity at all
+3. **No light theme**: The app is locked to dark mode with no toggle. The `.dark` class is empty and `:root` is the same dark palette
+4. **Muted foreground too dark**: `215 10% 50%` for secondary text is barely readable on these dark surfaces
+5. **Difficulty colors have no meaning**: Beginner is gray, intermediate is steel blue, advanced is white -- there's no intuitive color coding (green/yellow/red or similar)
 
-In `src/lib/types.ts`, add two optional fields:
-```ts
-creator?: string;        // e.g. "@alessiakoff"
-instagramUrl?: string;   // direct IG post link
-```
+## The Fix
 
-### 2. Add `'yoga'` category and `'press'` + `'yoga-flow'` tracks
+### 1. New Color System with Actual Color
 
-- `Category`: add `'yoga'`
-- `TrackId`: add `'press'` and `'yoga-flow'`
+Replace the monochrome steel-blue-only palette with meaningful, distinct accent colors:
 
-### 3. Add ~18 new exercises to `exercises.ts`
+- **Primary**: Shift from cold steel blue to a warmer, more vibrant blue (`220 70% 55%`) -- punchier, more modern
+- **Difficulty beginner**: Green-tinted (`150 50% 45%`) -- intuitive "easy/go" signal
+- **Difficulty intermediate**: Amber/gold (`40 80% 55%`) -- intuitive "caution/mid" signal
+- **Difficulty advanced**: Red-orange (`10 70% 55%`) -- intuitive "hard/stop" signal
+- **Success**: Brighter green (`155 60% 50%`) instead of the current muddy teal
+- **Accent**: A distinct secondary color, warm purple or teal, to differentiate from primary
 
-**From your Instagram reels (5 structured exercises from your earlier breakdown):**
+### 2. Lifted Dark Theme (Not a Blackwash)
 
-| Exercise | Creator | IG Link | Category | Track |
-|----------|---------|---------|----------|-------|
-| Wall Compression Stretch | @alessiakoff | DVbYLGDjE1T | core | compression, press |
-| Elevated Chair Compression Drill | @balancenotion | DUQhN8pFHm9 | core | compression, press |
-| Crocodile Pose (One-Arm Balance) | @balancenotion | DUHXfxxiFYL | skills | general |
-| HSPU Capacity Builder | @andry_strong | DU5jYLADGCp | push | handstand |
-| Band-Assisted Progressions | @cali.maxi | DUB-JFgDZtn | push | general |
+Raise all surface lightness values so the app feels rich and layered, not flat-black:
 
-**Press Handstand exercises (new):**
+- `--background`: `225 15% 10%` (was 4% -- now a visible dark navy)
+- `--surface-0`: `225 14% 10%`
+- `--surface-1`: `225 12% 14%` (was 7%)
+- `--surface-2`: `225 12% 18%` (was 10%)
+- `--surface-3`: `225 14% 22%` (was 13%)
+- `--border`: `225 10% 24%` (was 16% -- now actually visible)
+- `--muted-foreground`: `220 10% 60%` (was 50% -- now readable)
 
-| Exercise | Category | Track |
-|----------|----------|-------|
-| Straddle Press to Handstand | skills | press, handstand, compression |
-| Stalder Press to Handstand | skills | press, handstand, compression |
+This gives each card, each row, and each panel a visible difference from its background.
 
-**Yoga poses (new, all with real cues/fail signs):**
+### 3. Light Theme
 
-| Exercise | Difficulty | Track |
-|----------|------------|-------|
-| Warrior I | easy | yoga-flow |
-| Warrior II | easy | yoga-flow |
-| Warrior III | intermediate | yoga-flow |
-| Tree Pose | easy | yoga-flow |
-| Chair Pose (Utkatasana) | beginner | yoga-flow |
-| Child's Pose | easy | yoga-flow |
-| Triangle Pose | beginner | yoga-flow |
-| Crow Pose | intermediate | yoga-flow, planche |
-| Half Moon Pose | intermediate | yoga-flow |
-| Wheel Pose (Urdhva Dhanurasana) | advanced | yoga-flow |
-| Camel Pose | beginner | yoga-flow |
+Add a proper light theme under `.light` (or `:root` with dark as `.dark`) with:
 
-**Re-tag existing mobility exercises** (Downward Dog, Cobra, Pigeon, Bridge, Cat-Cow) to also belong to `yoga-flow` track.
+- **Background**: `220 15% 97%` (soft off-white with a cool tint)
+- **Surface-0**: `220 14% 97%`
+- **Surface-1**: `220 12% 93%`
+- **Surface-2**: `0 0% 100%` (white cards on gray bg)
+- **Surface-3**: `0 0% 100%`
+- **Foreground**: `225 15% 12%` (near-black text)
+- **Muted-foreground**: `220 10% 45%`
+- **Border**: `220 10% 85%`
+- **Primary/accent/difficulty colors**: Same hues, adjusted for light-bg contrast
 
-**Remaining 10 IG links** added as `instagramUrl` on existing or new exercises where they match (shoulder strengtheners → HSPU/handstand exercises, press-to-handstand journey → press exercises, human flag → human-flag exercise, stalder press → stalder exercise, core training → core exercises). Those that are visual-only reference reels get attached to the most relevant exercise.
+### 4. Theme Toggle
 
-### 4. Rework Compression Track → Press Handstand Pipeline
+Add a theme toggle button to the Navigation component:
 
-Current compression track ends at L-sit. Extend it:
+- Desktop: Place a Sun/Moon icon button at the bottom of the sidebar
+- Mobile: Add to the "More" menu overlay
+- Use `next-themes` (already installed) or a simple `useState` + `localStorage` + `document.documentElement.classList` approach
+- Toggle between `dark` and `light` class on `<html>`
+- Persist preference to `localStorage`
 
-```text
-Hollow Body → Seated Pike Lift → Seated Straddle Lift → L-Sit
-  → Wall Compression Stretch → Chair Compression Drill
-    → Straddle Press to HS → Stalder Press to HS
-```
+### 5. Difficulty Badge Color Overhaul
 
-### 5. Add new tracks to `tracks.ts`
+Update the difficulty badge utility classes across all components:
 
-**Press Track:**
-```text
-Wall Compression → Chair Compression → Straddle Press to HS → Stalder Press to HS
-```
+- **Easy**: Soft neutral (gray with slight green tint)
+- **Beginner**: Green badge (bg-green/15, text-green, border-green/30)
+- **Intermediate**: Amber badge (bg-amber/15, text-amber, border-amber/30)
+- **Advanced**: Red-orange badge (bg-red/15, text-red-orange, border-red/30)
+- **Master**: Purple or gold badge for elite feel
 
-**Yoga Flow Track:**
-```text
-Child's Pose → Cat-Cow → Downward Dog → Warrior I → Warrior II
-  → Triangle → Tree → Warrior III → Chair Pose → Crow Pose
-    → Camel → Half Moon → Bridge → Wheel Pose
-```
+These colors will be defined as CSS variables so they auto-switch with the theme.
 
-### 6. Update ExerciseLibrary filters
+### 6. Surface Contrast and Card Polish
 
-Add `'yoga'` to category dropdown. Add `'Press'` and `'Yoga Flow'` to track dropdown.
+- Increase `--shadow-card` visibility so elevated cards actually pop
+- Add subtle warm tint to card borders on hover (not just primary blue)
+- Make `surface-glass` backdrop more visible with slightly higher opacity
+- Increase `--scanline-opacity` very slightly or keep as-is (it's fine)
 
-### 7. Update Exercise Detail Modal
+---
 
-Show `creator` credit and `instagramUrl` as a clickable "Watch on Instagram" link when present.
+## Files to Change
 
-## Files Changed
+| File | Changes |
+|------|---------|
+| `src/index.css` | Rewrite `:root` color values for lifted dark palette. Add light theme variables. Update difficulty badge utility classes with green/amber/red colors |
+| `tailwind.config.ts` | Add difficulty color tokens (beginner, intermediate, advanced, master) to Tailwind config |
+| `src/components/layout/Navigation.tsx` | Add theme toggle button (Sun/Moon icon) to desktop sidebar and mobile menu |
+| `src/components/sections/ExerciseLibrary.tsx` | Update `difficultyBadge` map to use new color tokens |
+| `src/components/sections/SkillsLibrary.tsx` | Update `difficultyStyles` to use new color tokens |
+| `src/components/sections/skills/SkillDetailModal.tsx` | Update `difficultyStyles` to match |
+| `src/pages/Index.tsx` | Update `difficultyBadge` map for featured cards |
+| `src/components/layout/AppShell.tsx` | Ensure HUD grid and scanline colors adapt to light/dark theme |
+| `src/App.tsx` | Wrap app in ThemeProvider or add theme initialization logic |
 
-| File | Change |
-|------|--------|
-| `src/lib/types.ts` | Add `yoga` category, `press` + `yoga-flow` tracks, `creator` + `instagramUrl` fields |
-| `src/lib/exercises.ts` | Add ~18 new exercises, attach IG URLs to relevant exercises, re-tag mobility→yoga-flow |
-| `src/lib/tracks.ts` | Add Press track, Yoga Flow track, extend Compression track |
-| `src/components/sections/ExerciseLibrary.tsx` | Add yoga category + press/yoga-flow to filter dropdowns, show creator/IG link in modal |
-| `src/components/CoachCare/Canvas/ExerciseCanvas.tsx` | Show creator + IG link |
+**Total: 9 files edited, 0 new files**
 
-**~5 files, 0 new files, 0 new dependencies**
+## What Does NOT Change
+
+- Layout structure (already overhauled in previous pass)
+- Exercise data, track data, progression engine
+- Navigation layout and section routing
+- Framer Motion animations
+- All shadcn/ui primitives (they already consume CSS variables)
 
