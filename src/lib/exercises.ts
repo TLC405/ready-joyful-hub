@@ -591,6 +591,7 @@ export const exercises: Exercise[] = [
     tracks: ['handstand'],
     shortPurpose: 'Overhead pressing at bodyweight.',
     description: 'Wall-supported or freestanding. Head to floor and press back to full lockout.',
+    instagramUrl: 'https://www.instagram.com/p/DSlL7m3DCGN/',
     doThis: { setsRange: '3–5', repsRange: '2–8', restSecRange: '120s' },
     cueStack: ['Hands shoulder-width', 'Head touches floor', 'Full lockout at top'],
     failSigns: ['Kipping with hips', 'Arching excessively', 'Not reaching full ROM'],
