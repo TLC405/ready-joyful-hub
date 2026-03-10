@@ -257,11 +257,11 @@ export const exercises: Exercise[] = [
   {
     id: 'cobra-pose',
     name: 'Cobra Pose',
-    category: 'mobility',
+    category: 'yoga',
     difficulty: 'easy',
     muscles: ['Spine', 'Core', 'Shoulders'],
     equipment: ['floor'],
-    tracks: ['general'],
+    tracks: ['general', 'yoga-flow'],
     shortPurpose: 'Gentle spinal extension.',
     description: 'Lie prone, press up through hands keeping hips grounded. Open the chest.',
     doThis: { setsRange: '2–3', timeSecRange: '15–30s', restSecRange: '30s' },
