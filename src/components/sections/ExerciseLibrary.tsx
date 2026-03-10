@@ -13,6 +13,7 @@ const categories: { id: Category | 'all'; label: string }[] = [
   { id: 'core', label: 'Core' },
   { id: 'mobility', label: 'Mobility' },
   { id: 'skills', label: 'Skills' },
+  { id: 'yoga', label: 'Yoga' },
 ];
 
 const difficulties: { id: Difficulty | 'all'; label: string }[] = [
