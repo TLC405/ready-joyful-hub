@@ -1180,11 +1180,11 @@ export const exercises: Exercise[] = [
   {
     id: 'dolphin-pose',
     name: 'Dolphin Pose',
-    category: 'mobility',
+    category: 'yoga',
     difficulty: 'easy',
     muscles: ['Shoulders', 'Core', 'Hamstrings'],
     equipment: ['floor'],
-    tracks: ['forearm-stand'],
+    tracks: ['forearm-stand', 'yoga-flow'],
     shortPurpose: 'Shoulder opener and Pincha prep.',
     description: 'Forearm down-dog position. Builds the shoulder opening and scapular strength needed for forearm stand.',
     thumbnailUrl: 'https://i.ytimg.com/vi/TavTs7ZcDYM/hqdefault.jpg',
