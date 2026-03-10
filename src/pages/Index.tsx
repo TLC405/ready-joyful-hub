@@ -123,6 +123,12 @@ const Index = () => {
             )}
           </AnimatePresence>
 
+          <AnimatePresence>
+            {selectedExercise && (
+              <ExerciseDetailModal exercise={selectedExercise} onClose={() => setSelectedExercise(null)} />
+            )}
+          </AnimatePresence>
+
           <div className="h-24 lg:hidden" />
         </main>
       </div>
