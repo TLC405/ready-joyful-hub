@@ -96,6 +96,25 @@ export function ExerciseCanvas({ data }: ExerciseCanvasProps) {
             <span key={m} className="surface-raised rounded-md px-2 py-1 text-label text-[10px]">{m}</span>
           ))}
         </div>
+
+        {/* Creator Credit + IG Link */}
+        {exercise.creator && (
+          <div className="surface-inset rounded-xl p-4">
+            <p className="text-xs text-muted-foreground">
+              Credit: <span className="text-foreground font-medium">{exercise.creator}</span>
+            </p>
+            {exercise.instagramUrl && (
+              <a
+                href={exercise.instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-1 inline-flex items-center gap-1 text-xs text-primary hover:underline"
+              >
+                📸 Watch on Instagram →
+              </a>
+            )}
+          </div>
+        )}
       </motion.div>
     </div>
   );

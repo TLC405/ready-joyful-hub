@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 import { useProgression } from '@/hooks/use-progression';
 
 const trackIcons: Record<string, React.ElementType> = {
-  Zap, ArrowUp, Circle, Minimize2, ArrowDown, Footprints, Hand, Triangle, Grip: GripVertical,
+  Zap, ArrowUp, Circle, Minimize2, ArrowDown, Footprints, Hand, Triangle, Grip: GripVertical, TrendingUp, Flower2,
 };
 
 const stateConfig: Record<UnlockState, { icon: React.ElementType; label: string; className: string }> = {
