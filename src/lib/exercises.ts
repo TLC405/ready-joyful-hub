@@ -223,11 +223,11 @@ export const exercises: Exercise[] = [
   {
     id: 'bridge-pose',
     name: 'Bridge Pose',
-    category: 'mobility',
+    category: 'yoga',
     difficulty: 'beginner',
     muscles: ['Spine', 'Shoulders', 'Glutes'],
     equipment: ['floor'],
-    tracks: ['general'],
+    tracks: ['general', 'yoga-flow'],
     shortPurpose: 'Spinal extension + shoulder opening.',
     description: 'Glute bridge to full bridge progression. Open the front body safely.',
     doThis: { setsRange: '3', timeSecRange: '15–30s', restSecRange: '60s' },
