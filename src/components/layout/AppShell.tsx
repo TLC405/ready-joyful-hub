@@ -7,7 +7,7 @@ interface AppShellProps {
 
 export function AppShell({ children }: AppShellProps) {
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen overflow-x-hidden">
       {/* HUD Grid Background */}
       <div className="hud-grid scanline pointer-events-none fixed inset-0 z-0" />
 
