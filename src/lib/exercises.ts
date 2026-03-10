@@ -308,11 +308,11 @@ export const exercises: Exercise[] = [
   {
     id: 'pigeon-pose',
     name: 'Pigeon Pose',
-    category: 'mobility',
+    category: 'yoga',
     difficulty: 'beginner',
     muscles: ['Hips', 'Glutes', 'Piriformis'],
     equipment: ['floor'],
-    tracks: ['general'],
+    tracks: ['general', 'yoga-flow'],
     shortPurpose: 'Deep hip external rotation stretch.',
     description: 'Front leg bent, back leg extended. Fold forward for intensity. Breathe into the hip.',
     doThis: { setsRange: '2–3', timeSecRange: '45–90s each', restSecRange: '30s' },
