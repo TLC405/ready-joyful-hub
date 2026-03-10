@@ -103,10 +103,11 @@ export function TrackLadder() {
                   initial="hidden"
                   animate="visible"
                   whileHover={state !== 'locked' ? { x: 4, transition: { duration: 0.15 } } : {}}
+                  onClick={() => state !== 'locked' && setSelectedExercise(exercise)}
                   className={cn(
                     "relative ml-2 flex items-center gap-3 rounded-lg border p-3 transition-all",
                     config.className,
-                    state !== 'locked' && "cursor-pointer surface-raised"
+                    state !== 'locked' && "cursor-pointer surface-raised active:scale-[0.98]"
                   )}
                 >
                   <div className={cn(
