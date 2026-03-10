@@ -70,8 +70,8 @@ const Index = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 + i * 0.05, type: 'spring', stiffness: 300, damping: 24 }}
                         whileHover={{ y: -4, transition: { duration: 0.15 } }}
-                        onClick={() => handleNavigate('library')} 
-                        className="group cursor-pointer overflow-hidden rounded-lg surface-raised transition-all"
+                        onClick={() => setSelectedExercise(ex)} 
+                        className="group cursor-pointer overflow-hidden rounded-lg surface-raised transition-all active:scale-[0.97]"
                       >
                         <div className="relative aspect-[16/10] overflow-hidden">
                           <img src={ex.image} alt={ex.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
