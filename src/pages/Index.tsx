@@ -8,7 +8,9 @@ import { TrackLadder } from '@/components/sections/TrackLadder';
 import { ProgressDashboard } from '@/components/sections/ProgressDashboard';
 import { SettingsPanel } from '@/components/sections/SettingsPanel';
 import { CoachCareStudio } from '@/components/CoachCare/CoachCareStudio';
+import { ExerciseDetailModal } from '@/components/shared/ExerciseDetailModal';
 import { exercises } from '@/lib/exercises';
+import type { Exercise } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
 type Section = 'home' | 'library' | 'tracks' | 'coach' | 'progress' | 'settings';
