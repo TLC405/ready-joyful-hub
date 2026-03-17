@@ -15,6 +15,7 @@ import type { Exercise } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
 type Section = 'home' | 'library' | 'tracks' | 'coach' | 'progress' | 'settings';
+type TrackView = 'ladder' | 'map';
 
 const difficultyBadge: Record<string, string> = {
   easy: 'difficulty-easy',
