@@ -302,7 +302,7 @@ export const exercises: Exercise[] = [
     cueStack: ['Push floor away', 'Externally rotate arms', 'Pedal heels'],
     failSigns: ['Shoulders dumping', 'Rounded upper back', 'Locked knees with pain'],
     regressTo: [],
-    progressTo: [],
+    progressTo: ['chest-to-wall-handstand', 'dolphin-pose'],
     needsUpload: true,
   },
   {
