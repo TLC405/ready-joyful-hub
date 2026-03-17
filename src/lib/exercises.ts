@@ -74,7 +74,7 @@ export const exercises: Exercise[] = [
     cueStack: ['Depress shoulders hard', 'Point toes', 'Push floor away'],
     failSigns: ['Shoulders creeping to ears', 'Legs dropping below parallel', 'Bent knees (unless regressing)'],
     regressTo: ['tuck-sit', 'hollow-body-hold'],
-    progressTo: [],
+    progressTo: ['seated-straddle-lift', 'straddle-press-to-hs'],
   },
   {
     id: 'dragon-flag',
