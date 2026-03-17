@@ -26,10 +26,10 @@ const difficultyBadge: Record<string, string> = {
 const featured = exercises.filter(e => e.image).slice(0, 8);
 
 const pageTransition = {
-  initial: { opacity: 0, y: 12 },
+  initial: { opacity: 0, y: 8 },
   animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -8 },
-  transition: { type: 'spring' as const, stiffness: 300, damping: 28 }
+  exit: { opacity: 0, y: -4 },
+  transition: { duration: 0.3, ease: 'easeOut' }
 };
 
 const Index = () => {
@@ -51,41 +51,36 @@ const Index = () => {
             {activeSection === 'home' && (
               <motion.div key="home" {...pageTransition}>
                 <HeroSection />
+
+                {/* Featured Skills — editorial grid */}
                 <section className="px-4 pb-8 lg:px-8">
-                  <div className="mb-3 flex items-center justify-between">
-                    <h3 className="font-chalk text-lg text-embossed text-muted-foreground">FEATURED SKILLS</h3>
-                    <motion.button 
-                      onClick={() => handleNavigate('library')} 
-                      className="text-label text-xs text-primary hover:underline"
-                      whileHover={{ x: 3 }}
-                    >
-                      VIEW ALL →
-                    </motion.button>
+                  <div className="editorial-divider-thick mb-4 pt-4">
+                    <div className="flex items-baseline justify-between">
+                      <h3 className="text-editorial-sm text-foreground">FEATURED SKILLS</h3>
+                      <button onClick={() => handleNavigate('library')} className="text-label text-xs text-primary hover:underline">
+                        VIEW ALL →
+                      </button>
+                    </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4">
-                    {featured.map((ex, i) => (
-                      <motion.div 
-                        key={ex.id} 
-                        initial={{ opacity: 0, y: 15 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 + i * 0.05, type: 'spring', stiffness: 300, damping: 24 }}
-                        whileHover={{ y: -4, transition: { duration: 0.15 } }}
-                        onClick={() => setSelectedExercise(ex)} 
-                        className="group cursor-pointer overflow-hidden rounded-lg surface-raised transition-all active:scale-[0.97]"
+                  <div className="grid grid-cols-2 gap-px bg-foreground/10 border border-foreground/10 sm:grid-cols-3 md:grid-cols-4">
+                    {featured.map((ex) => (
+                      <div
+                        key={ex.id}
+                        onClick={() => setSelectedExercise(ex)}
+                        className="group cursor-pointer bg-card transition-colors hover:bg-surface-0"
                       >
-                        <div className="relative aspect-[16/10] overflow-hidden">
+                        <div className="relative aspect-[4/3] overflow-hidden">
                           <img src={ex.image} alt={ex.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                          <div className="image-overlay absolute inset-0" />
-                          <div className="absolute left-2 top-2">
-                            <span className={cn("rounded-full px-1.5 py-0.5 text-label text-[9px] backdrop-blur-sm", difficultyBadge[ex.difficulty])}>
+                          <div className="absolute left-0 top-0">
+                            <span className={cn("border px-2 py-0.5 text-label text-[9px] bg-card/90", difficultyBadge[ex.difficulty])}>
                               {ex.difficulty.toUpperCase()}
                             </span>
                           </div>
                         </div>
-                        <div className="p-2">
+                        <div className="border-t border-foreground/5 p-3">
                           <h4 className="font-chalk text-sm truncate">{ex.name}</h4>
                         </div>
-                      </motion.div>
+                      </div>
                     ))}
                   </div>
                 </section>

@@ -6,7 +6,6 @@ import {
   Menu,
   X,
   Home,
-  ChevronRight,
   GitBranch,
   Library,
   Sun,
@@ -30,24 +29,19 @@ const navItems: NavItem[] = [
   { id: 'settings', label: 'SETTINGS', icon: Settings },
 ];
 
-interface NavigationProps {
-  activeSection: string;
-  onNavigate: (section: string) => void;
-}
-
 function useTheme() {
   const [theme, setThemeState] = useState<'dark' | 'light'>(() => {
     if (typeof window !== 'undefined') {
-      return (localStorage.getItem('theme') as 'dark' | 'light') || 'dark';
+      return (localStorage.getItem('theme') as 'dark' | 'light') || 'light';
     }
-    return 'dark';
+    return 'light';
   });
 
   useEffect(() => {
     const root = document.documentElement;
     root.classList.remove('light', 'dark');
-    if (theme === 'light') {
-      root.classList.add('light');
+    if (theme === 'dark') {
+      root.classList.add('dark');
     }
     localStorage.setItem('theme', theme);
   }, [theme]);
@@ -56,64 +50,58 @@ function useTheme() {
   return { theme, toggle };
 }
 
-export function Navigation({ activeSection, onNavigate }: NavigationProps) {
+export function Navigation({ activeSection, onNavigate }: { activeSection: string; onNavigate: (section: string) => void }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { theme, toggle } = useTheme();
   const ThemeIcon = theme === 'dark' ? Sun : Moon;
 
   return (
     <>
-      {/* Desktop Navigation — brushed metal sidebar */}
-      <nav className="texture-brushed surface-raised fixed left-0 top-0 z-50 hidden h-screen w-20 flex-col items-center border-r border-border py-8 lg:flex">
-        <motion.div className="relative z-10 mb-12" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-          <div className="badge-coin flex h-12 w-12 items-center justify-center rounded-lg bg-primary">
-            <span className="font-chalk text-lg text-primary-foreground">TLC</span>
+      {/* Desktop Sidebar — editorial flat */}
+      <nav className="fixed left-0 top-0 z-50 hidden h-screen w-20 flex-col items-center border-r border-foreground/10 bg-card py-8 lg:flex">
+        <div className="mb-12">
+          <div className="flex h-12 w-12 items-center justify-center border-2 border-primary">
+            <span className="font-chalk text-lg text-primary">TLC</span>
           </div>
-        </motion.div>
+        </div>
 
-        <div className="relative z-10 flex flex-1 flex-col items-center gap-2">
+        <div className="flex flex-1 flex-col items-center gap-1">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeSection === item.id;
             return (
-              <motion.button
+              <button
                 key={item.id}
                 onClick={() => onNavigate(item.id)}
                 className={cn(
-                  "group relative flex h-14 w-14 items-center justify-center rounded-lg transition-all duration-300",
+                  "group relative flex h-14 w-14 items-center justify-center transition-colors",
                   isActive 
-                    ? "surface-inset text-primary" 
-                    : "btn-raised text-muted-foreground hover:text-foreground"
+                    ? "text-primary" 
+                    : "text-muted-foreground hover:text-foreground"
                 )}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
               >
                 <Icon className="h-5 w-5" />
-                <div className="surface-raised pointer-events-none absolute left-full ml-3 flex items-center gap-2 rounded-md px-3 py-2 opacity-0 transition-opacity group-hover:opacity-100">
-                  <span className="whitespace-nowrap text-label">{item.label}</span>
-                  <ChevronRight className="h-3 w-3 text-muted-foreground" />
+                <div className="pointer-events-none absolute left-full ml-3 flex items-center gap-2 border border-foreground/10 bg-card px-3 py-2 opacity-0 transition-opacity group-hover:opacity-100">
+                  <span className="whitespace-nowrap text-label text-xs">{item.label}</span>
                 </div>
                 {isActive && (
-                  <motion.div layoutId="activeIndicator" className="absolute -right-[1px] h-8 w-1 rounded-l-full bg-primary" transition={{ type: "spring", stiffness: 500, damping: 30 }} />
+                  <motion.div layoutId="activeIndicator" className="absolute -right-[1px] h-8 w-0.5 bg-primary" transition={{ type: "spring", stiffness: 500, damping: 30 }} />
                 )}
-              </motion.button>
+              </button>
             );
           })}
         </div>
 
-        {/* Theme Toggle */}
-        <motion.button
+        <button
           onClick={toggle}
-          className="btn-raised relative z-10 mt-4 flex h-12 w-12 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          className="mt-4 flex h-12 w-12 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
         >
           <ThemeIcon className="h-5 w-5" />
-        </motion.button>
+        </button>
       </nav>
 
-      {/* Mobile Navigation */}
-      <nav className="surface-glass fixed bottom-0 left-0 right-0 z-50 border-t border-border lg:hidden">
+      {/* Mobile Bottom Bar */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-foreground/10 bg-card lg:hidden">
         <div className="flex items-center justify-around py-3">
           {navItems.slice(0, 4).map((item) => {
             const Icon = item.icon;
@@ -123,6 +111,7 @@ export function Navigation({ activeSection, onNavigate }: NavigationProps) {
                 className={cn("flex flex-col items-center gap-1 px-3 py-1 transition-colors", isActive ? "text-primary" : "text-muted-foreground")}>
                 <Icon className="h-5 w-5" />
                 <span className="text-label text-[10px]">{item.label}</span>
+                {isActive && <div className="h-0.5 w-4 bg-primary" />}
               </button>
             );
           })}
@@ -136,38 +125,39 @@ export function Navigation({ activeSection, onNavigate }: NavigationProps) {
       {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {mobileMenuOpen && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 lg:hidden" style={{ background: 'hsla(var(--surface-0), 0.98)' }}>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 bg-card lg:hidden">
             <div className="flex h-full flex-col p-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="badge-coin flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
-                    <span className="font-chalk text-xl text-primary-foreground">TLC</span>
+                  <div className="flex h-10 w-10 items-center justify-center border-2 border-primary">
+                    <span className="font-chalk text-lg text-primary">TLC</span>
                   </div>
-                  <span className="font-chalk text-2xl text-embossed">TLC CALISTHENICS</span>
+                  <span className="font-chalk text-2xl">TLC CALISTHENICS</span>
                 </div>
-                <button onClick={() => setMobileMenuOpen(false)} className="btn-raised flex h-10 w-10 items-center justify-center rounded-lg">
+                <button onClick={() => setMobileMenuOpen(false)} className="flex h-10 w-10 items-center justify-center border border-foreground/10">
                   <X className="h-5 w-5" />
                 </button>
               </div>
-              <div className="mt-8 flex flex-1 flex-col gap-2">
+              <div className="mt-8 flex flex-1 flex-col gap-1">
                 {navItems.map((item, index) => {
                   const Icon = item.icon;
                   const isActive = activeSection === item.id;
                   return (
-                    <motion.button key={item.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.1 }}
+                    <motion.button key={item.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.05 }}
                       onClick={() => { onNavigate(item.id); setMobileMenuOpen(false); }}
-                      className={cn("flex items-center gap-4 rounded-lg p-4 transition-all", isActive ? "surface-inset text-primary" : "surface-raised text-foreground")}>
-                      <Icon className="h-6 w-6" />
+                      className={cn("flex items-center gap-4 border-b border-foreground/5 p-4 text-left transition-all", isActive ? "text-primary" : "text-foreground")}>
+                      <Icon className="h-5 w-5" />
                       <span className="font-chalk text-xl">{item.label}</span>
+                      {isActive && <div className="ml-auto h-2 w-2 bg-primary" />}
                     </motion.button>
                   );
                 })}
               </div>
               <button
                 onClick={toggle}
-                className="surface-raised mt-4 flex items-center gap-4 rounded-lg p-4 text-foreground"
+                className="mt-4 flex items-center gap-4 border-t border-foreground/10 p-4 text-foreground"
               >
-                <ThemeIcon className="h-6 w-6" />
+                <ThemeIcon className="h-5 w-5" />
                 <span className="font-chalk text-xl">{theme === 'dark' ? 'LIGHT MODE' : 'DARK MODE'}</span>
               </button>
             </div>
