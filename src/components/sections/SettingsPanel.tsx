@@ -4,20 +4,9 @@ import {
   Settings, User, Palette, Dumbbell, Database, Download, Github,
   Smartphone, Code, Info, Sun, Moon, Timer, Bell, BellOff, Trash2, FileDown
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 
-const accentColors = [
-  { name: 'Gold', hsl: '45 93% 53%' },
-  { name: 'Cyan', hsl: '190 90% 50%' },
-  { name: 'Rose', hsl: '350 80% 55%' },
-  { name: 'Lime', hsl: '120 60% 50%' },
-  { name: 'Violet', hsl: '270 70% 60%' },
-  { name: 'Orange', hsl: '25 95% 55%' },
-];
-
-const cardDelay = (i: number) => ({ delay: i * 0.08, type: 'spring' as const, stiffness: 300, damping: 24 });
+const cardDelay = (i: number) => ({ delay: i * 0.06, type: 'spring' as const, stiffness: 300, damping: 24 });
 
 export function SettingsPanel() {
   const [displayName, setDisplayName] = useState('Athlete');
@@ -27,16 +16,16 @@ export function SettingsPanel() {
   const [notifications, setNotifications] = useState(true);
   const [defaultDifficulty, setDefaultDifficulty] = useState('all');
 
-  const currentTheme = document.documentElement.classList.contains('light') ? 'light' : 'dark';
+  const currentTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
 
   const toggleTheme = () => {
     const root = document.documentElement;
-    if (currentTheme === 'dark') {
-      root.classList.add('light');
-      localStorage.setItem('theme', 'light');
-    } else {
-      root.classList.remove('light');
+    if (currentTheme === 'light') {
+      root.classList.add('dark');
       localStorage.setItem('theme', 'dark');
+    } else {
+      root.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
     }
   };
 
@@ -62,43 +51,35 @@ export function SettingsPanel() {
     }
   };
 
-  const handleDownloadApp = () => {
-    alert('Download feature would package the full source code as a ZIP file.');
-  };
-
   return (
     <section className="relative px-4 py-8 lg:px-8">
-      <div className="mb-6 flex items-center gap-3">
-        <div className="badge-coin inline-flex items-center gap-1.5 rounded-full px-3 py-1">
-          <Settings className="h-3 w-3 text-primary" />
-          <span className="text-label text-[10px] text-primary">CONFIG</span>
+      <div className="editorial-divider-thick mb-6 pt-2">
+        <div className="flex items-center gap-3">
+          <h2 className="text-editorial-sm text-foreground">SETTINGS</h2>
         </div>
-        <h2 className="font-chalk text-2xl text-embossed sm:text-3xl">
-          <span className="text-primary">SETTINGS</span>
-        </h2>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-px bg-foreground/10 border border-foreground/10 lg:grid-cols-2">
         {/* Profile */}
-        <motion.div initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={cardDelay(0)} className="surface-raised rounded-xl p-6">
-          <h3 className="mb-5 flex items-center gap-2 font-chalk text-xl text-embossed">
-            <User className="h-5 w-5 text-primary" /> PROFILE
+        <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={cardDelay(0)} className="bg-card p-6">
+          <h3 className="mb-4 flex items-center gap-2 font-chalk text-sm">
+            <User className="h-4 w-4 text-primary" /> PROFILE
           </h3>
           <div className="space-y-4">
             <div>
-              <label className="mb-1.5 block text-label text-sm text-muted-foreground">DISPLAY NAME</label>
-              <Input value={displayName} onChange={e => setDisplayName(e.target.value)} className="surface-inset border-0 font-chalk focus:ring-1 focus:ring-primary" />
+              <label className="mb-1 block text-label text-xs text-muted-foreground">DISPLAY NAME</label>
+              <input value={displayName} onChange={e => setDisplayName(e.target.value)} className="w-full border border-foreground/10 bg-surface-0 px-3 py-2 font-chalk text-sm text-foreground focus:border-primary focus:outline-none" />
             </div>
             <div>
-              <label className="mb-1.5 block text-label text-sm text-muted-foreground">BIO</label>
-              <Input value={bio} onChange={e => setBio(e.target.value)} className="surface-inset border-0 font-chalk focus:ring-1 focus:ring-primary" />
+              <label className="mb-1 block text-label text-xs text-muted-foreground">BIO</label>
+              <input value={bio} onChange={e => setBio(e.target.value)} className="w-full border border-foreground/10 bg-surface-0 px-3 py-2 font-chalk text-sm text-foreground focus:border-primary focus:outline-none" />
             </div>
             <div>
-              <label className="mb-1.5 block text-label text-sm text-muted-foreground">UNITS</label>
-              <div className="flex gap-2">
+              <label className="mb-1 block text-label text-xs text-muted-foreground">UNITS</label>
+              <div className="flex">
                 {(['metric', 'imperial'] as const).map(u => (
                   <button key={u} onClick={() => setUnits(u)}
-                    className={cn("flex-1 rounded-lg px-4 py-2 text-label text-sm transition-all", units === u ? "surface-inset text-primary" : "btn-raised text-muted-foreground")}>
+                    className={cn("flex-1 border border-foreground/10 px-4 py-2 text-label text-sm transition-colors", units === u ? "bg-foreground text-card" : "bg-card text-muted-foreground hover:bg-surface-0")}>
                     {u.toUpperCase()}
                   </button>
                 ))}
@@ -108,46 +89,35 @@ export function SettingsPanel() {
         </motion.div>
 
         {/* Appearance */}
-        <motion.div initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={cardDelay(1)} className="surface-raised rounded-xl p-6">
-          <h3 className="mb-5 flex items-center gap-2 font-chalk text-xl text-embossed">
-            <Palette className="h-5 w-5 text-primary" /> APPEARANCE
+        <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={cardDelay(1)} className="bg-card p-6">
+          <h3 className="mb-4 flex items-center gap-2 font-chalk text-sm">
+            <Palette className="h-4 w-4 text-primary" /> APPEARANCE
           </h3>
           <div className="space-y-4">
             <div>
-              <label className="mb-2 block text-label text-sm text-muted-foreground">THEME</label>
-              <button onClick={toggleTheme} className="btn-raised flex w-full items-center gap-3 rounded-lg px-4 py-3 text-foreground transition-all">
+              <label className="mb-2 block text-label text-xs text-muted-foreground">THEME</label>
+              <button onClick={toggleTheme} className="flex w-full items-center gap-3 border border-foreground/10 px-4 py-3 text-foreground transition-colors hover:bg-surface-0">
                 {currentTheme === 'dark' ? <Sun className="h-5 w-5 text-primary" /> : <Moon className="h-5 w-5 text-primary" />}
-                <span className="font-chalk">{currentTheme === 'dark' ? 'SWITCH TO LIGHT' : 'SWITCH TO DARK'}</span>
+                <span className="font-chalk text-sm">{currentTheme === 'dark' ? 'SWITCH TO LIGHT' : 'SWITCH TO DARK'}</span>
               </button>
-            </div>
-            <div>
-              <label className="mb-2 block text-label text-sm text-muted-foreground">ACCENT COLOR</label>
-              <div className="grid grid-cols-3 gap-2">
-                {accentColors.map(c => (
-                  <button key={c.name} className="surface-inset flex items-center gap-2 rounded-lg px-3 py-2 transition-all hover:scale-[1.02]">
-                    <div className="h-4 w-4 rounded-full" style={{ background: `hsl(${c.hsl})` }} />
-                    <span className="text-label text-xs">{c.name}</span>
-                  </button>
-                ))}
-              </div>
             </div>
           </div>
         </motion.div>
 
         {/* Training Preferences */}
-        <motion.div initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={cardDelay(2)} className="surface-raised rounded-xl p-6">
-          <h3 className="mb-5 flex items-center gap-2 font-chalk text-xl text-embossed">
-            <Dumbbell className="h-5 w-5 text-primary" /> TRAINING
+        <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={cardDelay(2)} className="bg-card p-6">
+          <h3 className="mb-4 flex items-center gap-2 font-chalk text-sm">
+            <Dumbbell className="h-4 w-4 text-primary" /> TRAINING
           </h3>
           <div className="space-y-4">
             <div>
-              <label className="mb-1.5 block text-label text-sm text-muted-foreground">DEFAULT REST TIMER (sec)</label>
-              <Input type="number" value={restTimer} onChange={e => setRestTimer(e.target.value)} className="surface-inset border-0 font-chalk focus:ring-1 focus:ring-primary" />
+              <label className="mb-1 block text-label text-xs text-muted-foreground">DEFAULT REST TIMER (sec)</label>
+              <input type="number" value={restTimer} onChange={e => setRestTimer(e.target.value)} className="w-full border border-foreground/10 bg-surface-0 px-3 py-2 font-chalk text-sm text-foreground focus:border-primary focus:outline-none" />
             </div>
             <div>
-              <label className="mb-1.5 block text-label text-sm text-muted-foreground">DEFAULT DIFFICULTY</label>
+              <label className="mb-1 block text-label text-xs text-muted-foreground">DEFAULT DIFFICULTY</label>
               <select value={defaultDifficulty} onChange={e => setDefaultDifficulty(e.target.value)}
-                className="surface-inset w-full rounded-lg px-4 py-3 font-chalk text-foreground focus:outline-none">
+                className="w-full border border-foreground/10 bg-card px-3 py-2 font-chalk text-sm text-foreground focus:outline-none">
                 <option value="all">All Levels</option>
                 <option value="beginner">Beginner</option>
                 <option value="intermediate">Intermediate</option>
@@ -155,48 +125,48 @@ export function SettingsPanel() {
               </select>
             </div>
             <div>
-              <label className="mb-1.5 block text-label text-sm text-muted-foreground">NOTIFICATIONS</label>
+              <label className="mb-1 block text-label text-xs text-muted-foreground">NOTIFICATIONS</label>
               <button onClick={() => setNotifications(!notifications)}
-                className={cn("btn-raised flex w-full items-center gap-3 rounded-lg px-4 py-3 transition-all", notifications ? "text-primary" : "text-muted-foreground")}>
+                className={cn("flex w-full items-center gap-3 border border-foreground/10 px-4 py-3 transition-colors hover:bg-surface-0", notifications ? "text-primary" : "text-muted-foreground")}>
                 {notifications ? <Bell className="h-5 w-5" /> : <BellOff className="h-5 w-5" />}
-                <span className="font-chalk">{notifications ? 'ENABLED' : 'DISABLED'}</span>
+                <span className="font-chalk text-sm">{notifications ? 'ENABLED' : 'DISABLED'}</span>
               </button>
             </div>
           </div>
         </motion.div>
 
         {/* Data Management */}
-        <motion.div initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={cardDelay(3)} className="surface-raised rounded-xl p-6">
-          <h3 className="mb-5 flex items-center gap-2 font-chalk text-xl text-embossed">
-            <Database className="h-5 w-5 text-primary" /> DATA
+        <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={cardDelay(3)} className="bg-card p-6">
+          <h3 className="mb-4 flex items-center gap-2 font-chalk text-sm">
+            <Database className="h-4 w-4 text-primary" /> DATA
           </h3>
-          <div className="space-y-3">
-            <Button onClick={handleExport} className="btn-raised w-full justify-start gap-3 bg-transparent py-5 font-chalk text-foreground hover:bg-primary/10">
-              <FileDown className="h-5 w-5 text-primary" /> EXPORT TRAINING DATA (JSON)
-            </Button>
-            <Button onClick={handleClearData} variant="destructive" className="w-full justify-start gap-3 py-5 font-chalk">
-              <Trash2 className="h-5 w-5" /> CLEAR ALL LOCAL DATA
-            </Button>
+          <div className="space-y-2">
+            <button onClick={handleExport} className="flex w-full items-center gap-3 border border-foreground/10 px-4 py-3 font-chalk text-sm text-foreground transition-colors hover:bg-surface-0">
+              <FileDown className="h-4 w-4 text-primary" /> EXPORT TRAINING DATA
+            </button>
+            <button onClick={handleClearData} className="flex w-full items-center gap-3 border border-primary/30 bg-primary/5 px-4 py-3 font-chalk text-sm text-primary transition-colors hover:bg-primary hover:text-primary-foreground">
+              <Trash2 className="h-4 w-4" /> CLEAR ALL LOCAL DATA
+            </button>
           </div>
         </motion.div>
 
-        {/* App Download */}
-        <motion.div initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={cardDelay(4)} className="surface-raised rounded-xl p-6 lg:col-span-2">
-          <h3 className="mb-5 flex items-center gap-2 font-chalk text-xl text-embossed">
-            <Download className="h-5 w-5 text-primary" /> APP DOWNLOAD
+        {/* App Download — full width */}
+        <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={cardDelay(4)} className="bg-card p-6 lg:col-span-2">
+          <h3 className="mb-4 flex items-center gap-2 font-chalk text-sm">
+            <Download className="h-4 w-4 text-primary" /> APP DOWNLOAD
           </h3>
-          <p className="mb-5 text-sm text-muted-foreground">
-            Download the complete TLC Calisthenics source code. Build for web, iOS, and Android using Capacitor.
+          <p className="mb-4 text-sm text-muted-foreground">
+            Download the complete TLC Calisthenics source code. Build for web, iOS, and Android.
           </p>
-          <div className="mb-6 flex flex-col gap-3 sm:flex-row">
-            <Button onClick={handleDownloadApp} className="btn-raised flex-1 gap-2 bg-primary py-5 font-chalk text-lg text-primary-foreground hover:bg-primary/90">
-              <Download className="h-5 w-5" /> DOWNLOAD ZIP
-            </Button>
-            <Button variant="outline" className="flex-1 gap-2 border-2 border-border py-5 font-chalk text-lg hover:border-primary hover:text-primary">
-              <Github className="h-5 w-5" /> VIEW ON GITHUB
-            </Button>
+          <div className="mb-4 flex flex-col gap-2 sm:flex-row">
+            <button className="flex-1 bg-primary px-6 py-3 font-chalk text-sm text-primary-foreground transition-opacity hover:opacity-90">
+              <Download className="mr-2 inline h-4 w-4" /> DOWNLOAD ZIP
+            </button>
+            <button className="flex-1 border-2 border-foreground px-6 py-3 font-chalk text-sm text-foreground transition-colors hover:bg-foreground hover:text-card">
+              <Github className="mr-2 inline h-4 w-4" /> VIEW ON GITHUB
+            </button>
           </div>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+          <div className="grid grid-cols-2 gap-px bg-foreground/5 sm:grid-cols-3 lg:grid-cols-6">
             {[
               { icon: '⚛️', label: 'React + TypeScript' },
               { icon: '🎨', label: 'Tailwind + Animations' },
@@ -205,32 +175,25 @@ export function SettingsPanel() {
               { icon: '💳', label: 'Stripe Ready' },
               { icon: '🔔', label: 'Push Notifications' },
             ].map(item => (
-              <div key={item.label} className="surface-inset flex items-center gap-2 rounded-lg p-3">
-                <span className="text-lg">{item.icon}</span>
+              <div key={item.label} className="flex items-center gap-2 bg-card p-3">
+                <span className="text-base">{item.icon}</span>
                 <span className="text-label text-[10px]">{item.label}</span>
               </div>
             ))}
           </div>
-          <div className="mt-4 flex items-center gap-3">
-            <div className="badge-coin flex items-center gap-2 rounded-full px-3 py-1">
-              <Smartphone className="h-3 w-3 text-primary" />
-              <span className="text-label text-[10px] text-primary">CAPACITOR READY</span>
-            </div>
-            <span className="text-xs text-muted-foreground">Build for iOS • Android • Web</span>
-          </div>
         </motion.div>
 
         {/* About */}
-        <motion.div initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={cardDelay(5)} className="surface-raised rounded-xl p-6 lg:col-span-2">
-          <h3 className="mb-3 flex items-center gap-2 font-chalk text-xl text-embossed">
-            <Info className="h-5 w-5 text-primary" /> ABOUT
+        <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={cardDelay(5)} className="bg-card p-6 lg:col-span-2">
+          <h3 className="mb-2 flex items-center gap-2 font-chalk text-sm">
+            <Info className="h-4 w-4 text-primary" /> ABOUT
           </h3>
           <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
             <span className="font-chalk text-foreground">TLC Calisthenics v1.0</span>
-            <span>•</span>
+            <span>·</span>
             <span>React + Vite + Tailwind</span>
-            <span>•</span>
-            <span>Built with ❤️ by TLC</span>
+            <span>·</span>
+            <span>Built with conviction by TLC</span>
           </div>
         </motion.div>
       </div>
