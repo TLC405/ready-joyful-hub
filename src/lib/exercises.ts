@@ -107,7 +107,7 @@ export const exercises: Exercise[] = [
     cueStack: ['Dead hang start', 'Legs straight', 'Control the descent'],
     failSigns: ['Swinging/kipping', 'Bent knees at top', 'Losing grip'],
     regressTo: ['hollow-body-hold'],
-    progressTo: ['toes-to-bar'],
+    progressTo: ['dragon-flag'],
     needsUpload: true,
   },
 
