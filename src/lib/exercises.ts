@@ -1659,7 +1659,7 @@ export const exercises: Exercise[] = [
     cueStack: ['Knees on backs of arms', 'Lean forward until feet lift', 'Gaze slightly forward'],
     failSigns: ['Face-planting', 'Wrist pain', 'Not leaning enough'],
     regressTo: ['frog-stand'],
-    progressTo: ['planche-lean', 'crane-pose'],
+    progressTo: ['planche-lean'],
   },
   {
     id: 'half-moon-pose',
