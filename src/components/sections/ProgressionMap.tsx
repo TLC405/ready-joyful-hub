@@ -47,7 +47,7 @@ function buildTree(trackId: string) {
       parents: node.prereqs,
       depth: 0,
       column: 0,
-    });
+    };
   }
 
   // Build children links
