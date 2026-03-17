@@ -37,6 +37,7 @@ const pageTransition = {
 const Index = () => {
   const [activeSection, setActiveSection] = useState<Section>('home');
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
+  const [trackView, setTrackView] = useState<TrackView>('ladder');
 
   const handleNavigate = (section: string) => {
     setActiveSection(section as Section);
