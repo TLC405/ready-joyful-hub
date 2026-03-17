@@ -1,9 +1,9 @@
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Map, ChevronDown, Zap, ArrowUp, Circle, Minimize2, ArrowDown, Footprints, Hand, Triangle, GripVertical, TrendingUp, Flower2 } from 'lucide-react';
+import { ChevronDown, Zap, ArrowUp, Circle, Minimize2, ArrowDown, Footprints, Hand, Triangle, GripVertical, TrendingUp, Flower2 } from 'lucide-react';
 import { tracks } from '@/lib/tracks';
 import { getExerciseById } from '@/lib/exercises';
-import type { Exercise, TrackId } from '@/lib/types';
+import type { Exercise } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { ExerciseDetailModal } from '@/components/shared/ExerciseDetailModal';
 
@@ -23,56 +23,51 @@ const difficultyBadge: Record<string, string> = {
   master: 'difficulty-master',
 };
 
-interface TreeNode {
+interface MapNode {
   exercise: Exercise;
-  children: string[]; // exerciseIds that depend on this
-  parents: string[];  // exerciseIds this depends on
+  children: string[];
+  parents: string[];
   depth: number;
-  column: number;
 }
 
-function buildTree(trackId: string) {
+function buildTree(trackId: string): MapNode[][] {
   const track = tracks.find(t => t.id === trackId);
-  if (!track) return { levels: [] as TreeNode[][], nodes: new Map<string, TreeNode>() };
+  if (!track) return [];
 
-  const nodeMap: Record<string, TreeNode> = {};
-  
-  // Create nodes
+  const nodeMap: Record<string, MapNode> = {};
+
   for (const node of track.nodes) {
     const exercise = getExerciseById(node.exerciseId);
     if (!exercise) continue;
     nodeMap[node.exerciseId] = {
       exercise,
       children: [],
-      parents: node.prereqs,
+      parents: node.prereqs.filter(p => track.nodes.some(n => n.exerciseId === p)),
       depth: 0,
-      column: 0,
     };
   }
 
-  // Build children links
+  // Build children
   for (const node of track.nodes) {
     for (const prereq of node.prereqs) {
-      const parent = nodeMap.get(prereq);
-      if (parent) {
-        parent.children.push(node.exerciseId);
+      if (nodeMap[prereq]) {
+        nodeMap[prereq].children.push(node.exerciseId);
       }
     }
   }
 
-  // Compute depths (BFS from roots)
-  const roots = Array.from(nodeMap.values()).filter(n => n.parents.length === 0 || n.parents.every(p => !nodeMap.has(p)));
+  // BFS depths
+  const roots = Object.values(nodeMap).filter(n => n.parents.length === 0);
   const queue = [...roots];
-  for (const r of roots) r.depth = 0;
-
   const visited = new Set<string>();
+
   while (queue.length > 0) {
     const current = queue.shift()!;
-    if (visited.has(current.exercise.id)) continue;
-    visited.add(current.exercise.id);
-    
+    const id = current.exercise.id;
+    if (visited.has(id)) continue;
+    visited.add(id);
     for (const childId of current.children) {
-      const child = nodeMap.get(childId);
+      const child = nodeMap[childId];
       if (child) {
         child.depth = Math.max(child.depth, current.depth + 1);
         queue.push(child);
@@ -80,33 +75,32 @@ function buildTree(trackId: string) {
     }
   }
 
-  // Group by depth into levels
-  const maxDepth = Math.max(0, ...Array.from(nodeMap.values()).map(n => n.depth));
-  const levels: TreeNode[][] = [];
+  // Group by depth
+  const maxDepth = Math.max(0, ...Object.values(nodeMap).map(n => n.depth));
+  const levels: MapNode[][] = [];
   for (let d = 0; d <= maxDepth; d++) {
-    const level = Array.from(nodeMap.values())
-      .filter(n => n.depth === d)
-      .sort((a, b) => difficultyOrder[a.exercise.difficulty] - difficultyOrder[b.exercise.difficulty]);
-    level.forEach((n, i) => n.column = i);
-    levels.push(level);
+    levels.push(
+      Object.values(nodeMap)
+        .filter(n => n.depth === d)
+        .sort((a, b) => difficultyOrder[a.exercise.difficulty] - difficultyOrder[b.exercise.difficulty])
+    );
   }
-
-  return { levels, nodes: nodeMap };
+  return levels;
 }
 
 export function ProgressionMap() {
-  const [activeTrack, setActiveTrack] = useState<string>('planche');
+  const [activeTrack, setActiveTrack] = useState('planche');
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
   const [showTrackSelect, setShowTrackSelect] = useState(false);
 
   const currentTrack = tracks.find(t => t.id === activeTrack)!;
-  const { levels, nodes } = useMemo(() => buildTree(activeTrack), [activeTrack]);
+  const levels = useMemo(() => buildTree(activeTrack), [activeTrack]);
   const TrackIcon = trackIcons[currentTrack.icon] || Zap;
 
   return (
     <section className="relative px-4 py-8 lg:px-8">
       <div className="editorial-divider-thick mb-6 pt-2">
-        <div className="flex items-baseline justify-between">
+        <div className="flex items-baseline justify-between gap-4">
           <h2 className="text-editorial-sm text-foreground">PROGRESSION MAP</h2>
           <div className="relative">
             <button
@@ -123,7 +117,7 @@ export function ProgressionMap() {
                   initial={{ opacity: 0, y: -4 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
-                  className="absolute right-0 top-full z-30 mt-1 w-56 border border-foreground/10 bg-card"
+                  className="absolute right-0 top-full z-30 mt-1 w-56 border border-foreground/10 bg-card shadow-lg"
                 >
                   {tracks.map(track => {
                     const Icon = trackIcons[track.icon] || Zap;
@@ -151,19 +145,19 @@ export function ProgressionMap() {
       </div>
 
       {/* Visual Tree */}
-      <div className="overflow-x-auto">
-        <div className="min-w-[320px] space-y-0">
+      <div className="overflow-x-auto pb-4">
+        <div className="min-w-[300px] space-y-0">
           {levels.map((level, levelIdx) => (
             <div key={levelIdx}>
-              {/* Connector lines from previous level */}
+              {/* Connector */}
               {levelIdx > 0 && (
-                <div className="flex justify-center py-2">
-                  <div className="flex items-center gap-1 text-[10px] text-muted-foreground/40">
-                    <div className="h-6 w-px bg-foreground/10" />
-                  </div>
+                <div className="flex justify-center py-1">
+                  <svg className="h-5 w-5 text-foreground/15" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M10 16l-5-5h4V4h2v7h4z" />
+                  </svg>
                 </div>
               )}
-              
+
               {/* Level label */}
               <div className="mb-2 flex items-center gap-2">
                 <div className="h-px flex-1 bg-foreground/5" />
@@ -173,53 +167,47 @@ export function ProgressionMap() {
                 <div className="h-px flex-1 bg-foreground/5" />
               </div>
 
-              {/* Nodes in this level */}
+              {/* Nodes */}
               <div className="flex flex-wrap justify-center gap-2">
                 {level.map((node) => {
                   const ex = node.exercise;
-                  const hasChildren = node.children.length > 0;
-                  const isTerminal = !hasChildren;
+                  const isTerminal = node.children.length === 0;
 
                   return (
                     <motion.button
                       key={ex.id}
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: levelIdx * 0.05 }}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: levelIdx * 0.06, duration: 0.3 }}
                       onClick={() => setSelectedExercise(ex)}
                       className={cn(
-                        "group relative flex items-center gap-2 border bg-card px-3 py-2.5 text-left transition-colors hover:bg-surface-0",
-                        isTerminal ? "border-primary/40" : "border-foreground/10",
+                        "group relative flex items-center gap-2 border bg-card px-3 py-2.5 text-left transition-all hover:bg-surface-0",
+                        isTerminal ? "border-primary/50 border-2" : "border-foreground/10",
                         "min-w-[140px] max-w-[220px]"
                       )}
                     >
-                      {/* Difficulty dot */}
                       <div className={cn(
-                        "h-2 w-2 shrink-0",
+                        "h-2.5 w-2.5 shrink-0",
                         ex.difficulty === 'easy' && "bg-difficulty-easy",
                         ex.difficulty === 'beginner' && "bg-difficulty-beginner",
                         ex.difficulty === 'intermediate' && "bg-difficulty-intermediate",
                         ex.difficulty === 'advanced' && "bg-difficulty-advanced",
                         ex.difficulty === 'master' && "bg-difficulty-master",
                       )} />
-                      
+
                       <div className="min-w-0 flex-1">
                         <div className="font-chalk text-xs truncate">{ex.name}</div>
-                        <div className="flex items-center gap-1">
-                          <span className={cn("text-label text-[8px]", difficultyBadge[ex.difficulty])}>
-                            {ex.difficulty.toUpperCase()}
-                          </span>
-                        </div>
+                        <span className={cn("text-label text-[8px]", difficultyBadge[ex.difficulty])}>
+                          {ex.difficulty.toUpperCase()}
+                        </span>
                       </div>
 
-                      {/* Terminal marker */}
                       {isTerminal && (
                         <div className="absolute -right-px -top-px bg-primary px-1.5 py-0.5 text-[8px] font-bold text-primary-foreground">
                           ★
                         </div>
                       )}
 
-                      {/* Image thumbnail */}
                       {ex.image && (
                         <div className="hidden h-8 w-8 shrink-0 overflow-hidden border border-foreground/10 sm:block">
                           <img src={ex.image} alt="" className="h-full w-full object-cover" />
@@ -229,22 +217,13 @@ export function ProgressionMap() {
                   );
                 })}
               </div>
-
-              {/* Arrow indicators */}
-              {levelIdx < levels.length - 1 && (
-                <div className="flex justify-center py-1">
-                  <svg className="h-4 w-4 text-foreground/15" viewBox="0 0 16 16" fill="currentColor">
-                    <path d="M8 12l-4-4h3V4h2v4h3z" />
-                  </svg>
-                </div>
-              )}
             </div>
           ))}
         </div>
       </div>
 
       {/* Legend */}
-      <div className="mt-6 flex flex-wrap items-center gap-4 border-t border-foreground/10 pt-4">
+      <div className="mt-4 flex flex-wrap items-center gap-4 border-t border-foreground/10 pt-4">
         <span className="text-label text-[10px] text-muted-foreground">DIFFICULTY:</span>
         {['easy', 'beginner', 'intermediate', 'advanced', 'master'].map(d => (
           <div key={d} className="flex items-center gap-1">
