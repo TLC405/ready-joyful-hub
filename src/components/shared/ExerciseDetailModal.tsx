@@ -1,5 +1,7 @@
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import type { Exercise } from '@/lib/types';
+import { getExerciseById } from '@/lib/exercises';
 import { cn } from '@/lib/utils';
 
 const difficultyBadge: Record<string, string> = {
@@ -15,7 +17,12 @@ interface ExerciseDetailModalProps {
   onClose: () => void;
 }
 
-export function ExerciseDetailModal({ exercise, onClose }: ExerciseDetailModalProps) {
+export function ExerciseDetailModal({ exercise: initialExercise, onClose }: ExerciseDetailModalProps) {
+  const [exercise, setExercise] = useState(initialExercise);
+
+  const regressExercises = exercise.regressTo.map(id => getExerciseById(id)).filter(Boolean) as Exercise[];
+  const progressExercises = exercise.progressTo.map(id => getExerciseById(id)).filter(Boolean) as Exercise[];
+
   return (
     <motion.div
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -23,8 +30,9 @@ export function ExerciseDetailModal({ exercise, onClose }: ExerciseDetailModalPr
       onClick={onClose}
     >
       <motion.div
+        key={exercise.id}
         initial={{ y: 40 }} animate={{ y: 0 }} exit={{ y: 40 }}
-        transition={{ duration: 0.25, ease: 'easeOut' }}
+        transition={{ duration: 0.25, ease: 'easeOut' as const }}
         onClick={e => e.stopPropagation()}
         className="relative max-h-[92vh] w-full max-w-3xl overflow-y-auto bg-card border border-foreground/15 sm:border-2 p-5 sm:p-6 lg:p-8"
       >
@@ -114,6 +122,66 @@ export function ExerciseDetailModal({ exercise, onClose }: ExerciseDetailModalPr
               <h4 className="mb-1 text-label text-xs text-primary">RECOVERY</h4>
               <p className="text-sm text-foreground">{exercise.coachNotes.recoveryVector}</p>
             </div>
+          </div>
+        )}
+
+        {/* Progression Chain */}
+        {(regressExercises.length > 0 || progressExercises.length > 0) && (
+          <div className="mt-5 border-t-2 border-foreground pt-4">
+            <h4 className="mb-3 text-label text-sm text-foreground">PROGRESSION CHAIN</h4>
+            <div className="flex flex-col sm:flex-row gap-3">
+              {regressExercises.length > 0 && (
+                <div className="flex-1">
+                  <div className="mb-2 text-label text-[10px] text-muted-foreground">← EASIER (REGRESS TO)</div>
+                  <div className="space-y-1">
+                    {regressExercises.map(ex => (
+                      <button
+                        key={ex.id}
+                        onClick={() => setExercise(ex)}
+                        className="flex w-full items-center gap-2 border border-foreground/10 bg-card px-3 py-2 text-left text-sm transition-colors hover:bg-surface-0"
+                      >
+                        {ex.image && <img src={ex.image} alt={ex.name} className="h-8 w-8 object-cover border border-foreground/10 shrink-0" />}
+                        <div className="min-w-0 flex-1">
+                          <div className="font-chalk text-xs truncate">{ex.name}</div>
+                          <span className={cn("text-label text-[9px]", difficultyBadge[ex.difficulty])}>{ex.difficulty.toUpperCase()}</span>
+                        </div>
+                        <span className="text-[10px] text-muted-foreground">←</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {progressExercises.length > 0 && (
+                <div className="flex-1">
+                  <div className="mb-2 text-label text-[10px] text-muted-foreground">HARDER (PROGRESS TO) →</div>
+                  <div className="space-y-1">
+                    {progressExercises.map(ex => (
+                      <button
+                        key={ex.id}
+                        onClick={() => setExercise(ex)}
+                        className="flex w-full items-center gap-2 border border-foreground/10 bg-card px-3 py-2 text-left text-sm transition-colors hover:bg-surface-0"
+                      >
+                        {ex.image && <img src={ex.image} alt={ex.name} className="h-8 w-8 object-cover border border-foreground/10 shrink-0" />}
+                        <div className="min-w-0 flex-1">
+                          <div className="font-chalk text-xs truncate">{ex.name}</div>
+                          <span className={cn("text-label text-[9px]", difficultyBadge[ex.difficulty])}>{ex.difficulty.toUpperCase()}</span>
+                        </div>
+                        <span className="text-[10px] text-primary">→</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Tracks this exercise belongs to */}
+        {exercise.tracks.length > 0 && (
+          <div className="mt-4 flex flex-wrap gap-1">
+            {exercise.tracks.map(t => (
+              <span key={t} className="border border-foreground/10 px-2 py-0.5 text-label text-[10px] text-muted-foreground">{t}</span>
+            ))}
           </div>
         )}
       </motion.div>
