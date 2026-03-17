@@ -440,7 +440,7 @@ export const exercises: Exercise[] = [
     cueStack: ['Pull to one hand', 'Other arm stays straight', 'Full dead hang between'],
     failSigns: ['Both arms pulling equally', 'Kipping', 'Losing control at bottom'],
     regressTo: ['pull-up'],
-    progressTo: [],
+    progressTo: ['front-lever-raise'],
     needsUpload: true,
   },
   {
