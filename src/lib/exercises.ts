@@ -74,7 +74,7 @@ export const exercises: Exercise[] = [
     cueStack: ['Depress shoulders hard', 'Point toes', 'Push floor away'],
     failSigns: ['Shoulders creeping to ears', 'Legs dropping below parallel', 'Bent knees (unless regressing)'],
     regressTo: ['tuck-sit', 'hollow-body-hold'],
-    progressTo: [],
+    progressTo: ['seated-straddle-lift', 'straddle-press-to-hs'],
   },
   {
     id: 'dragon-flag',
@@ -107,7 +107,7 @@ export const exercises: Exercise[] = [
     cueStack: ['Dead hang start', 'Legs straight', 'Control the descent'],
     failSigns: ['Swinging/kipping', 'Bent knees at top', 'Losing grip'],
     regressTo: ['hollow-body-hold'],
-    progressTo: ['toes-to-bar'],
+    progressTo: ['dragon-flag'],
     needsUpload: true,
   },
 
@@ -234,7 +234,7 @@ export const exercises: Exercise[] = [
     cueStack: ['Push through hands', 'Open chest', 'Breathe into the stretch'],
     failSigns: ['Shoulders not over wrists', 'Pain in lower back', 'Holding breath'],
     regressTo: [],
-    progressTo: [],
+    progressTo: ['wheel-pose'],
     needsUpload: true,
   },
   {
@@ -285,7 +285,7 @@ export const exercises: Exercise[] = [
     cueStack: ['Heels flat', 'Knees out', 'Chest tall'],
     failSigns: ['Heels lifting', 'Rounding completely', 'Holding breath'],
     regressTo: [],
-    progressTo: [],
+    progressTo: ['bodyweight-squat', 'cossack-squat'],
     needsUpload: true,
   },
   {
@@ -302,7 +302,7 @@ export const exercises: Exercise[] = [
     cueStack: ['Push floor away', 'Externally rotate arms', 'Pedal heels'],
     failSigns: ['Shoulders dumping', 'Rounded upper back', 'Locked knees with pain'],
     regressTo: [],
-    progressTo: [],
+    progressTo: ['chest-to-wall-handstand', 'dolphin-pose'],
     needsUpload: true,
   },
   {
@@ -440,7 +440,7 @@ export const exercises: Exercise[] = [
     cueStack: ['Pull to one hand', 'Other arm stays straight', 'Full dead hang between'],
     failSigns: ['Both arms pulling equally', 'Kipping', 'Losing control at bottom'],
     regressTo: ['pull-up'],
-    progressTo: [],
+    progressTo: ['front-lever-raise'],
     needsUpload: true,
   },
   {
@@ -596,7 +596,7 @@ export const exercises: Exercise[] = [
     cueStack: ['Hands shoulder-width', 'Head touches floor', 'Full lockout at top'],
     failSigns: ['Kipping with hips', 'Arching excessively', 'Not reaching full ROM'],
     regressTo: ['pike-push-up'],
-    progressTo: [],
+    progressTo: ['bent-arm-handstand'],
     needsUpload: true,
   },
   {
@@ -1659,7 +1659,7 @@ export const exercises: Exercise[] = [
     cueStack: ['Knees on backs of arms', 'Lean forward until feet lift', 'Gaze slightly forward'],
     failSigns: ['Face-planting', 'Wrist pain', 'Not leaning enough'],
     regressTo: ['frog-stand'],
-    progressTo: ['planche-lean', 'crane-pose'],
+    progressTo: ['planche-lean'],
   },
   {
     id: 'half-moon-pose',
