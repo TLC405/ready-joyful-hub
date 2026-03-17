@@ -98,7 +98,15 @@ const Index = () => {
 
             {activeSection === 'tracks' && (
               <motion.div key="tracks" {...pageTransition}>
-                <TrackLadder />
+                <div className="flex gap-px border-b border-foreground/10 px-4 lg:px-8 pt-4">
+                  {(['ladder', 'map'] as const).map(v => (
+                    <button key={v} onClick={() => setTrackView(v)}
+                      className={cn("px-4 py-2 font-chalk text-xs transition-colors", trackView === v ? "bg-foreground text-card" : "text-muted-foreground hover:text-foreground")}>
+                      {v.toUpperCase()}
+                    </button>
+                  ))}
+                </div>
+                {trackView === 'ladder' ? <TrackLadder /> : <ProgressionMap />}
               </motion.div>
             )}
 
