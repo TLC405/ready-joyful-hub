@@ -5,6 +5,7 @@ import { AppShell } from '@/components/layout/AppShell';
 import { HeroSection } from '@/components/sections/HeroSection';
 import { ExerciseLibrary } from '@/components/sections/ExerciseLibrary';
 import { TrackLadder } from '@/components/sections/TrackLadder';
+import { ProgressionMap } from '@/components/sections/ProgressionMap';
 import { ProgressDashboard } from '@/components/sections/ProgressDashboard';
 import { SettingsPanel } from '@/components/sections/SettingsPanel';
 import { CoachCareStudio } from '@/components/CoachCare/CoachCareStudio';
