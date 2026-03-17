@@ -285,7 +285,7 @@ export const exercises: Exercise[] = [
     cueStack: ['Heels flat', 'Knees out', 'Chest tall'],
     failSigns: ['Heels lifting', 'Rounding completely', 'Holding breath'],
     regressTo: [],
-    progressTo: [],
+    progressTo: ['bodyweight-squat', 'cossack-squat'],
     needsUpload: true,
   },
   {
