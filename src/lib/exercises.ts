@@ -596,7 +596,7 @@ export const exercises: Exercise[] = [
     cueStack: ['Hands shoulder-width', 'Head touches floor', 'Full lockout at top'],
     failSigns: ['Kipping with hips', 'Arching excessively', 'Not reaching full ROM'],
     regressTo: ['pike-push-up'],
-    progressTo: [],
+    progressTo: ['bent-arm-handstand'],
     needsUpload: true,
   },
   {
