@@ -35,13 +35,13 @@ function buildTree(trackId: string) {
   const track = tracks.find(t => t.id === trackId);
   if (!track) return { levels: [] as TreeNode[][], nodes: new Map<string, TreeNode>() };
 
-  const nodeMap = new Map<string, TreeNode>();
+  const nodeMap: Record<string, TreeNode> = {};
   
   // Create nodes
   for (const node of track.nodes) {
     const exercise = getExerciseById(node.exerciseId);
     if (!exercise) continue;
-    nodeMap.set(node.exerciseId, {
+    nodeMap[node.exerciseId] = {
       exercise,
       children: [],
       parents: node.prereqs,
