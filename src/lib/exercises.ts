@@ -234,7 +234,7 @@ export const exercises: Exercise[] = [
     cueStack: ['Push through hands', 'Open chest', 'Breathe into the stretch'],
     failSigns: ['Shoulders not over wrists', 'Pain in lower back', 'Holding breath'],
     regressTo: [],
-    progressTo: [],
+    progressTo: ['wheel-pose'],
     needsUpload: true,
   },
   {
