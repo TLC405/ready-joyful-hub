@@ -1,108 +1,111 @@
 
 
-# Visual Refresh: Color Palette, Theme Toggle, and Polish
+# CoachCare Editorial Restyle + Notebook Feel + Atomic Sweep
 
-## What's Wrong Right Now
+## Overview
 
-1. **Blackwash**: Background is 4% lightness, surfaces go from 4% to 13% -- everything blends into a near-black void with almost no visual separation between cards, backgrounds, and borders
-2. **One-color palette**: Steel blue (`210 40% 52%`) is the only accent. Difficulty badges (beginner, intermediate, advanced) are all the same grayish-blue. No color diversity at all
-3. **No light theme**: The app is locked to dark mode with no toggle. The `.dark` class is empty and `:root` is the same dark palette
-4. **Muted foreground too dark**: `215 10% 50%` for secondary text is barely readable on these dark surfaces
-5. **Difficulty colors have no meaning**: Beginner is gray, intermediate is steel blue, advanced is white -- there's no intuitive color coding (green/yellow/red or similar)
+Restyle all CoachCare components to match the newspaper editorial brutalism design system. Add a "training notebook" feel across the app — ruled-line textures, handwritten-style annotations, log-like layouts. Fix critical issues (AnalyticsCanvas using old blue colors, DocumentCanvas using `prose-invert` in light theme, rounded corners everywhere contradicting editorial flat style).
 
-## The Fix
+## 1. CSS: Add Notebook Utilities (`src/index.css`)
 
-### 1. New Color System with Actual Color
+Add new utility classes:
+- `.notebook-ruled` — repeating horizontal lines background (like ruled paper), subtle gray, 1.5rem spacing
+- `.notebook-margin` — left red vertical margin line (classic notebook)
+- `.notebook-entry` — bordered-bottom entry row with timestamp feel
+- Update `.surface-raised` border-radius references: everything goes `rounded-none` or `rounded-sm` max
 
-Replace the monochrome steel-blue-only palette with meaningful, distinct accent colors:
+## 2. CoachCareStudio.tsx — Editorial Frame
 
-- **Primary**: Shift from cold steel blue to a warmer, more vibrant blue (`220 70% 55%`) -- punchier, more modern
-- **Difficulty beginner**: Green-tinted (`150 50% 45%`) -- intuitive "easy/go" signal
-- **Difficulty intermediate**: Amber/gold (`40 80% 55%`) -- intuitive "caution/mid" signal
-- **Difficulty advanced**: Red-orange (`10 70% 55%`) -- intuitive "hard/stop" signal
-- **Success**: Brighter green (`155 60% 50%`) instead of the current muddy teal
-- **Accent**: A distinct secondary color, warm purple or teal, to differentiate from primary
+- Remove `rounded-2xl` from ResizablePanelGroup → `rounded-none`
+- Mobile drawer: `rounded-t-2xl` → `rounded-none`, add top border instead
+- Mobile canvas trigger button: square, bordered, not rounded-full
 
-### 2. Lifted Dark Theme (Not a Blackwash)
+## 3. ChatPanel.tsx — Notebook Chat Log
 
-Raise all surface lightness values so the app feels rich and layered, not flat-black:
+- Header: Replace `badge-coin rounded-lg bg-primary` icon with flat bordered square, red text "COACH CARE" with `.text-label` style
+- Messages area: Add `notebook-ruled` background so messages sit on "ruled paper"
+- Add a date separator between messages: thin divider + small caps timestamp
 
-- `--background`: `225 15% 10%` (was 4% -- now a visible dark navy)
-- `--surface-0`: `225 14% 10%`
-- `--surface-1`: `225 12% 14%` (was 7%)
-- `--surface-2`: `225 12% 18%` (was 10%)
-- `--surface-3`: `225 14% 22%` (was 13%)
-- `--border`: `225 10% 24%` (was 16% -- now actually visible)
-- `--muted-foreground`: `220 10% 60%` (was 50% -- now readable)
+## 4. ChatMessage.tsx — Editorial Bubbles
 
-This gives each card, each row, and each panel a visible difference from its background.
+- Replace `rounded-2xl` with `rounded-none` (sharp rectangular)
+- Coach messages: white bg, thin black border (flat card). No `surface-raised` gradients
+- User messages: solid red bg stays, but sharp corners
+- Type badges: add thin left border accent instead of inline icon label
+- "Open on Canvas →" link: red text, uppercase, editorial style
 
-### 3. Light Theme
+## 5. ChatInput.tsx — Notebook Input
 
-Add a proper light theme under `.light` (or `:root` with dark as `.dark`) with:
+- Replace `surface-inset rounded-xl` input container with flat bordered, no radius
+- Quick action buttons: squared, thin border, editorial hover (bg-foreground text-card)
+- Send button: squared, not rounded-lg
 
-- **Background**: `220 15% 97%` (soft off-white with a cool tint)
-- **Surface-0**: `220 14% 97%`
-- **Surface-1**: `220 12% 93%`
-- **Surface-2**: `0 0% 100%` (white cards on gray bg)
-- **Surface-3**: `0 0% 100%`
-- **Foreground**: `225 15% 12%` (near-black text)
-- **Muted-foreground**: `220 10% 45%`
-- **Border**: `220 10% 85%`
-- **Primary/accent/difficulty colors**: Same hues, adjusted for light-bg contrast
+## 6. IdleCanvas.tsx — Editorial Action Grid
 
-### 4. Theme Toggle
+- Remove emoji from heading. Use "WHAT SHOULD WE WORK ON?" in `.text-editorial-sm`
+- Action cards: `rounded-xl` → `rounded-none`, thin border, newspaper column divider between them
+- Remove `surface-inset rounded-xl` from icon containers → flat bordered square
+- whileHover: just border-color change to primary, no y translation
 
-Add a theme toggle button to the Navigation component:
+## 7. VideoCanvas.tsx — Editorial Analysis
 
-- Desktop: Place a Sun/Moon icon button at the bottom of the sidebar
-- Mobile: Add to the "More" menu overlay
-- Use `next-themes` (already installed) or a simple `useState` + `localStorage` + `document.documentElement.classList` approach
-- Toggle between `dark` and `light` class on `<html>`
-- Persist preference to `localStorage`
+- `rounded-xl` → `rounded-none` everywhere
+- Analysis card: thin black borders, red section headers
+- Score badge: rectangular, bordered, not rounded-full
 
-### 5. Difficulty Badge Color Overhaul
+## 8. ExerciseCanvas.tsx — Already close, minor fixes
 
-Update the difficulty badge utility classes across all components:
+- `rounded-xl` → `rounded-none` or `rounded-sm`
+- `rounded-full` badges → rectangular
+- Image container: no rounded, hard crop
 
-- **Easy**: Soft neutral (gray with slight green tint)
-- **Beginner**: Green badge (bg-green/15, text-green, border-green/30)
-- **Intermediate**: Amber badge (bg-amber/15, text-amber, border-amber/30)
-- **Advanced**: Red-orange badge (bg-red/15, text-red-orange, border-red/30)
-- **Master**: Purple or gold badge for elite feel
+## 9. TemplateCanvas.tsx — Notebook Workout Log
 
-These colors will be defined as CSS variables so they auto-switch with the theme.
+- Template blocks: look like notebook entries with ruled-line feel
+- Number badges: square, not rounded-full
+- Input fields: flat bordered, no radius
+- "ADD EXERCISE" button: editorial bordered, full-width
 
-### 6. Surface Contrast and Card Polish
+## 10. DocumentCanvas.tsx — Notebook Editor
 
-- Increase `--shadow-card` visibility so elevated cards actually pop
-- Add subtle warm tint to card borders on hover (not just primary blue)
-- Make `surface-glass` backdrop more visible with slightly higher opacity
-- Increase `--scanline-opacity` very slightly or keep as-is (it's fine)
+- Remove `prose-invert` (breaks light theme)
+- Flat bordered toolbar and content area
+- Edit/Preview toggle: editorial tab style (bg-foreground text-card for active)
 
----
+## 11. AnalyticsCanvas.tsx — Fix Colors + Editorial
 
-## Files to Change
+- Replace all hardcoded blue `hsl(220, 70%, 55%)` with red primary `hsl(0, 65%, 42%)`
+- COLORS array: use editorial palette (red, black, muted gray, amber, dark green)
+- Tooltip: use `bg-card border-foreground/15` (not dark theme hardcoded)
+- Cards: `rounded-xl` → `rounded-none`
+- Grid lines: use `foreground/10` not hardcoded dark values
 
-| File | Changes |
-|------|---------|
-| `src/index.css` | Rewrite `:root` color values for lifted dark palette. Add light theme variables. Update difficulty badge utility classes with green/amber/red colors |
-| `tailwind.config.ts` | Add difficulty color tokens (beginner, intermediate, advanced, master) to Tailwind config |
-| `src/components/layout/Navigation.tsx` | Add theme toggle button (Sun/Moon icon) to desktop sidebar and mobile menu |
-| `src/components/sections/ExerciseLibrary.tsx` | Update `difficultyBadge` map to use new color tokens |
-| `src/components/sections/SkillsLibrary.tsx` | Update `difficultyStyles` to use new color tokens |
-| `src/components/sections/skills/SkillDetailModal.tsx` | Update `difficultyStyles` to match |
-| `src/pages/Index.tsx` | Update `difficultyBadge` map for featured cards |
-| `src/components/layout/AppShell.tsx` | Ensure HUD grid and scanline colors adapt to light/dark theme |
-| `src/App.tsx` | Wrap app in ThemeProvider or add theme initialization logic |
+## 12. Atomic Sweep — Other Components
 
-**Total: 9 files edited, 0 new files**
+Audit remaining components for stale styles:
+- **HeroSection.tsx**: Already editorial, fine
+- **Navigation.tsx**: Already editorial, fine
+- **ProgressDashboard.tsx**: Check for any remaining `rounded-xl` → `rounded-sm`
+- **SettingsPanel.tsx**: Check rounded corners on form groups
+- **ExerciseLibrary.tsx**: Check for remaining old styles
 
-## What Does NOT Change
+## Files Changed
 
-- Layout structure (already overhauled in previous pass)
-- Exercise data, track data, progression engine
-- Navigation layout and section routing
-- Framer Motion animations
-- All shadcn/ui primitives (they already consume CSS variables)
+| File | Change |
+|------|--------|
+| `src/index.css` | Add notebook utilities (ruled lines, margin, entry) |
+| `src/components/CoachCare/CoachCareStudio.tsx` | Remove rounded corners, editorial frame |
+| `src/components/CoachCare/ChatPanel.tsx` | Notebook ruled background, editorial header |
+| `src/components/CoachCare/ChatMessage.tsx` | Sharp rectangles, editorial type badges |
+| `src/components/CoachCare/ChatInput.tsx` | Flat bordered input, square buttons |
+| `src/components/CoachCare/Canvas/IdleCanvas.tsx` | Editorial grid, no emoji, flat cards |
+| `src/components/CoachCare/Canvas/VideoCanvas.tsx` | Sharp corners, editorial analysis cards |
+| `src/components/CoachCare/Canvas/ExerciseCanvas.tsx` | Minor corner/badge fixes |
+| `src/components/CoachCare/Canvas/TemplateCanvas.tsx` | Notebook entry style blocks |
+| `src/components/CoachCare/Canvas/DocumentCanvas.tsx` | Fix prose-invert, flat borders |
+| `src/components/CoachCare/Canvas/AnalyticsCanvas.tsx` | Fix blue→red colors, editorial cards |
+| `src/components/sections/ProgressDashboard.tsx` | Corner radius sweep |
+| `src/components/sections/SettingsPanel.tsx` | Corner radius sweep |
+
+**13 files, 0 new files, 0 new dependencies**
 
