@@ -372,6 +372,32 @@
     color: hsl(var(--difficulty-master));
     border-color: hsl(var(--difficulty-master) / 0.4);
   }
+  /* ===== NOTEBOOK UTILITIES ===== */
+
+  /* Ruled paper background */
+  .notebook-ruled {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent calc(1.5rem - 1px),
+      hsl(var(--foreground) / 0.06) calc(1.5rem - 1px),
+      hsl(var(--foreground) / 0.06) 1.5rem
+    );
+    background-size: 100% 1.5rem;
+  }
+
+  /* Red margin line */
+  .notebook-margin {
+    border-left: 2px solid hsl(var(--primary) / 0.25);
+    padding-left: 1rem;
+  }
+
+  /* Entry row with bottom border + timestamp feel */
+  .notebook-entry {
+    border-bottom: 1px solid hsl(var(--foreground) / 0.08);
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
 }
 
 .hide-scrollbar {
