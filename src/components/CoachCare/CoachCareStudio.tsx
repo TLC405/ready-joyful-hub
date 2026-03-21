@@ -54,7 +54,7 @@ function generateResponse(text: string, setCanvas: (mode: CanvasMode, data: any)
     };
     setCanvas('video', videoData);
     return {
-      content: `I've loaded your ${urlData.platform} video and analyzed the form. Check the canvas for detailed timestamp breakdowns.\n\nOverall score: 7/10 — solid foundation with a couple of corrections needed. The elbow flare at 0:08 is the main thing to fix.`,
+      content: `I've loaded your ${urlData.platform} video and analyzed the form. Check the canvas for detailed timestamp breakdowns.\n\nOverall score: 7/10 — solid foundation with a couple of corrections needed.`,
       type: 'video-card' as const,
       canvasAction: { mode: 'video' as CanvasMode, data: videoData },
     };
@@ -66,7 +66,7 @@ function generateResponse(text: string, setCanvas: (mode: CanvasMode, data: any)
     const exData: ExerciseCanvasData = { exerciseId: exercise.id, exerciseName: exercise.name };
     setCanvas('exercise', exData);
     return {
-      content: `Here's the full breakdown for **${exercise.name}** — I've loaded it on the canvas with cues, fail signs, and programming parameters.\n\nDifficulty: ${exercise.difficulty}\nCategory: ${exercise.category}\n\n${exercise.shortPurpose}`,
+      content: `Here's the full breakdown for **${exercise.name}** — loaded on the canvas.\n\nDifficulty: ${exercise.difficulty}\nCategory: ${exercise.category}\n\n${exercise.shortPurpose}`,
       type: 'exercise-card' as const,
       canvasAction: { mode: 'exercise' as CanvasMode, data: exData },
     };
@@ -96,7 +96,7 @@ function generateResponse(text: string, setCanvas: (mode: CanvasMode, data: any)
     };
     setCanvas('template', templateData);
     return {
-      content: `I've built a ${category} day template with ${matchingExercises.length} exercises from the database. It's loaded on the canvas — you can drag to reorder, edit sets/reps, and save it.\n\nExercises: ${matchingExercises.map(e => e.name).join(', ')}`,
+      content: `Built a ${category} day template with ${matchingExercises.length} exercises. It's on the canvas — edit sets/reps and save.\n\nExercises: ${matchingExercises.map(e => e.name).join(', ')}`,
       type: 'template-preview' as const,
       canvasAction: { mode: 'template' as CanvasMode, data: templateData },
     };
@@ -106,7 +106,7 @@ function generateResponse(text: string, setCanvas: (mode: CanvasMode, data: any)
   if (lower.match(/stats|progress|analytics|data|chart/)) {
     setCanvas('analytics', { type: 'overview' });
     return {
-      content: "Your training analytics are loaded on the canvas. This week you've logged 9 sessions with 240 minutes of volume. Your push-to-pull ratio is balanced. Keep it up!",
+      content: "Training analytics loaded on canvas. 9 sessions this week, 240 minutes volume. Push-to-pull ratio balanced.",
       type: 'chart' as const,
       canvasAction: { mode: 'analytics' as CanvasMode, data: { type: 'overview' } },
     };
@@ -116,11 +116,11 @@ function generateResponse(text: string, setCanvas: (mode: CanvasMode, data: any)
   if (lower.match(/write|document|plan|guide|article/)) {
     const docData: DocumentCanvasData = {
       title: 'Training Program',
-      content: `Week 1-2: Foundation Phase\n- Focus on hollow body, plank, and basic pushing/pulling\n- 3 sessions per week, 45 minutes each\n- Goal: Build consistent training habit\n\nWeek 3-4: Skill Introduction\n- Add frog stand and headstand practice\n- Increase to 4 sessions per week\n- Begin tracking hold times\n\nWeek 5-6: Progressive Overload\n- Extend hold times by 5s per week\n- Add L-sit attempts\n- Deload on week 6 if needed`,
+      content: `Week 1-2: Foundation Phase\n- Focus on hollow body, plank, and basic pushing/pulling\n- 3 sessions per week, 45 minutes each\n\nWeek 3-4: Skill Introduction\n- Add frog stand and headstand practice\n- Increase to 4 sessions per week\n\nWeek 5-6: Progressive Overload\n- Extend hold times by 5s per week\n- Add L-sit attempts`,
     };
     setCanvas('document', docData);
     return {
-      content: "I've drafted a 6-week program on the canvas. You can edit it directly — add sections, modify the progression, or ask me to adjust anything.",
+      content: "Drafted a 6-week program on the canvas. Edit directly or ask me to adjust.",
       type: 'text' as const,
       canvasAction: { mode: 'document' as CanvasMode, data: docData },
     };
@@ -128,10 +128,10 @@ function generateResponse(text: string, setCanvas: (mode: CanvasMode, data: any)
 
   // General responses
   const generalResponses = [
-    "That's a great question. For calisthenics progression, the key is patience with perfect form over rushing to the next variation. What specific skill are you working toward?",
-    "I'd recommend focusing on your weakest link first. Paste a video of your current form and I'll give you specific corrections, or tell me which exercise you want to explore.",
-    "Remember: consistency beats intensity. Three solid 45-minute sessions beat one marathon workout. Want me to build you a template?",
-    "Good thinking. Try pasting a YouTube link of your form, asking about a specific exercise, or saying 'build me a push day' to see what I can do.",
+    "Good question. For calisthenics progression, patience with perfect form beats rushing to the next variation. What specific skill are you targeting?",
+    "Focus on your weakest link first. Paste a video and I'll give specific corrections, or tell me which exercise to explore.",
+    "Consistency beats intensity. Three solid 45-minute sessions beat one marathon. Want me to build you a template?",
+    "Try pasting a YouTube link, asking about a specific exercise, or saying 'build me a push day'.",
   ];
 
   return {
@@ -148,8 +148,6 @@ export function CoachCareStudio() {
 
   const handleSend = useCallback((text: string) => {
     addMessage({ role: 'user', content: text, type: 'text' });
-
-    // Generate response with small delay for feel
     setTimeout(() => {
       const response = generateResponse(text, setCanvas);
       addMessage({ role: 'coach', ...response });
@@ -165,8 +163,7 @@ export function CoachCareStudio() {
       analytics: "Show my training stats",
       social: "Let me browse some social media content for inspiration",
     };
-    const msg = actionMessages[action] || "Let's get started";
-    handleSend(msg);
+    handleSend(actionMessages[action] || "Let's get started");
   }, [handleSend]);
 
   if (isMobile) {
@@ -176,14 +173,14 @@ export function CoachCareStudio() {
         {canvasState.mode !== 'idle' && (
           <Drawer.Root open={drawerOpen} onOpenChange={setDrawerOpen}>
             <Drawer.Trigger asChild>
-              <button className="btn-raised fixed bottom-20 right-4 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg">
+              <button className="fixed bottom-20 right-4 z-40 flex h-12 w-12 items-center justify-center border-2 border-foreground bg-primary text-primary-foreground">
                 <Maximize2 className="h-5 w-5" />
               </button>
             </Drawer.Trigger>
             <Drawer.Portal>
-              <Drawer.Overlay className="fixed inset-0 z-50 bg-black/50" />
-              <Drawer.Content className="fixed bottom-0 left-0 right-0 z-50 mt-24 flex h-[85vh] flex-col rounded-t-2xl bg-background">
-                <div className="mx-auto mt-2 h-1 w-12 rounded-full bg-border" />
+              <Drawer.Overlay className="fixed inset-0 z-50 bg-foreground/50" />
+              <Drawer.Content className="fixed bottom-0 left-0 right-0 z-50 mt-24 flex h-[85vh] flex-col border-t-2 border-foreground bg-background">
+                <div className="mx-auto mt-2 h-1 w-12 bg-foreground/20" />
                 <CanvasRouter canvasState={canvasState} onAction={handleCanvasAction} />
               </Drawer.Content>
             </Drawer.Portal>
@@ -195,11 +192,11 @@ export function CoachCareStudio() {
 
   return (
     <div className="h-[calc(100vh-2rem)] p-2">
-      <ResizablePanelGroup direction="horizontal" className="surface-raised h-full overflow-hidden rounded-2xl">
+      <ResizablePanelGroup direction="horizontal" className="h-full overflow-hidden border border-foreground/15">
         <ResizablePanel defaultSize={35} minSize={25} maxSize={50}>
           <ChatPanel messages={messages} onSend={handleSend} onClear={clearHistory} />
         </ResizablePanel>
-        <ResizableHandle withHandle className="bg-border" />
+        <ResizableHandle withHandle className="bg-foreground/10" />
         <ResizablePanel defaultSize={65}>
           <CanvasRouter canvasState={canvasState} onAction={handleCanvasAction} />
         </ResizablePanel>

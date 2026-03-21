@@ -23,23 +23,23 @@ export function ChatPanel({ messages, onSend, onClear }: ChatPanelProps) {
   return (
     <div className="flex h-full flex-col">
       {/* Header */}
-      <div className="surface-raised flex items-center justify-between border-b border-border px-4 py-3">
+      <div className="flex items-center justify-between border-b border-foreground/15 bg-card px-4 py-3">
         <div className="flex items-center gap-2">
-          <div className="badge-coin flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-            <MessageSquare className="h-4 w-4 text-primary-foreground" />
+          <div className="flex h-8 w-8 items-center justify-center border border-foreground/15">
+            <MessageSquare className="h-4 w-4 text-primary" />
           </div>
           <div>
-            <h3 className="font-chalk text-sm text-embossed">COACH CARE</h3>
+            <h3 className="text-label text-sm text-foreground">COACH CARE</h3>
             <span className="text-[10px] text-muted-foreground">AI Training Partner</span>
           </div>
         </div>
-        <button onClick={onClear} className="btn-raised rounded-md p-2 text-muted-foreground hover:text-foreground" title="Clear chat">
+        <button onClick={onClear} className="border border-foreground/10 p-2 text-muted-foreground transition-colors hover:bg-foreground hover:text-card" title="Clear chat">
           <Trash2 className="h-4 w-4" />
         </button>
       </div>
 
-      {/* Messages */}
-      <div ref={scrollRef} className="hide-scrollbar flex-1 overflow-y-auto p-4 space-y-4">
+      {/* Messages — notebook ruled background */}
+      <div ref={scrollRef} className="hide-scrollbar notebook-ruled notebook-margin flex-1 overflow-y-auto p-4 space-y-4">
         {messages.map((msg, i) => (
           <motion.div
             key={msg.id}

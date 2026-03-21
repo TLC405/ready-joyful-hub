@@ -14,6 +14,13 @@ const typeIcons: Record<string, React.ElementType> = {
   'chart': BarChart3,
 };
 
+const typeLabels: Record<string, string> = {
+  'video-card': 'VIDEO ANALYSIS',
+  'exercise-card': 'EXERCISE',
+  'template-preview': 'TEMPLATE',
+  'chart': 'ANALYTICS',
+};
+
 export function ChatMessageBubble({ message }: ChatMessageBubbleProps) {
   const isCoach = message.role === 'coach';
   const Icon = typeIcons[message.type];
@@ -21,37 +28,32 @@ export function ChatMessageBubble({ message }: ChatMessageBubbleProps) {
   return (
     <div className={cn("flex", isCoach ? "justify-start" : "justify-end")}>
       <div className={cn(
-        "max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed",
-        isCoach 
-          ? "surface-raised text-foreground" 
+        "max-w-[85%] px-4 py-3 text-sm leading-relaxed",
+        isCoach
+          ? "border border-foreground/12 bg-card text-foreground"
           : "bg-primary text-primary-foreground",
-        isCoach && "rounded-tl-sm",
-        !isCoach && "rounded-tr-sm"
       )}>
         {message.type !== 'text' && Icon && (
           <div className={cn(
-            "mb-2 flex items-center gap-2 text-label text-[10px]",
-            isCoach ? "text-primary" : "text-primary-foreground/70"
+            "mb-2 flex items-center gap-2 border-l-2 pl-2 text-label text-[10px]",
+            isCoach ? "border-primary text-primary" : "border-primary-foreground/40 text-primary-foreground/70"
           )}>
             <Icon className="h-3.5 w-3.5" />
-            {message.type === 'video-card' && 'VIDEO ANALYSIS'}
-            {message.type === 'exercise-card' && 'EXERCISE'}
-            {message.type === 'template-preview' && 'TEMPLATE'}
-            {message.type === 'chart' && 'ANALYTICS'}
+            {typeLabels[message.type]}
           </div>
         )}
 
         <p className="whitespace-pre-wrap">{message.content}</p>
 
         {message.canvasAction && (
-          <motion.button 
+          <motion.button
             whileHover={{ x: 3 }}
             className={cn(
               "mt-2 flex items-center gap-1 text-label text-[10px]",
               isCoach ? "text-primary" : "text-primary-foreground/80"
             )}
           >
-            Open on Canvas <ChevronRight className="h-3 w-3" />
+            OPEN ON CANVAS <ChevronRight className="h-3 w-3" />
           </motion.button>
         )}
 

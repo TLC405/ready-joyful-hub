@@ -35,22 +35,22 @@ export function ExerciseCanvas({ data }: ExerciseCanvasProps) {
       >
         {/* Image */}
         {exercise.image && (
-          <div className="surface-inset overflow-hidden rounded-xl">
+          <div className="overflow-hidden border border-foreground/10">
             <img src={exercise.image} alt={exercise.name} className="h-48 w-full object-cover" />
           </div>
         )}
 
         {/* Header */}
-        <div className="surface-raised rounded-xl p-4">
-          <span className={cn("mb-2 inline-block rounded-full border px-2.5 py-0.5 text-label text-[10px]", difficultyBadge[exercise.difficulty])}>
+        <div className="border border-foreground/10 bg-card p-4">
+          <span className={cn("mb-2 inline-block border px-2.5 py-0.5 text-label text-[10px]", difficultyBadge[exercise.difficulty])}>
             {exercise.difficulty.toUpperCase()}
           </span>
-          <h3 className="font-chalk text-2xl text-embossed">{exercise.name}</h3>
+          <h3 className="font-chalk text-2xl text-foreground">{exercise.name}</h3>
           <p className="mt-1 text-sm text-muted-foreground">{exercise.description}</p>
         </div>
 
         {/* Do This */}
-        <div className="surface-inset rounded-xl p-4">
+        <div className="border border-foreground/10 bg-surface-0 p-4">
           <h4 className="mb-2 flex items-center gap-2 text-label text-xs text-primary">
             <Target className="h-4 w-4" /> DO THIS
           </h4>
@@ -63,12 +63,12 @@ export function ExerciseCanvas({ data }: ExerciseCanvasProps) {
         </div>
 
         {/* Cues */}
-        <div className="surface-raised rounded-xl p-4">
+        <div className="border border-foreground/10 bg-card p-4">
           <h4 className="mb-2 text-label text-xs text-primary">CUES</h4>
           <ul className="space-y-1.5">
             {exercise.cueStack.map((cue, i) => (
               <li key={i} className="flex items-start gap-2 text-sm">
-                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 bg-primary" />
                 {cue}
               </li>
             ))}
@@ -76,14 +76,14 @@ export function ExerciseCanvas({ data }: ExerciseCanvasProps) {
         </div>
 
         {/* Fail Signs */}
-        <div className="surface-raised rounded-xl border border-destructive/20 p-4">
-          <h4 className="mb-2 flex items-center gap-2 text-label text-xs text-destructive">
+        <div className="border border-foreground/15 bg-card p-4">
+          <h4 className="mb-2 flex items-center gap-2 text-label text-xs text-foreground">
             <AlertTriangle className="h-4 w-4" /> FAIL SIGNS
           </h4>
           <ul className="space-y-1.5">
             {exercise.failSigns.map((fs, i) => (
               <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
-                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-destructive" />
+                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 bg-foreground" />
                 {fs}
               </li>
             ))}
@@ -93,24 +93,24 @@ export function ExerciseCanvas({ data }: ExerciseCanvasProps) {
         {/* Muscles */}
         <div className="flex flex-wrap gap-1.5">
           {exercise.muscles.map((m) => (
-            <span key={m} className="surface-raised rounded-md px-2 py-1 text-label text-[10px]">{m}</span>
+            <span key={m} className="border border-foreground/10 bg-card px-2 py-1 text-label text-[10px]">{m}</span>
           ))}
         </div>
 
         {/* Creator Credit + IG Link */}
         {exercise.creator && (
-          <div className="surface-inset rounded-xl p-4">
+          <div className="border border-foreground/10 bg-surface-0 p-4">
             <p className="text-xs text-muted-foreground">
-              Credit: <span className="text-foreground font-medium">{exercise.creator}</span>
+              Credit: <span className="font-medium text-foreground">{exercise.creator}</span>
             </p>
             {exercise.instagramUrl && (
               <a
                 href={exercise.instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-1 inline-flex items-center gap-1 text-xs text-primary hover:underline"
+                className="mt-1 inline-flex items-center gap-1 text-label text-xs text-primary hover:underline"
               >
-                📸 Watch on Instagram →
+                WATCH ON INSTAGRAM →
               </a>
             )}
           </div>

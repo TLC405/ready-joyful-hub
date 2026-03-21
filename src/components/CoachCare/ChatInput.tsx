@@ -1,5 +1,5 @@
 import { useState, KeyboardEvent } from 'react';
-import { Send, Video, FileText, Dumbbell, BarChart3, Link } from 'lucide-react';
+import { Send, Video, FileText, Dumbbell, BarChart3 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface ChatInputProps {
@@ -31,7 +31,7 @@ export function ChatInput({ onSend }: ChatInputProps) {
   };
 
   return (
-    <div className="border-t border-border p-3">
+    <div className="border-t border-foreground/15 p-3">
       {/* Quick action buttons */}
       <div className="mb-2 flex gap-1">
         {quickActions.map((action) => {
@@ -40,7 +40,7 @@ export function ChatInput({ onSend }: ChatInputProps) {
             <button
               key={action.label}
               onClick={() => setValue(prev => prev + (prev ? ' ' : '') + action.hint)}
-              className="btn-raised flex items-center gap-1.5 rounded-md px-2 py-1 text-[10px] text-muted-foreground transition-colors hover:text-foreground"
+              className="flex items-center gap-1.5 border border-foreground/10 px-2 py-1 text-[10px] text-muted-foreground transition-colors hover:bg-foreground hover:text-card"
               title={action.hint}
             >
               <Icon className="h-3 w-3" />
@@ -51,7 +51,7 @@ export function ChatInput({ onSend }: ChatInputProps) {
       </div>
 
       {/* Input bar */}
-      <div className="surface-inset flex items-end gap-2 rounded-xl px-3 py-2">
+      <div className="flex items-end gap-2 border border-foreground/10 bg-surface-0 px-3 py-2">
         <textarea
           value={value}
           onChange={(e) => setValue(e.target.value)}
@@ -65,7 +65,7 @@ export function ChatInput({ onSend }: ChatInputProps) {
           onClick={handleSend}
           disabled={!value.trim()}
           className={cn(
-            "badge-coin flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-all",
+            "flex h-8 w-8 shrink-0 items-center justify-center transition-all",
             value.trim() ? "bg-primary text-primary-foreground" : "bg-surface-2 text-muted-foreground"
           )}
         >
