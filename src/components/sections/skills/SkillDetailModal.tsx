@@ -3,7 +3,6 @@ import {
   CheckCircle, Target, Lightbulb, Play, X, AlertTriangle, Zap, RotateCcw, TrendingUp, Shield
 } from 'lucide-react';
 import { Skill } from '@/lib/skills-data';
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -26,69 +25,67 @@ export function SkillDetailModal({ skill, onClose }: SkillDetailModalProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-xl"
-      style={{ background: 'hsla(var(--surface-0), 0.98)' }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-foreground/60"
       onClick={onClose}
     >
       <motion.div
-        initial={{ scale: 0.9, y: 20 }}
+        initial={{ scale: 0.95, y: 20 }}
         animate={{ scale: 1, y: 0 }}
-        exit={{ scale: 0.9, y: 20 }}
+        exit={{ scale: 0.95, y: 20 }}
         onClick={(e) => e.stopPropagation()}
-        className="glass-premium relative max-h-[90vh] w-full max-w-5xl overflow-y-auto rounded-3xl p-6 lg:p-10"
-        style={{ boxShadow: 'var(--shadow-deep)' }}
+        className="relative max-h-[90vh] w-full max-w-5xl overflow-y-auto border border-foreground/15 bg-card p-6 lg:p-10"
       >
         <button
           onClick={onClose}
-          className="btn-raised absolute right-4 top-4 z-10 flex h-12 w-12 items-center justify-center rounded-xl"
+          className="absolute right-3 top-3 z-10 flex h-10 w-10 items-center justify-center border border-foreground/10 text-muted-foreground transition-colors hover:bg-foreground hover:text-card"
         >
           <X className="h-5 w-5" />
         </button>
 
         <div className="grid gap-8 lg:grid-cols-2">
-          <div className="relative overflow-hidden rounded-2xl" style={{ boxShadow: 'var(--shadow-brutal)' }}>
+          <div className="relative overflow-hidden border border-foreground/10">
             <img src={skill.image} alt={skill.name} className="h-full w-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-card/80 to-transparent" />
+            <div className="image-overlay absolute inset-0" />
           </div>
 
           <div>
             <div className="mb-6">
               {skill.protocol_name && (
-                <div className="mb-2 text-label text-xs text-primary/80">
+                <div className="mb-2 text-label text-[10px] text-primary/80">
                   {skill.protocol_name}
                 </div>
               )}
               <div className={cn(
-                "mb-3 inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-medium",
+                "mb-3 inline-flex items-center gap-1 border px-3 py-1 text-label text-[10px]",
                 difficultyStyles[skill.difficulty].badge
               )}>
-                <span className="text-label">{difficultyStyles[skill.difficulty].label}</span>
+                {difficultyStyles[skill.difficulty].label}
               </div>
-              <h2 className="text-heading text-3xl text-embossed lg:text-4xl">{skill.name}</h2>
+              <h2 className="font-chalk text-3xl lg:text-4xl">{skill.name}</h2>
               {skill.objective && (
                 <p className="mt-2 text-label text-sm text-primary">{skill.objective}</p>
               )}
-              <p className="mt-3 leading-relaxed text-muted-foreground">{skill.description}</p>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{skill.description}</p>
             </div>
 
             <div className="mb-6">
-              <h3 className="mb-3 flex items-center gap-2 font-chalk text-lg text-primary">
-                <Target className="h-5 w-5" />
+              <h3 className="mb-3 flex items-center gap-2 font-chalk text-sm text-primary">
+                <Target className="h-4 w-4" />
                 PROGRESSION TARGETS
               </h3>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1">
                 {skill.progressionTargets.map((target, idx) => (
                   <div
                     key={idx}
                     className={cn(
-                      "flex items-center gap-2 rounded-lg border px-3 py-1.5 text-sm",
+                      "flex items-center gap-2 border px-3 py-1.5 text-label text-[10px]",
                       idx === 0 
-                        ? "surface-inset border-primary/30 text-primary" 
-                        : "surface-raised"
+                        ? "border-primary/30 text-primary" 
+                        : "border-foreground/10 text-muted-foreground"
                     )}
                   >
-                    {idx === 0 && <CheckCircle className="h-4 w-4" />}
-                    <span className="text-label">{target}</span>
+                    {idx === 0 && <CheckCircle className="h-3 w-3" />}
+                    {target}
                   </div>
                 ))}
               </div>
@@ -96,8 +93,8 @@ export function SkillDetailModal({ skill, onClose }: SkillDetailModalProps) {
 
             {skill.intensity_markers && skill.intensity_markers.length > 0 && (
               <div className="mb-6">
-                <h3 className="mb-3 flex items-center gap-2 font-chalk text-lg text-primary">
-                  <Shield className="h-5 w-5" />
+                <h3 className="mb-3 flex items-center gap-2 font-chalk text-sm text-primary">
+                  <Shield className="h-4 w-4" />
                   INTENSITY MARKERS
                 </h3>
                 <div className="space-y-2">
@@ -114,82 +111,82 @@ export function SkillDetailModal({ skill, onClose }: SkillDetailModalProps) {
         </div>
 
         {hasMovements ? (
-          <div className="mt-10">
-            <h3 className="mb-6 flex items-center gap-2 font-chalk text-2xl text-embossed text-primary">
-              <Play className="h-6 w-6" />
+          <div className="mt-8">
+            <h3 className="mb-4 flex items-center gap-2 font-chalk text-sm text-primary">
+              <Play className="h-4 w-4" />
               MOVEMENT BRIEFINGS
             </h3>
-            <div className="space-y-6">
+            <div className="space-y-4">
               {skill.movements!.map((movement, idx) => (
                 <motion.div
                   key={idx}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: idx * 0.1 }}
-                  className="surface-raised overflow-hidden rounded-2xl"
+                  transition={{ delay: idx * 0.08 }}
+                  className="border border-foreground/10"
                 >
-                  <div className="flex items-center gap-4 border-b border-border p-4" style={{ background: 'linear-gradient(180deg, hsl(var(--surface-3)) 0%, hsl(var(--surface-2)) 100%)' }}>
-                    <span className="badge-coin flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary font-chalk text-lg text-primary-foreground">
+                  <div className="flex items-center gap-3 border-b border-foreground/10 bg-surface-0 px-4 py-3">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center border border-primary bg-primary font-chalk text-sm text-primary-foreground">
                       {idx + 1}
                     </span>
-                    <h4 className="font-chalk text-xl">{movement.name}</h4>
+                    <h4 className="font-chalk text-sm">{movement.name}</h4>
                   </div>
 
-                  <div className="p-5">
+                  <div className="p-4">
                     <Tabs defaultValue="mechanic" className="w-full">
-                      <TabsList className="mb-4 grid w-full grid-cols-3 surface-inset lg:grid-cols-6">
-                        <TabsTrigger value="mechanic" className="text-label text-xs">MECHANIC</TabsTrigger>
-                        <TabsTrigger value="brutality" className="text-label text-xs">BRUTALITY</TabsTrigger>
-                        <TabsTrigger value="progression" className="text-label text-xs">PROGRESSION</TabsTrigger>
-                        <TabsTrigger value="volume" className="text-label text-xs">VOLUME</TabsTrigger>
-                        <TabsTrigger value="watchout" className="text-label text-xs">WATCH OUT</TabsTrigger>
-                        <TabsTrigger value="recovery" className="text-label text-xs">RECOVERY</TabsTrigger>
+                      <TabsList className="mb-3 grid w-full grid-cols-3 border border-foreground/10 bg-surface-0 lg:grid-cols-6">
+                        <TabsTrigger value="mechanic" className="text-label text-[10px]">MECHANIC</TabsTrigger>
+                        <TabsTrigger value="brutality" className="text-label text-[10px]">BRUTALITY</TabsTrigger>
+                        <TabsTrigger value="progression" className="text-label text-[10px]">PROGRESSION</TabsTrigger>
+                        <TabsTrigger value="volume" className="text-label text-[10px]">VOLUME</TabsTrigger>
+                        <TabsTrigger value="watchout" className="text-label text-[10px]">WATCH OUT</TabsTrigger>
+                        <TabsTrigger value="recovery" className="text-label text-[10px]">RECOVERY</TabsTrigger>
                       </TabsList>
 
                       <TabsContent value="mechanic" className="mt-0">
-                        <div className="surface-inset rounded-xl p-4">
-                          <p className="leading-relaxed text-foreground">{movement.mechanic}</p>
+                        <div className="border border-foreground/10 bg-surface-0 p-4">
+                          <p className="text-sm leading-relaxed text-foreground">{movement.mechanic}</p>
                         </div>
                       </TabsContent>
 
                       <TabsContent value="brutality" className="mt-0">
-                        <div className="surface-raised rounded-xl border border-primary/20 p-4">
+                        <div className="border border-primary/20 bg-card p-4">
                           <div className="flex items-start gap-3">
-                            <Zap className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-                            <p className="leading-relaxed text-foreground">{movement.brutality}</p>
+                            <Zap className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                            <p className="text-sm leading-relaxed text-foreground">{movement.brutality}</p>
                           </div>
                         </div>
                       </TabsContent>
 
                       <TabsContent value="progression" className="mt-0">
-                        <div className="surface-inset rounded-xl p-4">
+                        <div className="border border-foreground/10 bg-surface-0 p-4">
                           <div className="flex items-start gap-3">
-                            <TrendingUp className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-                            <p className="leading-relaxed text-foreground">{movement.progression}</p>
+                            <TrendingUp className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                            <p className="text-sm leading-relaxed text-foreground">{movement.progression}</p>
                           </div>
                         </div>
                       </TabsContent>
 
                       <TabsContent value="volume" className="mt-0">
-                        <div className="surface-inset rounded-xl p-4">
-                          <p className="font-chalk text-lg text-foreground">{movement.volume}</p>
+                        <div className="border border-foreground/10 bg-surface-0 p-4">
+                          <p className="font-chalk text-sm text-foreground">{movement.volume}</p>
                         </div>
                       </TabsContent>
 
                       <TabsContent value="watchout" className="mt-0">
-                        <div className="surface-raised rounded-xl border border-destructive/20 p-4">
+                        <div className="border border-primary/20 bg-card p-4">
                           <div className="flex items-start gap-3">
-                            <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-destructive" />
-                            <p className="leading-relaxed text-foreground">{movement.watch_out}</p>
+                            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                            <p className="text-sm leading-relaxed text-foreground">{movement.watch_out}</p>
                           </div>
                         </div>
                       </TabsContent>
 
                       <TabsContent value="recovery" className="mt-0">
-                        <div className="surface-inset rounded-xl p-4">
+                        <div className="border border-foreground/10 bg-surface-0 p-4">
                           <div className="flex items-start gap-3">
-                            <RotateCcw className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-                            <p className="leading-relaxed text-foreground">{movement.movement_recovery}</p>
+                            <RotateCcw className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+                            <p className="text-sm leading-relaxed text-foreground">{movement.movement_recovery}</p>
                           </div>
                         </div>
                       </TabsContent>
@@ -201,24 +198,18 @@ export function SkillDetailModal({ skill, onClose }: SkillDetailModalProps) {
           </div>
         ) : (
           <div className="mt-8">
-            <h3 className="mb-4 flex items-center gap-2 font-chalk text-xl text-primary">
-              <Play className="h-5 w-5" />
+            <h3 className="mb-4 flex items-center gap-2 font-chalk text-sm text-primary">
+              <Play className="h-4 w-4" />
               STEP-BY-STEP INSTRUCTIONS
             </h3>
-            <ol className="grid gap-3 sm:grid-cols-2">
+            <ol className="grid gap-px bg-foreground/10 border border-foreground/10 sm:grid-cols-2">
               {skill.instructions.map((instruction, idx) => (
-                <motion.li
-                  key={idx}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: idx * 0.1 }}
-                  className="surface-inset flex gap-4 rounded-xl p-4"
-                >
-                  <span className="badge-coin flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary font-chalk text-sm text-primary-foreground">
+                <li key={idx} className="flex gap-3 bg-card p-4">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center border border-primary bg-primary font-chalk text-xs text-primary-foreground">
                     {idx + 1}
                   </span>
                   <span className="text-sm text-foreground">{instruction}</span>
-                </motion.li>
+                </li>
               ))}
             </ol>
           </div>
@@ -226,13 +217,13 @@ export function SkillDetailModal({ skill, onClose }: SkillDetailModalProps) {
 
         {skill.recovery_vector && skill.recovery_vector.length > 0 && (
           <div className="mt-8">
-            <h3 className="mb-4 flex items-center gap-2 font-chalk text-xl text-primary">
-              <RotateCcw className="h-5 w-5" />
+            <h3 className="mb-3 flex items-center gap-2 font-chalk text-sm text-primary">
+              <RotateCcw className="h-4 w-4" />
               RECOVERY VECTOR
             </h3>
-            <div className="grid gap-3 sm:grid-cols-3">
+            <div className="grid gap-px bg-foreground/10 border border-foreground/10 sm:grid-cols-3">
               {skill.recovery_vector.map((tip, idx) => (
-                <div key={idx} className="surface-raised rounded-xl border border-primary/20 p-4">
+                <div key={idx} className="bg-card p-4">
                   <span className="text-sm text-muted-foreground">{tip}</span>
                 </div>
               ))}
@@ -242,13 +233,13 @@ export function SkillDetailModal({ skill, onClose }: SkillDetailModalProps) {
 
         {!skill.recovery_vector && skill.tips && skill.tips.length > 0 && (
           <div className="mt-8">
-            <h3 className="mb-4 flex items-center gap-2 font-chalk text-xl text-primary">
-              <Lightbulb className="h-5 w-5" />
+            <h3 className="mb-3 flex items-center gap-2 font-chalk text-sm text-primary">
+              <Lightbulb className="h-4 w-4" />
               PRO TIPS
             </h3>
-            <div className="grid gap-3 sm:grid-cols-3">
+            <div className="grid gap-px bg-foreground/10 border border-foreground/10 sm:grid-cols-3">
               {skill.tips.map((tip, idx) => (
-                <div key={idx} className="surface-raised rounded-xl border border-primary/20 p-4">
+                <div key={idx} className="bg-card p-4">
                   <span className="text-sm text-muted-foreground">{tip}</span>
                 </div>
               ))}
@@ -256,10 +247,10 @@ export function SkillDetailModal({ skill, onClose }: SkillDetailModalProps) {
           </div>
         )}
 
-        <div className="mt-10">
-          <Button className="btn-raised w-full bg-primary py-7 font-chalk text-xl text-primary-foreground hover:bg-primary/90">
+        <div className="mt-8">
+          <button className="w-full bg-primary py-4 font-chalk text-sm text-primary-foreground transition-opacity hover:opacity-90">
             START PRACTICING
-          </Button>
+          </button>
         </div>
       </motion.div>
     </motion.div>

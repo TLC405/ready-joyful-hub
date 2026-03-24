@@ -5,9 +5,7 @@ import {
   Zap, 
   Star,
   Lock,
-  Unlock
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 interface Plan {
@@ -89,104 +87,87 @@ const plans: Plan[] = [
 
 export function SubscriptionPlans() {
   return (
-    <section className="relative min-h-screen px-4 py-20 lg:px-8">
+    <section className="relative px-4 py-8 lg:px-8">
       {/* Section Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="mb-12 text-center"
-      >
-        <h2 className="font-chalk text-5xl sm:text-6xl lg:text-7xl">
-          CHOOSE YOUR <span className="text-gradient">PATH</span>
+      <div className="editorial-divider-thick mb-6 pt-2">
+        <h2 className="text-editorial-sm text-foreground">
+          CHOOSE YOUR <span className="text-primary">PATH</span>
         </h2>
-        <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
+        <p className="mt-2 max-w-xl text-sm text-muted-foreground">
           Unlock your full potential with premium features. Cancel anytime.
         </p>
-      </motion.div>
+      </div>
 
       {/* Plans Grid */}
-      <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-3">
+      <div className="mx-auto grid max-w-5xl grid-cols-1 gap-px bg-foreground/10 border border-foreground/10 md:grid-cols-3">
         {plans.map((plan, idx) => {
           const Icon = plan.icon;
           
           return (
             <motion.div
               key={plan.id}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: idx * 0.1 }}
               className={cn(
-                "relative flex flex-col rounded-2xl border-2 p-6 transition-all",
-                plan.popular 
-                  ? "border-primary bg-primary/5 shadow-[0_0_40px_rgba(245,197,24,0.15)]" 
-                  : "border-border bg-card hover:border-primary/50"
+                "relative flex flex-col bg-card p-6",
+                plan.popular && "border-l-2 border-l-primary"
               )}
             >
               {/* Popular Badge */}
               {plan.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <span className="rounded-full bg-primary px-4 py-1 font-chalk text-sm text-primary-foreground">
+                <div className="absolute -top-px left-0 right-0">
+                  <span className="inline-block bg-primary px-4 py-1 text-label text-[10px] text-primary-foreground">
                     MOST POPULAR
                   </span>
                 </div>
               )}
 
               {/* Plan Header */}
-              <div className="mb-6 text-center">
+              <div className={cn("mb-6", plan.popular && "mt-4")}>
                 <div className={cn(
-                  "mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-xl",
+                  "mb-4 flex h-12 w-12 items-center justify-center border",
                   plan.popular 
-                    ? "bg-primary" 
-                    : "bg-secondary"
+                    ? "border-primary bg-primary text-primary-foreground" 
+                    : "border-foreground/10 bg-surface-0 text-primary"
                 )}>
-                  <Icon className={cn(
-                    "h-8 w-8",
-                    plan.popular ? "text-primary-foreground" : "text-primary"
-                  )} />
+                  <Icon className="h-6 w-6" />
                 </div>
-                <h3 className="font-chalk text-3xl">{plan.name}</h3>
-                <div className="mt-2 flex items-baseline justify-center gap-1">
-                  <span className="font-chalk text-5xl">{plan.price}</span>
-                  <span className="text-muted-foreground">{plan.period}</span>
+                <h3 className="font-chalk text-2xl">{plan.name}</h3>
+                <div className="mt-2 flex items-baseline gap-1">
+                  <span className="font-chalk text-4xl">{plan.price}</span>
+                  <span className="text-sm text-muted-foreground">{plan.period}</span>
                 </div>
                 <p className="mt-2 text-sm text-muted-foreground">{plan.description}</p>
               </div>
 
               {/* Features */}
               <div className="flex-1">
-                <div className="mb-4">
-                  <span className="font-chalk text-xs text-muted-foreground">INCLUDED</span>
+                <div className="mb-3">
+                  <span className="text-label text-[10px] text-muted-foreground">INCLUDED</span>
                 </div>
-                <ul className="mb-6 space-y-3">
+                <ul className="mb-6 space-y-2">
                   {plan.features.map((feature, i) => (
-                    <motion.li
-                      key={i}
-                      initial={{ opacity: 0, x: -10 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.3 + i * 0.05 }}
-                      className="flex items-center gap-3"
-                    >
-                      <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/20">
+                    <li key={i} className="flex items-center gap-2">
+                      <div className="flex h-4 w-4 shrink-0 items-center justify-center bg-primary/10">
                         <Check className="h-3 w-3 text-primary" />
                       </div>
                       <span className="text-sm">{feature}</span>
-                    </motion.li>
+                    </li>
                   ))}
                 </ul>
 
                 {/* Locked Features */}
                 {plan.locked.length > 0 && (
                   <>
-                    <div className="mb-4">
-                      <span className="font-chalk text-xs text-muted-foreground">NOT INCLUDED</span>
+                    <div className="mb-3">
+                      <span className="text-label text-[10px] text-muted-foreground">NOT INCLUDED</span>
                     </div>
-                    <ul className="mb-6 space-y-3">
+                    <ul className="mb-6 space-y-2">
                       {plan.locked.map((feature, i) => (
-                        <li key={i} className="flex items-center gap-3 opacity-50">
-                          <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-secondary">
+                        <li key={i} className="flex items-center gap-2 opacity-40">
+                          <div className="flex h-4 w-4 shrink-0 items-center justify-center bg-surface-0">
                             <Lock className="h-3 w-3 text-muted-foreground" />
                           </div>
                           <span className="text-sm text-muted-foreground">{feature}</span>
@@ -198,37 +179,31 @@ export function SubscriptionPlans() {
               </div>
 
               {/* CTA Button */}
-              <Button
+              <button
                 className={cn(
-                  "w-full py-6 font-chalk text-lg",
+                  "w-full py-3 font-chalk text-sm transition-colors",
                   plan.popular 
-                    ? "bg-primary text-primary-foreground hover:bg-primary/90" 
-                    : "bg-secondary text-foreground hover:bg-secondary/80"
+                    ? "bg-primary text-primary-foreground hover:opacity-90" 
+                    : "border border-foreground/10 text-foreground hover:bg-foreground hover:text-card"
                 )}
               >
                 {plan.id === 'free' ? 'CURRENT PLAN' : `GET ${plan.name}`}
-              </Button>
+              </button>
             </motion.div>
           );
         })}
       </div>
 
       {/* Money Back Guarantee */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ delay: 0.5 }}
-        className="mx-auto mt-12 max-w-xl text-center"
-      >
-        <div className="inline-flex items-center gap-2 rounded-full border border-green-500/30 bg-green-500/10 px-4 py-2 text-green-400">
-          <Check className="h-4 w-4" />
-          <span className="font-chalk text-sm">30-DAY MONEY BACK GUARANTEE</span>
+      <div className="mt-6 text-center">
+        <div className="inline-flex items-center gap-2 border border-success/30 bg-success/5 px-4 py-2">
+          <Check className="h-4 w-4 text-success" />
+          <span className="text-label text-xs text-success">30-DAY MONEY BACK GUARANTEE</span>
         </div>
-        <p className="mt-4 text-sm text-muted-foreground">
+        <p className="mt-3 text-sm text-muted-foreground">
           Not satisfied? Get a full refund within 30 days. No questions asked.
         </p>
-      </motion.div>
+      </div>
     </section>
   );
 }
