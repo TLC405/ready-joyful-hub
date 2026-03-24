@@ -27,163 +27,134 @@ const leaderboardData: LeaderboardEntry[] = [
 ];
 
 const TrendIcon = ({ trend }: { trend: 'up' | 'down' | 'same' }) => {
-  if (trend === 'up') return <TrendingUp className="h-4 w-4 text-green-500" />;
-  if (trend === 'down') return <TrendingDown className="h-4 w-4 text-red-500" />;
+  if (trend === 'up') return <TrendingUp className="h-4 w-4 text-success" />;
+  if (trend === 'down') return <TrendingDown className="h-4 w-4 text-primary" />;
   return <Minus className="h-4 w-4 text-muted-foreground" />;
 };
 
 const RankBadge = ({ rank }: { rank: number }) => {
-  if (rank === 1) return <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-yellow-400 to-amber-600"><Crown className="h-5 w-5 text-white" /></div>;
-  if (rank === 2) return <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-gray-300 to-gray-500"><Medal className="h-5 w-5 text-white" /></div>;
-  if (rank === 3) return <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-amber-600 to-amber-800"><Medal className="h-5 w-5 text-white" /></div>;
-  return <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary"><span className="font-chalk text-lg">{rank}</span></div>;
+  if (rank === 1) return <div className="flex h-10 w-10 items-center justify-center border-2 border-primary bg-primary text-primary-foreground"><Crown className="h-5 w-5" /></div>;
+  if (rank === 2) return <div className="flex h-10 w-10 items-center justify-center border-2 border-foreground bg-foreground text-card"><Medal className="h-5 w-5" /></div>;
+  if (rank === 3) return <div className="flex h-10 w-10 items-center justify-center border-2 border-foreground/50 bg-surface-0"><Medal className="h-5 w-5 text-foreground" /></div>;
+  return <div className="flex h-10 w-10 items-center justify-center border border-foreground/10 bg-card"><span className="font-chalk text-lg">{rank}</span></div>;
 };
 
 export function Leaderboard() {
   return (
-    <section className="relative min-h-screen px-4 py-20 lg:px-8">
+    <section className="relative px-4 py-8 lg:px-8">
       {/* Section Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="mb-12"
-      >
-        <h2 className="font-chalk text-5xl sm:text-6xl lg:text-7xl">
-          <span className="text-gradient">GLOBAL</span> LEADERBOARD
+      <div className="editorial-divider-thick mb-6 pt-2">
+        <h2 className="text-editorial-sm text-foreground">
+          <span className="text-primary">GLOBAL</span> LEADERBOARD
         </h2>
-        <p className="mt-2 max-w-lg text-muted-foreground">
+        <p className="mt-2 max-w-lg text-sm text-muted-foreground">
           Compete with athletes worldwide and climb the ranks
         </p>
-      </motion.div>
+      </div>
 
       {/* Stats Bar */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ delay: 0.1 }}
-        className="mb-8 flex flex-wrap items-center gap-4 rounded-xl border-2 border-border bg-card p-4"
-      >
-        <div className="flex items-center gap-2">
-          <Users className="h-5 w-5 text-primary" />
-          <span className="font-chalk text-sm text-muted-foreground">12,847 ATHLETES</span>
+      <div className="mb-6 flex flex-wrap items-center border-y border-foreground/10">
+        <div className="flex items-center gap-2 px-4 py-3">
+          <Users className="h-4 w-4 text-primary" />
+          <span className="text-label text-xs text-muted-foreground">12,847 ATHLETES</span>
         </div>
-        <div className="h-6 w-px bg-border" />
-        <div className="flex items-center gap-2">
-          <Trophy className="h-5 w-5 text-primary" />
-          <span className="font-chalk text-sm text-muted-foreground">YOUR RANK: #142</span>
+        <div className="h-6 w-px bg-foreground/10" />
+        <div className="flex items-center gap-2 px-4 py-3">
+          <Trophy className="h-4 w-4 text-primary" />
+          <span className="text-label text-xs text-muted-foreground">YOUR RANK: #142</span>
         </div>
-        <div className="h-6 w-px bg-border" />
-        <div className="flex items-center gap-2">
-          <TrendingUp className="h-5 w-5 text-green-500" />
-          <span className="font-chalk text-sm text-green-500">+15 THIS WEEK</span>
+        <div className="h-6 w-px bg-foreground/10" />
+        <div className="flex items-center gap-2 px-4 py-3">
+          <TrendingUp className="h-4 w-4 text-success" />
+          <span className="text-label text-xs text-success">+15 THIS WEEK</span>
         </div>
-      </motion.div>
+      </div>
 
       {/* Top 3 Podium */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ delay: 0.2 }}
-        className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-3"
-      >
+      <div className="mb-6 grid grid-cols-1 gap-px bg-foreground/10 border border-foreground/10 sm:grid-cols-3">
         {leaderboardData.slice(0, 3).map((entry, idx) => (
           <motion.div
             key={entry.rank}
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.3 + idx * 0.1 }}
+            transition={{ delay: 0.1 + idx * 0.1 }}
             className={cn(
-              "relative overflow-hidden rounded-xl border-2 p-6 text-center",
-              entry.rank === 1 
-                ? "border-yellow-500/50 bg-gradient-to-br from-yellow-500/10 to-amber-600/10 sm:order-2 sm:-mt-4" 
-                : entry.rank === 2 
-                  ? "border-gray-400/50 bg-gradient-to-br from-gray-400/10 to-gray-500/10 sm:order-1" 
-                  : "border-amber-700/50 bg-gradient-to-br from-amber-700/10 to-amber-800/10 sm:order-3"
+              "bg-card p-6 text-center",
+              entry.rank === 1 && "sm:order-2",
+              entry.rank === 2 && "sm:order-1",
+              entry.rank === 3 && "sm:order-3"
             )}
           >
             {/* Crown for #1 */}
             {entry.rank === 1 && (
-              <motion.div
-                animate={{ y: [0, -5, 0] }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="absolute left-1/2 top-2 -translate-x-1/2"
-              >
-                <Crown className="h-8 w-8 text-yellow-500" />
-              </motion.div>
+              <div className="mb-2 flex justify-center">
+                <Crown className="h-6 w-6 text-primary" />
+              </div>
             )}
 
-            <div className="mb-4 mt-6">
+            <div className="mb-4">
               <div className={cn(
-                "mx-auto flex h-20 w-20 items-center justify-center rounded-full text-3xl font-bold",
+                "mx-auto flex h-16 w-16 items-center justify-center border-2 text-2xl font-bold",
                 entry.rank === 1 
-                  ? "bg-gradient-to-br from-yellow-400 to-amber-600" 
+                  ? "border-primary bg-primary text-primary-foreground" 
                   : entry.rank === 2 
-                    ? "bg-gradient-to-br from-gray-300 to-gray-500" 
-                    : "bg-gradient-to-br from-amber-600 to-amber-800"
+                    ? "border-foreground bg-foreground text-card" 
+                    : "border-foreground/40 bg-surface-0 text-foreground"
               )}>
-                <span className="font-chalk text-white">{entry.avatar}</span>
+                <span className="font-chalk">{entry.avatar}</span>
               </div>
             </div>
 
-            <h3 className="mb-1 font-chalk text-xl">{entry.name}</h3>
+            <h3 className="mb-1 font-chalk text-lg">{entry.name}</h3>
             {entry.isPremium && (
-              <span className="mb-2 inline-flex items-center gap-1 rounded-full bg-primary/20 px-2 py-0.5 text-xs text-primary">
+              <span className="mb-2 inline-flex items-center gap-1 border border-primary/30 px-2 py-0.5 text-label text-[10px] text-primary">
                 <Crown className="h-3 w-3" /> PRO
               </span>
             )}
 
-            <div className="mt-4 grid grid-cols-3 gap-2">
-              <div className="rounded-lg bg-secondary/50 p-2">
-                <Flame className="mx-auto mb-1 h-4 w-4 text-orange-500" />
+            <div className="mt-4 grid grid-cols-3 gap-px bg-foreground/5">
+              <div className="bg-card p-2">
+                <Flame className="mx-auto mb-1 h-4 w-4 text-primary" />
                 <span className="block font-chalk text-lg">{entry.streak}</span>
-                <span className="text-xs text-muted-foreground">STREAK</span>
+                <span className="text-label text-[9px] text-muted-foreground">STREAK</span>
               </div>
-              <div className="rounded-lg bg-secondary/50 p-2">
+              <div className="bg-card p-2">
                 <span className="block font-chalk text-lg">{entry.workouts}</span>
-                <span className="text-xs text-muted-foreground">WORKOUTS</span>
+                <span className="text-label text-[9px] text-muted-foreground">WORKOUTS</span>
               </div>
-              <div className="rounded-lg bg-secondary/50 p-2">
+              <div className="bg-card p-2">
                 <span className="block font-chalk text-lg">{entry.skills}</span>
-                <span className="text-xs text-muted-foreground">SKILLS</span>
+                <span className="text-label text-[9px] text-muted-foreground">SKILLS</span>
               </div>
             </div>
           </motion.div>
         ))}
-      </motion.div>
+      </div>
 
       {/* Full Leaderboard Table */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ delay: 0.5 }}
-        className="rounded-xl border-2 border-border bg-card"
-      >
+      <div className="border border-foreground/10 bg-card">
         {/* Table Header */}
-        <div className="grid grid-cols-12 gap-4 border-b border-border bg-secondary/30 px-6 py-4">
-          <div className="col-span-1 font-chalk text-sm text-muted-foreground">RANK</div>
-          <div className="col-span-5 font-chalk text-sm text-muted-foreground">ATHLETE</div>
-          <div className="col-span-2 font-chalk text-sm text-muted-foreground">STREAK</div>
-          <div className="col-span-2 font-chalk text-sm text-muted-foreground">WORKOUTS</div>
-          <div className="col-span-1 font-chalk text-sm text-muted-foreground">SKILLS</div>
-          <div className="col-span-1 font-chalk text-sm text-muted-foreground">TREND</div>
+        <div className="grid grid-cols-12 gap-4 border-b-2 border-foreground px-6 py-3 bg-card">
+          <div className="col-span-1 text-label text-xs text-muted-foreground">RANK</div>
+          <div className="col-span-5 text-label text-xs text-muted-foreground">ATHLETE</div>
+          <div className="col-span-2 text-label text-xs text-muted-foreground">STREAK</div>
+          <div className="col-span-2 text-label text-xs text-muted-foreground">WORKOUTS</div>
+          <div className="col-span-1 text-label text-xs text-muted-foreground">SKILLS</div>
+          <div className="col-span-1 text-label text-xs text-muted-foreground">TREND</div>
         </div>
 
         {/* Table Body */}
         {leaderboardData.slice(3).map((entry, idx) => (
           <motion.div
             key={entry.rank}
-            initial={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, x: -10 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.6 + idx * 0.05 }}
+            transition={{ delay: 0.2 + idx * 0.05 }}
             className={cn(
-              "grid grid-cols-12 items-center gap-4 border-b border-border px-6 py-4 transition-colors hover:bg-secondary/20",
-              entry.isCurrentUser && "border-l-4 border-l-primary bg-primary/5"
+              "grid grid-cols-12 items-center gap-4 border-b border-foreground/5 px-6 py-3 transition-colors hover:bg-surface-0",
+              entry.isCurrentUser && "border-l-2 border-l-primary bg-primary/5"
             )}
           >
             <div className="col-span-1">
@@ -191,23 +162,23 @@ export function Leaderboard() {
             </div>
             <div className="col-span-5 flex items-center gap-3">
               <div className={cn(
-                "flex h-12 w-12 items-center justify-center rounded-full font-chalk text-lg",
-                entry.isCurrentUser ? "bg-primary text-primary-foreground" : "bg-secondary"
+                "flex h-10 w-10 items-center justify-center border font-chalk text-lg",
+                entry.isCurrentUser ? "border-primary bg-primary text-primary-foreground" : "border-foreground/10 bg-surface-0"
               )}>
                 {entry.avatar}
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="font-chalk text-lg">{entry.name}</span>
-                  {entry.isPremium && <Crown className="h-4 w-4 text-primary" />}
+                  <span className="font-chalk">{entry.name}</span>
+                  {entry.isPremium && <Crown className="h-3 w-3 text-primary" />}
                 </div>
                 {entry.isCurrentUser && (
-                  <span className="text-xs text-primary">That's you!</span>
+                  <span className="text-label text-[10px] text-primary">THAT'S YOU</span>
                 )}
               </div>
             </div>
             <div className="col-span-2 flex items-center gap-2">
-              <Flame className="h-4 w-4 text-orange-500" />
+              <Flame className="h-4 w-4 text-primary" />
               <span className="font-chalk">{entry.streak}</span>
             </div>
             <div className="col-span-2 font-chalk">{entry.workouts}</div>
@@ -217,7 +188,7 @@ export function Leaderboard() {
             </div>
           </motion.div>
         ))}
-      </motion.div>
+      </div>
     </section>
   );
 }
