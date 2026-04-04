@@ -60,14 +60,26 @@ export function ExerciseLibrary() {
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
   const [page, setPage] = useState(1);
 
+  const difficultyOrderMap: Record<string, number> = {
+    easy: 0, beginner: 1, intermediate: 2, advanced: 3, master: 4,
+  };
+
   const filtered = useMemo(() => {
-    return exercises.filter(e => {
-      if (categoryFilter !== 'all' && e.category !== categoryFilter) return false;
-      if (difficultyFilter !== 'all' && e.difficulty !== difficultyFilter) return false;
-      if (trackFilter !== 'all' && !e.tracks.includes(trackFilter)) return false;
-      if (search && !e.name.toLowerCase().includes(search.toLowerCase())) return false;
-      return true;
-    });
+    return exercises
+      .filter(e => {
+        if (categoryFilter !== 'all' && e.category !== categoryFilter) return false;
+        if (difficultyFilter !== 'all' && e.difficulty !== difficultyFilter) return false;
+        if (trackFilter !== 'all' && !e.tracks.includes(trackFilter)) return false;
+        if (search && !e.name.toLowerCase().includes(search.toLowerCase())) return false;
+        return true;
+      })
+      .sort((a, b) => {
+        // Sort by difficulty first, then alphabetically within same difficulty
+        const diffA = difficultyOrderMap[a.difficulty] ?? 99;
+        const diffB = difficultyOrderMap[b.difficulty] ?? 99;
+        if (diffA !== diffB) return diffA - diffB;
+        return a.name.localeCompare(b.name);
+      });
   }, [categoryFilter, difficultyFilter, trackFilter, search]);
 
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
