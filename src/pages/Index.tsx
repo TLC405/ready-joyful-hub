@@ -4,7 +4,6 @@ import { Navigation } from '@/components/layout/Navigation';
 import { AppShell } from '@/components/layout/AppShell';
 import { HeroSection } from '@/components/sections/HeroSection';
 import { ExerciseLibrary } from '@/components/sections/ExerciseLibrary';
-import { TrackLadder } from '@/components/sections/TrackLadder';
 import { ProgressionMap } from '@/components/sections/ProgressionMap';
 import { ProgressDashboard } from '@/components/sections/ProgressDashboard';
 import { SettingsPanel } from '@/components/sections/SettingsPanel';
@@ -15,7 +14,6 @@ import type { Exercise } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
 type Section = 'home' | 'library' | 'tracks' | 'coach' | 'progress' | 'settings';
-type TrackView = 'ladder' | 'map';
 
 const difficultyBadge: Record<string, string> = {
   easy: 'difficulty-easy',
@@ -37,7 +35,6 @@ const pageTransition = {
 const Index = () => {
   const [activeSection, setActiveSection] = useState<Section>('home');
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
-  const [trackView, setTrackView] = useState<TrackView>('ladder');
 
   const handleNavigate = (section: string) => {
     setActiveSection(section as Section);
@@ -98,15 +95,7 @@ const Index = () => {
 
             {activeSection === 'tracks' && (
               <motion.div key="tracks" {...pageTransition}>
-                <div className="flex gap-px border-b border-foreground/10 px-4 lg:px-8 pt-4">
-                  {(['ladder', 'map'] as const).map(v => (
-                    <button key={v} onClick={() => setTrackView(v)}
-                      className={cn("px-4 py-2 font-chalk text-xs transition-colors", trackView === v ? "bg-foreground text-card" : "text-muted-foreground hover:text-foreground")}>
-                      {v.toUpperCase()}
-                    </button>
-                  ))}
-                </div>
-                {trackView === 'ladder' ? <TrackLadder /> : <ProgressionMap />}
+                <ProgressionMap />
               </motion.div>
             )}
 

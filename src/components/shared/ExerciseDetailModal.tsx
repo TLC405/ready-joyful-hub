@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import type { Exercise } from '@/lib/types';
 import { getExerciseById } from '@/lib/exercises';
 import { cn } from '@/lib/utils';
+import { TLCVideoPlayer } from './TLCVideoPlayer';
 
 const difficultyBadge: Record<string, string> = {
   easy: 'difficulty-easy',
@@ -44,11 +45,20 @@ export function ExerciseDetailModal({ exercise: initialExercise, onClose }: Exer
         </button>
 
         <div className="grid gap-5 lg:grid-cols-2">
-          {exercise.image && (
+          {/* Video player or image */}
+          {exercise.videoUrl ? (
+            <TLCVideoPlayer
+              videoUrl={exercise.videoUrl}
+              thumbnailUrl={exercise.thumbnailUrl}
+              title={exercise.name}
+              className="aspect-[4/3] sm:aspect-auto"
+            />
+          ) : exercise.image ? (
             <div className="overflow-hidden aspect-[4/3] sm:aspect-auto border border-foreground/10">
               <img src={exercise.image} alt={exercise.name} className="h-full w-full object-cover" />
             </div>
-          )}
+          ) : null}
+          
           <div className="min-w-0">
             <span className={cn("mb-2 inline-block border px-3 py-0.5 text-label text-xs", difficultyBadge[exercise.difficulty])}>
               {exercise.difficulty.toUpperCase()}
