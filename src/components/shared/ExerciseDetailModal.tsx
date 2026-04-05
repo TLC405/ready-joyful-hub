@@ -27,11 +27,13 @@ interface ExerciseDetailModalProps {
 }
 
 export function ExerciseDetailModal({ exercise: initialExercise, onClose }: ExerciseDetailModalProps) {
+  const navigate = useNavigate();
   const [exercise, setExercise] = useState(initialExercise);
 
   const regressExercises = exercise.regressTo.map(id => getExerciseById(id)).filter(Boolean) as Exercise[];
   const progressExercises = exercise.progressTo.map(id => getExerciseById(id)).filter(Boolean) as Exercise[];
   const creatorInfo = exercise.creator ? creatorIcons[exercise.creator] : null;
+  const hasVideo = exercise.videoUrl || exercise.videoSources?.length || exercise.instagramUrl;
 
   return (
     <motion.div
