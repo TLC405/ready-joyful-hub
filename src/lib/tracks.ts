@@ -25,6 +25,8 @@ export const tracks: Track[] = [
     nodes: [
       { exerciseId: 'frog-stand', prereqs: [], unlockTest: { type: 'hold', value: 15, unit: 'sec' } },
       { exerciseId: 'elbow-lever', prereqs: ['frog-stand'], unlockTest: { type: 'hold', value: 10, unit: 'sec' } },
+      { exerciseId: 'single-arm-elbow-lever', prereqs: ['elbow-lever'], unlockTest: { type: 'hold', value: 5, unit: 'sec' } },
+      { exerciseId: 'crocodile-pose', prereqs: ['elbow-lever'], unlockTest: { type: 'hold', value: 10, unit: 'sec' } },
       { exerciseId: 'hollow-body-hold', prereqs: ['elbow-lever'], unlockTest: { type: 'hold', value: 30, unit: 'sec' } },
       { exerciseId: 'chest-to-wall-handstand', prereqs: ['hollow-body-hold'], unlockTest: { type: 'hold', value: 45, unit: 'sec' } },
       { exerciseId: 'straddle-hs-kick-up', prereqs: ['chest-to-wall-handstand'], unlockTest: { type: 'reps', value: 5, unit: 'reps' } },
@@ -56,6 +58,7 @@ export const tracks: Track[] = [
     icon: 'Minimize2',
     nodes: [
       { exerciseId: 'hollow-body-hold', prereqs: [], unlockTest: { type: 'hold', value: 30, unit: 'sec' } },
+      { exerciseId: 'plank', prereqs: [], unlockTest: { type: 'hold', value: 60, unit: 'sec' } },
       { exerciseId: 'hanging-leg-raise', prereqs: ['hollow-body-hold'], unlockTest: { type: 'reps', value: 8, unit: 'reps' } },
       { exerciseId: 'tuck-sit', prereqs: ['hollow-body-hold'], unlockTest: { type: 'hold', value: 15, unit: 'sec' } },
       { exerciseId: 'seated-pike-lift', prereqs: ['hollow-body-hold'], unlockTest: { type: 'reps', value: 8, unit: 'reps' } },
@@ -113,6 +116,7 @@ export const tracks: Track[] = [
       { exerciseId: 'pistol-squat', prereqs: ['bulgarian-split-squat'], unlockTest: { type: 'reps', value: 5, unit: 'reps' } },
       { exerciseId: 'shrimp-squat', prereqs: ['pistol-squat'], unlockTest: { type: 'reps', value: 3, unit: 'reps' } },
       { exerciseId: 'nordic-curl', prereqs: ['bodyweight-squat'], unlockTest: { type: 'reps', value: 5, unit: 'reps' } },
+      { exerciseId: 'calf-raise', prereqs: [], unlockTest: { type: 'reps', value: 20, unit: 'reps' } },
     ],
   },
   {
