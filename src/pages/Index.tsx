@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Play } from 'lucide-react';
 import { Navigation } from '@/components/layout/Navigation';
 import { AppShell } from '@/components/layout/AppShell';
 import { HeroSection } from '@/components/sections/HeroSection';
@@ -76,6 +78,14 @@ const Index = () => {
                               {ex.difficulty.toUpperCase()}
                             </span>
                           </div>
+                          {(ex.videoUrl || ex.videoSources?.length || ex.instagramUrl) && (
+                            <button
+                              onClick={(e) => { e.stopPropagation(); navigate(`/video/${ex.id}`); }}
+                              className="absolute right-2 bottom-2 flex h-8 w-8 items-center justify-center border border-card/50 bg-foreground/70 text-card hover:bg-primary transition-colors"
+                            >
+                              <Play className="h-3.5 w-3.5 ml-0.5" fill="currentColor" />
+                            </button>
+                          )}
                         </div>
                         <div className="border-t border-foreground/5 p-3">
                           <h4 className="font-chalk text-sm truncate">{ex.name}</h4>
