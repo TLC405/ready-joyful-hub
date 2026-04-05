@@ -52,7 +52,7 @@ const difficultyBadge: Record<string, string> = {
 
 const ITEMS_PER_PAGE = 20;
 
-export function ExerciseLibrary() {
+export function ExerciseLibrary({ embedded = false }: { embedded?: boolean }) {
   const [categoryFilter, setCategoryFilter] = useState<Category | 'all'>('all');
   const [difficultyFilter, setDifficultyFilter] = useState<Difficulty | 'all'>('all');
   const [trackFilter, setTrackFilter] = useState<TrackId | 'all'>('all');
@@ -92,7 +92,8 @@ export function ExerciseLibrary() {
   };
 
   return (
-    <section className="relative px-4 py-8 lg:px-8">
+    <section className={embedded ? "" : "relative px-4 py-8 lg:px-8"}>
+      {!embedded && (
       <div className="editorial-divider-thick mb-4 pt-2">
         <div className="flex items-baseline justify-between">
           <h2 className="text-editorial-sm text-foreground">
@@ -117,6 +118,7 @@ export function ExerciseLibrary() {
           </div>
         </div>
       </div>
+      )}
 
       {/* Search + Filters */}
       <div className="sticky top-0 z-20 mb-4 flex flex-wrap items-center gap-2 border-b border-foreground/10 bg-background py-3">
