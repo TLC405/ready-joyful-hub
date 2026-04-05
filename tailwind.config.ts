@@ -76,6 +76,13 @@ export default {
           advanced: "hsl(var(--difficulty-advanced))",
           master: "hsl(var(--difficulty-master))",
         },
+        thunder: {
+          orange: "hsl(var(--thunder-orange))",
+          "orange-foreground": "hsl(var(--thunder-orange-foreground))",
+          blue: "hsl(var(--thunder-blue))",
+          "blue-foreground": "hsl(var(--thunder-blue-foreground))",
+          navy: "hsl(var(--thunder-navy))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
