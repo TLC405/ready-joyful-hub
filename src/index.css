@@ -41,6 +41,17 @@
     --success: 150 40% 35%;
     --success-foreground: 0 0% 100%;
 
+    /* OKC Thunder accent palette */
+    --thunder-orange: 24 95% 47%;
+    --thunder-orange-foreground: 0 0% 100%;
+    --thunder-blue: 200 100% 38%;
+    --thunder-blue-foreground: 0 0% 100%;
+    --thunder-navy: 214 100% 19%;
+    --thunder-glow-orange: 0 0 0 / 0, 24 95% 47% / 0.4;
+    --thunder-glow-blue: 0 0 0 / 0, 200 100% 38% / 0.4;
+    --thunder-gradient: linear-gradient(135deg, hsl(24 95% 47%) 0%, hsl(200 100% 38%) 100%);
+    --thunder-gradient-subtle: linear-gradient(135deg, hsl(24 95% 47% / 0.15) 0%, hsl(200 100% 38% / 0.15) 100%);
+
     --difficulty-easy: 0 0% 45%;
     --difficulty-beginner: 150 40% 32%;
     --difficulty-intermediate: 35 60% 40%;
@@ -114,6 +125,17 @@
 
     --success: 150 40% 45%;
     --success-foreground: 0 0% 6%;
+
+    /* OKC Thunder accent palette — dark mode (brighter) */
+    --thunder-orange: 24 95% 55%;
+    --thunder-orange-foreground: 0 0% 100%;
+    --thunder-blue: 200 100% 48%;
+    --thunder-blue-foreground: 0 0% 100%;
+    --thunder-navy: 214 80% 30%;
+    --thunder-glow-orange: 0 0 0 / 0, 24 95% 55% / 0.5;
+    --thunder-glow-blue: 0 0 0 / 0, 200 100% 48% / 0.5;
+    --thunder-gradient: linear-gradient(135deg, hsl(24 95% 55%) 0%, hsl(200 100% 48%) 100%);
+    --thunder-gradient-subtle: linear-gradient(135deg, hsl(24 95% 55% / 0.15) 0%, hsl(200 100% 48% / 0.15) 100%);
 
     --difficulty-easy: 0 0% 55%;
     --difficulty-beginner: 150 40% 45%;
