@@ -93,6 +93,9 @@ function InlineTVBrowser() {
               )}
             >
               {cat.toUpperCase()}
+              <span className="ml-1 opacity-60">
+                {cat === 'all' ? exercises.length : exercises.filter(e => e.category === cat).length}
+              </span>
             </button>
           ))}
         </div>
