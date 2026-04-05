@@ -1,57 +1,115 @@
 
 
-# Fix All Gaps: Library Rendering, Ballet Thumbnails, Layout Issues + Comprehensive QA
+# Atomic Upgrade: Coach Care Studio + Social Search + World-Class UI Polish
 
-## Issues Found (from browser testing)
+## Current State Assessment
 
-1. **Library section appears completely blank** — when navigating to Library from the sidebar, the UnifiedLibrary content (tabs, search, exercises) exists in the DOM but is visually invisible. There's a massive empty gap at the top of the content area (~300px of nothing). The breadcrumbs, tabs, and exercise table only become visible after scrolling far down. Root cause: the `section` wrapper in `UnifiedLibrary` uses `py-6` padding but the real issue is the `main` element renders all content below the sidebar's fixed height with no content pushing it up.
-
-2. **Ballet thumbnails all broken** — all 12 ballet exercises show grey YouTube placeholder icons. The YouTube video IDs in exercises.ts were fabricated and don't correspond to real videos. Need to find real ballet tutorial YouTube URLs.
-
-3. **Nav sidebar scrolls away** — at certain scroll positions the sidebar icons disappear, suggesting the sidebar's `fixed` positioning is being disrupted or occluded.
-
-4. **Home section is mostly empty** — only shows a small hero text and a featured grid. The stat bars were removed but nothing replaced them — feels hollow.
-
-5. **Console errors** — `Function components cannot be given refs` warning from App component (not critical but noisy).
+The Coach is functional but basic: hardcoded responses, no real AI, no social media search, static analytics, no workout history. The canvas modes work but lack depth. The rest of the app has Thunder branding but several components still feel thin (Progress Dashboard is empty, Settings is minimal).
 
 ## Plan
 
-### 1. Fix Library Section Visibility (`Index.tsx` + `UnifiedLibrary.tsx`)
-- The AnimatePresence content area needs the sections to render immediately visible without relying on scrolling
-- Add `scroll-mt-0` and ensure the `main` element with `lg:pl-20` properly positions content at the top of the viewport
-- The problem: the `motion.div` with `pageTransition` has `y: 8` initial offset AND the `min-h-screen` on the parent makes the content shift. Fix by ensuring each section fills the available viewport immediately
-- Add `pt-4 lg:pt-6` to the main content wrapper to give consistent top spacing without excess
+### 1. Add Social Media Canvas Mode — In-App Search (`types.ts`, `CanvasRouter.tsx`, new `SocialCanvas.tsx`)
 
-### 2. Fix Ballet Thumbnails (`exercises.ts`)
-Replace all 12 fabricated YouTube URLs with real ballet tutorial videos:
-- Relevé, Plié, Tendu, Grand Plié, Port de Bras, Passé Balance, Arabesque Hold, Développé, Rond de Jambe, Grand Battement, Attitude Hold, Penché
-- Use established ballet YouTube channels (Kathryn Morgan, Ballet Beautiful, etc.)
+New canvas mode `social` that lets users search YouTube, Instagram, and X for calisthenics content directly inside the app:
 
-### 3. Fix Nav Sidebar Z-Index (`Navigation.tsx`)
-- Ensure sidebar uses `z-50` consistently and isn't being overlapped by the content `z-10` layer
-- The sidebar already has `z-50` but the main content's `relative z-10` inside AppShell may create a stacking context issue — verify and fix
+- Add `'social'` to `CanvasMode` union type
+- New `SocialCanvasData` type with `query`, `results[]`, `platform` filter
+- New `SocialCanvas.tsx`: search bar with platform filter pills (YouTube/Instagram/All), renders results as thumbnail cards with embedded preview on click
+- YouTube search via YouTube Data API oEmbed thumbnails (no API key needed for thumbnails — use `https://www.youtube.com/results?search_query=` iframe or construct search URLs)
+- For MVP: construct search URLs and display as linkable cards with thumbnails, with a "Watch In-App" button that opens the video in the existing `VideoCanvas`
+- Search queries auto-suggested from exercise names in the library
 
-### 4. Fix Home Section Feel (`HeroSection.tsx` + `Index.tsx`)
-- The "featured skills" section should be more prominent
-- Add a "Quick Start" row or category cards below the hero to make the home page feel complete
-- Ensure the featured grid shows thumbnails from YouTube where available (use same `getThumb` logic)
+### 2. Upgrade Coach Intelligence (`CoachCareStudio.tsx`)
 
-### 5. Fix Ref Warning (`App.tsx`)
-- The `Function components cannot be given refs` warning comes from how `App` is exported — wrap with `forwardRef` or ensure the component tree doesn't pass refs down
+Replace the basic `generateResponse` with a smarter engine:
 
-### 6. Verify Push-Strength Track on Map
-- Ensure the push-strength track appears in the track dropdown on the Map tab
-- Test that clicking exercises in the Map navigates to their video pages
+- **Progression advisor**: When user mentions an exercise, suggest the next progression AND regression based on `progressTo`/`regressTo` chains
+- **Workout history awareness**: Read saved templates from localStorage and reference them ("You last trained push 3 days ago")
+- **Multi-turn context**: Track last 3 messages for context (e.g., "what about harder?" refers to the last exercise discussed)
+- **Social search trigger**: Detect queries like "find videos of..." or "show me..." to trigger social canvas
+- **Daily tip**: On first message of session, Coach gives a rotating training tip
+- **Streak tracker**: Count consecutive days with saved workouts and mention it
+
+### 3. Upgrade Chat UI (`ChatPanel.tsx`, `ChatMessage.tsx`, `ChatInput.tsx`)
+
+- **Typing indicator**: Animated dots when Coach is "thinking"
+- **Message reactions**: Thumbs up/down on coach messages (stored in localStorage for future training)
+- **Quick reply chips**: After coach responses, show 2-3 contextual follow-up suggestions as tappable pills
+- **Rich exercise cards**: When Coach mentions an exercise, render an inline mini-card with thumbnail, difficulty badge, and "Open" button instead of plain text
+- **Voice input button**: Add mic icon (browser SpeechRecognition API) for voice commands
+- **Attachment button**: Quick action to paste image URLs for form analysis
+
+### 4. Upgrade Canvas Panels
+
+**ExerciseCanvas** improvements:
+- Add video thumbnail with play button that opens `VideoCanvas`
+- Add progression chain visualization: `← regression | CURRENT | progression →`
+- Add "Add to Workout" button that creates a template block
+
+**AnalyticsCanvas** improvements:
+- Replace hardcoded data with localStorage workout history
+- Add "streak" heatmap calendar (GitHub-style contribution grid)
+- Add "skills radar" chart showing proficiency across categories
+- Thunder gradient fills on all charts
+
+**TemplateCanvas** improvements:
+- Add exercise search/autocomplete when adding blocks
+- Add superset grouping with visual brackets
+- Add estimated duration calculator
+- Add "Share" button that copies as formatted text
+
+**VideoCanvas** improvements:
+- Add playback speed controls (0.5x, 1x, 1.5x)
+- Add "Save timestamp" button to bookmark form notes
+- Thunder LED status light on the bezel
+
+### 5. Progress Dashboard Overhaul (`ProgressDashboard.tsx`)
+
+Replace the empty placeholder with real content:
+
+- **Streak counter**: Large skeuo counter showing consecutive training days
+- **Weekly heatmap**: 7-day grid with Thunder gradient intensity based on volume
+- **Skill progress bars**: Per-track completion percentage with Thunder gradient fills
+- **Recent workouts**: List of last 5 saved templates with date and exercise count
+- **Goals section**: Set and track numeric goals (e.g., "30s L-sit hold") with progress rings
+- All data from localStorage (templates, workout logs)
+
+### 6. Settings Panel Enhancement (`SettingsPanel.tsx`)
+
+- **Training preferences**: Set preferred categories, session duration, rest day schedule
+- **Coach personality**: Toggle between "motivational", "technical", "chill" response styles
+- **Data export**: Download all saved templates and workout history as JSON
+- **Data import**: Upload JSON to restore data
+- **Notification preferences**: Daily reminder toggle (browser notification API)
+- **Theme customization**: Thunder intensity slider (subtle vs. full Thunder)
+
+### 7. Global UI Polish — Every Component
+
+- **Idle Canvas**: Add animated Thunder bolt icon, pulsing gradient border on action cards
+- **All skeuo cards**: Ensure consistent `skeuo-thunder-card` treatment with grain
+- **Loading states**: Thunder-branded skeleton loaders instead of blank states
+- **Empty states**: Custom illustrations with Thunder colors for all empty views
+- **Micro-interactions**: Button press haptic feedback CSS (`transform: scale(0.97)`), card hover lifts
+- **Mobile**: Ensure all new canvases work in the drawer, coach quick-replies scroll horizontally
 
 ## Files
 
 | File | Change |
 |------|--------|
-| `src/pages/Index.tsx` | Fix main content area spacing, ensure sections render at viewport top |
-| `src/components/sections/UnifiedLibrary.tsx` | Adjust section padding/positioning |
-| `src/lib/exercises.ts` | Replace 12 ballet YouTube URLs with real videos |
-| `src/components/layout/Navigation.tsx` | Fix sidebar z-index stacking |
-| `src/components/sections/HeroSection.tsx` | Add more content to home section |
+| `src/components/CoachCare/types.ts` | Add `social` mode, `SocialCanvasData`, quick-reply types |
+| `src/components/CoachCare/Canvas/SocialCanvas.tsx` | **New** — social media search canvas |
+| `src/components/CoachCare/Canvas/CanvasRouter.tsx` | Add social route |
+| `src/components/CoachCare/CoachCareStudio.tsx` | Smart response engine, progression advisor, context tracking |
+| `src/components/CoachCare/ChatPanel.tsx` | Typing indicator, quick-reply chips |
+| `src/components/CoachCare/ChatMessage.tsx` | Rich exercise cards, reactions, inline thumbnails |
+| `src/components/CoachCare/ChatInput.tsx` | Voice input, social search action, attachment button |
+| `src/components/CoachCare/Canvas/ExerciseCanvas.tsx` | Video preview, progression chain, add-to-workout |
+| `src/components/CoachCare/Canvas/AnalyticsCanvas.tsx` | Real data, streak heatmap, skills radar |
+| `src/components/CoachCare/Canvas/TemplateCanvas.tsx` | Exercise autocomplete, superset groups, duration calc |
+| `src/components/CoachCare/Canvas/VideoCanvas.tsx` | Speed controls, save timestamps, Thunder bezel |
+| `src/components/CoachCare/Canvas/IdleCanvas.tsx` | Animated Thunder bolt, gradient borders |
+| `src/components/sections/ProgressDashboard.tsx` | Full overhaul — streaks, heatmap, skill bars, recent workouts |
+| `src/components/sections/SettingsPanel.tsx` | Training prefs, coach personality, data export/import |
 
-**5 files modified, 0 new files, 0 new dependencies**
+**14 files (1 new, 13 modified), 0 new dependencies**
 
