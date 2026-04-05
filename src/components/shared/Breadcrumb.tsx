@@ -14,14 +14,14 @@ interface AppBreadcrumbProps {
 
 export function AppBreadcrumb({ items, className }: AppBreadcrumbProps) {
   return (
-    <nav className={cn("mb-3 flex items-center gap-1.5 text-label text-[10px] tracking-widest", className)}>
+    <nav className={cn("mb-3 flex items-center gap-1.5 text-label text-[10px] tracking-widest text-journal-sm", className)}>
       {items.map((item, i) => {
         const isLast = i === items.length - 1;
         return (
           <span key={i} className="flex items-center gap-1.5">
             {i > 0 && <ChevronRight className="h-3 w-3 text-muted-foreground/40" />}
             {isLast ? (
-              <span className="text-foreground">{item.label}</span>
+              <span className="text-foreground text-embossed">{item.label}</span>
             ) : (
               <button
                 onClick={item.onClick}

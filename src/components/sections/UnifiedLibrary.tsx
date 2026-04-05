@@ -77,7 +77,7 @@ function InlineTVBrowser() {
             placeholder="Search exercises..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full border-2 border-foreground/15 bg-card py-2.5 pl-10 pr-4 text-sm focus:border-primary focus:outline-none"
+            className="w-full surface-inset py-2.5 pl-10 pr-4 text-sm focus:border-primary focus:outline-none text-journal"
           />
         </div>
         <div className="flex gap-1.5 overflow-x-auto hide-scrollbar pb-1">
@@ -86,10 +86,10 @@ function InlineTVBrowser() {
               key={cat}
               onClick={() => setActiveCategory(cat)}
               className={cn(
-                "shrink-0 border px-3 py-1 text-label text-[10px] tracking-widest transition-colors",
+                "shrink-0 border px-3 py-1 text-label text-[10px] tracking-widest transition-colors text-journal-sm",
                 activeCategory === cat
-                  ? "border-foreground bg-foreground text-card"
-                  : "border-foreground/15 bg-card text-muted-foreground hover:bg-surface-0"
+                  ? "skeuo-pressed border-foreground bg-foreground text-card"
+                  : "border-foreground/15 bg-card text-muted-foreground hover:bg-surface-0 skeuo-card"
               )}
             >
               {cat.toUpperCase()}
@@ -102,7 +102,7 @@ function InlineTVBrowser() {
         <div key={category}>
           {activeCategory === 'all' && (
             <div className="editorial-divider-thick mb-2 pt-2">
-              <h3 className="text-label text-xs tracking-widest text-foreground">{category.toUpperCase()}</h3>
+              <h3 className="text-label text-xs tracking-widest text-foreground text-embossed text-journal">{category.toUpperCase()}</h3>
             </div>
           )}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-px bg-foreground/10 border border-foreground/10">
@@ -112,7 +112,7 @@ function InlineTVBrowser() {
                 <button
                   key={ex.id}
                   onClick={() => navigate(`/video/${ex.id}`)}
-                  className="group flex flex-col bg-card hover:bg-surface-0 transition-all text-left"
+                  className="group flex flex-col bg-card hover:bg-surface-0 transition-all text-left skeuo-card skeuo-grain"
                 >
                   <div className="relative aspect-video overflow-hidden bg-surface-0">
                     {thumb ? (
@@ -126,7 +126,7 @@ function InlineTVBrowser() {
                     )}
                     {hasVideo(ex) && (
                       <div className="absolute inset-0 flex items-center justify-center bg-foreground/0 group-hover:bg-foreground/30 transition-colors">
-                        <div className="flex h-8 w-8 items-center justify-center bg-primary text-primary-foreground opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="flex h-8 w-8 items-center justify-center bg-primary text-primary-foreground opacity-0 group-hover:opacity-100 transition-opacity btn-raised">
                           <Play className="h-3 w-3 ml-0.5" fill="currentColor" />
                         </div>
                       </div>
@@ -137,12 +137,12 @@ function InlineTVBrowser() {
                       </span>
                     </div>
                     {!hasVideo(ex) && (
-                      <div className="absolute right-1 bottom-1 px-1.5 py-0.5 bg-foreground/60 text-card text-label text-[7px] tracking-wider">SOON</div>
+                      <div className="absolute right-1 bottom-1 px-1.5 py-0.5 skeuo-metal text-label text-[7px] tracking-wider">SOON</div>
                     )}
                   </div>
                   <div className="border-t border-foreground/5 p-2">
-                    <p className="font-chalk text-xs truncate">{ex.name}</p>
-                    <p className="text-[10px] text-muted-foreground truncate">{ex.shortPurpose || ex.category}</p>
+                    <p className="font-chalk text-xs truncate text-journal">{ex.name}</p>
+                    <p className="text-[10px] text-muted-foreground truncate text-journal-sm">{ex.shortPurpose || ex.category}</p>
                   </div>
                 </button>
               );
@@ -150,7 +150,7 @@ function InlineTVBrowser() {
           </div>
         </div>
       ))}
-      <p className="text-center text-[10px] text-muted-foreground/50 pb-4">
+      <p className="text-center text-[10px] text-muted-foreground/50 pb-4 text-journal-sm">
         {filtered.length} EXERCISES • {filtered.filter(hasVideo).length} WITH VIDEO
       </p>
     </div>
@@ -170,7 +170,8 @@ export function UnifiedLibrary() {
     <section className="relative px-4 py-6 lg:px-8">
       <AppBreadcrumb items={breadcrumbItems} />
 
-      <div className="mb-4 flex items-center gap-0 border border-foreground/10">
+      {/* Tab bar — leather strip */}
+      <div className="mb-4 flex items-center gap-0 skeuo-leather">
         {tabs.map(tab => {
           const Icon = tab.icon;
           return (
@@ -178,10 +179,10 @@ export function UnifiedLibrary() {
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={cn(
-                "flex flex-1 items-center justify-center gap-2 px-4 py-2.5 text-label text-[10px] tracking-widest transition-colors border-r last:border-r-0 border-foreground/10",
+                "flex flex-1 items-center justify-center gap-2 px-4 py-2.5 text-label text-[10px] tracking-widest transition-colors border-r last:border-r-0 border-primary-foreground/10",
                 activeTab === tab.id
-                  ? "bg-foreground text-card"
-                  : "bg-card text-muted-foreground hover:bg-surface-0"
+                  ? "skeuo-pressed bg-primary-foreground/15 text-primary-foreground"
+                  : "text-primary-foreground/60 hover:text-primary-foreground/80"
               )}
             >
               <Icon className="h-3.5 w-3.5" />

@@ -63,7 +63,7 @@ function ExerciseBrowser() {
   }, [filtered, activeCategory]);
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden bg-background">
+    <div className="h-screen flex flex-col overflow-hidden bg-background skeuo-grain">
       {/* Top bar */}
       <div className="shrink-0 border-b-2 border-foreground bg-background px-4 py-2.5 skeuo-leather">
         <div className="mx-auto max-w-5xl flex items-center gap-3">
@@ -88,7 +88,7 @@ function ExerciseBrowser() {
             placeholder="Search exercises..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full border-2 border-foreground/15 bg-card py-2.5 pl-10 pr-4 text-sm focus:border-primary focus:outline-none skeuo-pressed"
+            className="w-full border-2 border-foreground/15 bg-card py-2.5 pl-10 pr-4 text-sm focus:border-primary focus:outline-none surface-inset text-journal"
           />
         </div>
         <div className="flex gap-1.5 overflow-x-auto hide-scrollbar pb-1">
@@ -119,14 +119,14 @@ function ExerciseBrowser() {
                   <h3 className="text-label text-xs tracking-widest text-foreground text-embossed">{category.toUpperCase()}</h3>
                 </div>
               )}
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-px bg-foreground/10 border border-foreground/10">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-px bg-foreground/10 border border-foreground/10 skeuo-card">
                 {exs.map(ex => {
                   const thumb = getThumb(ex);
                   return (
                     <button
                       key={ex.id}
                       onClick={() => navigate(`/video/${ex.id}`)}
-                      className="group flex flex-col bg-card hover:bg-surface-0 transition-all text-left skeuo-card"
+                      className="group flex flex-col bg-card hover:bg-surface-0 transition-all text-left skeuo-card skeuo-grain"
                     >
                       <div className="relative aspect-video overflow-hidden bg-surface-0">
                         {thumb ? (
@@ -179,14 +179,14 @@ function AccordionPanel({ title, icon, children, defaultOpen = false }: { title:
   const [open, setOpen] = useState(defaultOpen);
   return (
     <Collapsible open={open} onOpenChange={setOpen}>
-      <CollapsibleTrigger className="flex w-full items-center justify-between px-4 py-2.5 skeuo-stitch hover:bg-surface-0 transition-colors">
+      <CollapsibleTrigger className="flex w-full items-center justify-between px-4 py-2.5 skeuo-stitch hover:bg-surface-0 transition-colors skeuo-grain">
         <div className="flex items-center gap-2">
           {icon}
-          <span className="text-label text-[10px] tracking-widest text-foreground text-embossed">{title}</span>
+          <span className="text-label text-[10px] tracking-widest text-foreground text-embossed text-journal">{title}</span>
         </div>
         <ChevronDown className={cn("h-3.5 w-3.5 text-muted-foreground transition-transform", open && "rotate-180")} />
       </CollapsibleTrigger>
-      <CollapsibleContent className="px-4 pb-3 pt-1">
+      <CollapsibleContent className="px-4 pb-3 pt-1 notebook-ruled notebook-margin">
         {children}
       </CollapsibleContent>
     </Collapsible>
@@ -217,7 +217,7 @@ export default function VideoPage() {
   const regressExercises = exercise.regressTo.map(id => getExerciseById(id)).filter(Boolean);
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden bg-background">
+    <div className="h-screen flex flex-col overflow-hidden bg-background skeuo-grain">
       {/* Top bar — leather strip */}
       <div className="shrink-0 flex items-center justify-between px-4 py-2 skeuo-leather z-30">
         <div className="flex items-center gap-3">
@@ -281,7 +281,7 @@ export default function VideoPage() {
           </div>
 
           {/* Accordion panels */}
-          <div className="bg-card border-t border-foreground/10">
+          <div className="bg-card border-t border-foreground/10 skeuo-grain">
             {/* Prescription */}
             <AccordionPanel title="PRESCRIPTION" defaultOpen={true}>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -377,7 +377,7 @@ export default function VideoPage() {
 
             {/* Description */}
             <AccordionPanel title="ABOUT">
-              <p className="text-sm text-muted-foreground">{exercise.description}</p>
+              <p className="text-sm text-muted-foreground text-journal">{exercise.description}</p>
               {exercise.creator && (
                 <p className="mt-2 text-xs text-muted-foreground border-t border-foreground/10 pt-2">
                   Made famous by <span className="font-medium text-foreground">{exercise.creator}</span>

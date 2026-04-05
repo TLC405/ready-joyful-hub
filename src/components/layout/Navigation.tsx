@@ -57,10 +57,11 @@ export function Navigation({ activeSection, onNavigate, onOpenSearch }: { active
   return (
     <>
       {/* Desktop Sidebar */}
-      <nav className="fixed left-0 top-0 z-50 hidden h-screen w-20 flex-col items-center border-r border-foreground/10 bg-card py-8 lg:flex">
+      <nav className="fixed left-0 top-0 z-50 hidden h-screen w-20 flex-col items-center border-r border-foreground/10 bg-card py-8 lg:flex skeuo-grain">
+        {/* Leather logo strip */}
         <div className="mb-12">
-          <div className="flex h-12 w-12 items-center justify-center border-2 border-primary">
-            <span className="font-chalk text-lg text-primary">TLC</span>
+          <div className="flex h-12 w-12 items-center justify-center border-2 border-primary skeuo-card">
+            <span className="font-chalk text-lg text-primary text-journal">TLC</span>
           </div>
         </div>
 
@@ -73,15 +74,15 @@ export function Navigation({ activeSection, onNavigate, onOpenSearch }: { active
                 key={item.id}
                 onClick={() => onNavigate(item.id)}
                 className={cn(
-                  "group relative flex h-14 w-14 items-center justify-center transition-colors",
+                  "group relative flex h-14 w-14 items-center justify-center transition-all",
                   isActive 
-                    ? "text-primary" 
+                    ? "text-primary skeuo-pressed" 
                     : "text-muted-foreground hover:text-foreground"
                 )}
               >
                 <Icon className="h-5 w-5" />
-                <div className="pointer-events-none absolute left-full ml-3 flex items-center gap-2 border border-foreground/10 bg-card px-3 py-2 opacity-0 transition-opacity group-hover:opacity-100">
-                  <span className="whitespace-nowrap text-label text-xs">{item.label}</span>
+                <div className="pointer-events-none absolute left-full ml-3 flex items-center gap-2 border border-foreground/10 bg-card px-3 py-2 opacity-0 transition-opacity group-hover:opacity-100 skeuo-card">
+                  <span className="whitespace-nowrap text-label text-xs text-embossed">{item.label}</span>
                 </div>
                 {isActive && (
                   <motion.div layoutId="activeIndicator" className="absolute -right-[1px] h-8 w-0.5 bg-primary" transition={{ type: "spring", stiffness: 500, damping: 30 }} />
@@ -95,7 +96,7 @@ export function Navigation({ activeSection, onNavigate, onOpenSearch }: { active
         {onOpenSearch && (
           <button
             onClick={onOpenSearch}
-            className="mb-2 flex h-12 w-12 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
+            className="mb-2 flex h-12 w-12 items-center justify-center text-muted-foreground transition-colors hover:text-foreground btn-raised"
             title="Search (⌘K)"
           >
             <Search className="h-5 w-5" />
@@ -104,28 +105,28 @@ export function Navigation({ activeSection, onNavigate, onOpenSearch }: { active
 
         <button
           onClick={toggle}
-          className="mt-2 flex h-12 w-12 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
+          className="mt-2 flex h-12 w-12 items-center justify-center text-muted-foreground transition-colors hover:text-foreground btn-raised"
         >
           <ThemeIcon className="h-5 w-5" />
         </button>
       </nav>
 
       {/* Mobile Bottom Bar */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-foreground/10 bg-card lg:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 skeuo-leather skeuo-stitch lg:hidden">
         <div className="flex items-center justify-around py-3">
           {navItems.slice(0, 4).map((item) => {
             const Icon = item.icon;
             const isActive = activeSection === item.id;
             return (
               <button key={item.id} onClick={() => onNavigate(item.id)}
-                className={cn("flex flex-col items-center gap-1 px-3 py-1 transition-colors", isActive ? "text-primary" : "text-muted-foreground")}>
+                className={cn("flex flex-col items-center gap-1 px-3 py-1 transition-colors", isActive ? "text-primary-foreground" : "text-primary-foreground/50")}>
                 <Icon className="h-5 w-5" />
-                <span className="text-label text-[10px]">{item.label}</span>
+                <span className="text-label text-[10px] text-journal-sm">{item.label}</span>
                 {isActive && <div className="h-0.5 w-4 bg-primary" />}
               </button>
             );
           })}
-          <button onClick={() => setMobileMenuOpen(true)} className="flex flex-col items-center gap-1 px-3 py-1 text-muted-foreground">
+          <button onClick={() => setMobileMenuOpen(true)} className="flex flex-col items-center gap-1 px-3 py-1 text-primary-foreground/50">
             <Menu className="h-5 w-5" />
             <span className="text-label text-[10px]">MORE</span>
           </button>
@@ -135,16 +136,16 @@ export function Navigation({ activeSection, onNavigate, onOpenSearch }: { active
       {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {mobileMenuOpen && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 bg-card lg:hidden">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 bg-card notebook-ruled notebook-margin lg:hidden">
             <div className="flex h-full flex-col p-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center border-2 border-primary">
+                  <div className="flex h-10 w-10 items-center justify-center border-2 border-primary skeuo-card">
                     <span className="font-chalk text-lg text-primary">TLC</span>
                   </div>
-                  <span className="font-chalk text-2xl">TLC CALISTHENICS</span>
+                  <span className="font-chalk text-2xl text-journal-lg">TLC CALISTHENICS</span>
                 </div>
-                <button onClick={() => setMobileMenuOpen(false)} className="flex h-10 w-10 items-center justify-center border border-foreground/10">
+                <button onClick={() => setMobileMenuOpen(false)} className="flex h-10 w-10 items-center justify-center border border-foreground/10 btn-raised">
                   <X className="h-5 w-5" />
                 </button>
               </div>
@@ -155,9 +156,9 @@ export function Navigation({ activeSection, onNavigate, onOpenSearch }: { active
                   return (
                     <motion.button key={item.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.05 }}
                       onClick={() => { onNavigate(item.id); setMobileMenuOpen(false); }}
-                      className={cn("flex items-center gap-4 border-b border-foreground/5 p-4 text-left transition-all", isActive ? "text-primary" : "text-foreground")}>
+                      className={cn("notebook-entry flex items-center gap-4 p-4 text-left transition-all", isActive ? "text-primary" : "text-foreground")}>
                       <Icon className="h-5 w-5" />
-                      <span className="font-chalk text-xl">{item.label}</span>
+                      <span className="font-chalk text-xl text-journal">{item.label}</span>
                       {isActive && <div className="ml-auto h-2 w-2 bg-primary" />}
                     </motion.button>
                   );
@@ -165,10 +166,10 @@ export function Navigation({ activeSection, onNavigate, onOpenSearch }: { active
               </div>
               <button
                 onClick={toggle}
-                className="mt-4 flex items-center gap-4 border-t border-foreground/10 p-4 text-foreground"
+                className="mt-4 flex items-center gap-4 skeuo-stitch p-4 text-foreground btn-raised"
               >
                 <ThemeIcon className="h-5 w-5" />
-                <span className="font-chalk text-xl">{theme === 'dark' ? 'LIGHT MODE' : 'DARK MODE'}</span>
+                <span className="font-chalk text-xl text-journal">{theme === 'dark' ? 'LIGHT MODE' : 'DARK MODE'}</span>
               </button>
             </div>
           </motion.div>

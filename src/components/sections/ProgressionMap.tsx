@@ -47,7 +47,6 @@ function buildTree(trackId: string): MapNode[][] {
     };
   }
 
-  // Build children
   for (const node of track.nodes) {
     for (const prereq of node.prereqs) {
       if (nodeMap[prereq]) {
@@ -56,7 +55,6 @@ function buildTree(trackId: string): MapNode[][] {
     }
   }
 
-  // BFS depths
   const roots = Object.values(nodeMap).filter(n => n.parents.length === 0);
   const queue = [...roots];
   const visited = new Set<string>();
@@ -75,7 +73,6 @@ function buildTree(trackId: string): MapNode[][] {
     }
   }
 
-  // Group by depth
   const maxDepth = Math.max(0, ...Object.values(nodeMap).map(n => n.depth));
   const levels: MapNode[][] = [];
   for (let d = 0; d <= maxDepth; d++) {
@@ -101,11 +98,11 @@ export function ProgressionMap({ embedded = false }: { embedded?: boolean }) {
     <section className={embedded ? "" : "relative px-4 py-8 lg:px-8"}>
       <div className={cn(embedded ? "mb-4" : "editorial-divider-thick mb-6 pt-2")}>
         <div className="flex items-baseline justify-between gap-4">
-          {!embedded && <h2 className="text-editorial-sm text-foreground">PROGRESSION MAP</h2>}
+          {!embedded && <h2 className="text-editorial-sm text-foreground text-embossed">PROGRESSION MAP</h2>}
           <div className="relative">
             <button
               onClick={() => setShowTrackSelect(!showTrackSelect)}
-              className="flex items-center gap-2 border border-foreground/10 bg-card px-3 py-2 text-sm font-chalk transition-colors hover:bg-surface-0"
+              className="flex items-center gap-2 border border-foreground/10 bg-card px-3 py-2 text-sm font-chalk transition-colors hover:bg-surface-0 skeuo-card text-journal"
             >
               <TrackIcon className="h-4 w-4 text-primary" />
               {currentTrack.name}
@@ -117,7 +114,7 @@ export function ProgressionMap({ embedded = false }: { embedded?: boolean }) {
                   initial={{ opacity: 0, y: -4 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -4 }}
-                  className="absolute right-0 top-full z-30 mt-1 w-56 border border-foreground/10 bg-card shadow-lg"
+                  className="absolute right-0 top-full z-30 mt-1 w-56 border border-foreground/10 bg-card shadow-lg skeuo-card skeuo-grain"
                 >
                   {tracks.map(track => {
                     const Icon = trackIcons[track.icon] || Zap;
@@ -127,11 +124,11 @@ export function ProgressionMap({ embedded = false }: { embedded?: boolean }) {
                         onClick={() => { setActiveTrack(track.id); setShowTrackSelect(false); }}
                         className={cn(
                           "flex w-full items-center gap-2 border-b border-foreground/5 px-3 py-2 text-left text-sm transition-colors hover:bg-surface-0",
-                          activeTrack === track.id && "bg-foreground text-card"
+                          activeTrack === track.id && "skeuo-leather text-primary-foreground"
                         )}
                       >
                         <Icon className="h-3 w-3" />
-                        <span className="font-chalk text-xs">{track.name}</span>
+                        <span className="font-chalk text-xs text-journal">{track.name}</span>
                         <span className="ml-auto text-label text-[10px] opacity-50">{track.nodes.length}</span>
                       </button>
                     );
@@ -141,7 +138,7 @@ export function ProgressionMap({ embedded = false }: { embedded?: boolean }) {
             </AnimatePresence>
           </div>
         </div>
-        <p className="mt-2 text-sm text-muted-foreground">{currentTrack.description}</p>
+        <p className="mt-2 text-sm text-muted-foreground text-journal">{currentTrack.description}</p>
       </div>
 
       {/* Visual Tree */}
@@ -149,9 +146,9 @@ export function ProgressionMap({ embedded = false }: { embedded?: boolean }) {
         <div className="min-w-[300px] space-y-0">
           {levels.map((level, levelIdx) => (
             <div key={levelIdx}>
-              {/* Connector */}
+              {/* Connector — stitched */}
               {levelIdx > 0 && (
-                <div className="flex justify-center py-1">
+                <div className="flex justify-center py-1 skeuo-stitch">
                   <svg className="h-5 w-5 text-foreground/15" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M10 16l-5-5h4V4h2v7h4z" />
                   </svg>
@@ -161,7 +158,7 @@ export function ProgressionMap({ embedded = false }: { embedded?: boolean }) {
               {/* Level label */}
               <div className="mb-2 flex items-center gap-2">
                 <div className="h-px flex-1 bg-foreground/5" />
-                <span className="text-label text-[9px] text-muted-foreground/50">
+                <span className="text-label text-[9px] text-muted-foreground/50 text-journal-sm">
                   {levelIdx === 0 ? 'START' : levelIdx === levels.length - 1 ? 'GOAL' : `STAGE ${levelIdx}`}
                 </span>
                 <div className="h-px flex-1 bg-foreground/5" />
@@ -181,7 +178,7 @@ export function ProgressionMap({ embedded = false }: { embedded?: boolean }) {
                       transition={{ delay: levelIdx * 0.06, duration: 0.3 }}
                       onClick={() => setSelectedExercise(ex)}
                       className={cn(
-                        "group relative flex items-center gap-2 border bg-card px-3 py-2.5 text-left transition-all hover:bg-surface-0",
+                        "group relative flex items-center gap-2 border bg-card px-3 py-2.5 text-left transition-all hover:bg-surface-0 skeuo-card",
                         isTerminal ? "border-primary/50 border-2" : "border-foreground/10",
                         "min-w-[140px] max-w-[220px]"
                       )}
@@ -196,8 +193,8 @@ export function ProgressionMap({ embedded = false }: { embedded?: boolean }) {
                       )} />
 
                       <div className="min-w-0 flex-1">
-                        <div className="font-chalk text-xs truncate">{ex.name}</div>
-                        <span className={cn("text-label text-[8px]", difficultyBadge[ex.difficulty])}>
+                        <div className="font-chalk text-xs truncate text-journal">{ex.name}</div>
+                        <span className={cn("text-label text-[8px] skeuo-metal inline-block px-1", difficultyBadge[ex.difficulty])}>
                           {ex.difficulty.toUpperCase()}
                         </span>
                       </div>
@@ -223,8 +220,8 @@ export function ProgressionMap({ embedded = false }: { embedded?: boolean }) {
       </div>
 
       {/* Legend */}
-      <div className="mt-4 flex flex-wrap items-center gap-4 border-t border-foreground/10 pt-4">
-        <span className="text-label text-[10px] text-muted-foreground">DIFFICULTY:</span>
+      <div className="mt-4 flex flex-wrap items-center gap-4 skeuo-stitch pt-4">
+        <span className="text-label text-[10px] text-muted-foreground text-journal-sm">DIFFICULTY:</span>
         {['easy', 'beginner', 'intermediate', 'advanced', 'master'].map(d => (
           <div key={d} className="flex items-center gap-1">
             <div className={cn(
@@ -235,12 +232,12 @@ export function ProgressionMap({ embedded = false }: { embedded?: boolean }) {
               d === 'advanced' && "bg-difficulty-advanced",
               d === 'master' && "bg-difficulty-master",
             )} />
-            <span className="text-[10px] text-muted-foreground">{d.toUpperCase()}</span>
+            <span className="text-[10px] text-muted-foreground text-journal-sm">{d.toUpperCase()}</span>
           </div>
         ))}
         <div className="flex items-center gap-1 ml-auto">
           <div className="bg-primary px-1 text-[8px] text-primary-foreground">★</div>
-          <span className="text-[10px] text-muted-foreground">GOAL SKILL</span>
+          <span className="text-[10px] text-muted-foreground text-journal-sm">GOAL SKILL</span>
         </div>
       </div>
 

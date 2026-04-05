@@ -30,14 +30,14 @@ const COLORS = [
 
 export function AnalyticsCanvas() {
   return (
-    <div className="hide-scrollbar h-full overflow-y-auto p-4 space-y-4">
+    <div className="hide-scrollbar h-full overflow-y-auto p-4 space-y-4 notebook-ruled">
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         className="text-center"
       >
-        <h3 className="text-editorial-sm text-foreground">TRAINING ANALYTICS</h3>
-        <p className="text-xs text-muted-foreground">Last 7 days overview</p>
+        <h3 className="text-editorial-sm text-foreground text-embossed">TRAINING ANALYTICS</h3>
+        <p className="text-xs text-muted-foreground text-journal-sm">Last 7 days overview</p>
       </motion.div>
 
       {/* Stats row */}
@@ -49,18 +49,18 @@ export function AnalyticsCanvas() {
         ].map((stat) => {
           const Icon = stat.icon;
           return (
-            <div key={stat.label} className="bg-card p-3 text-center">
+            <div key={stat.label} className="bg-card p-3 text-center skeuo-card">
               <Icon className="mx-auto mb-1 h-4 w-4 text-primary" />
-              <div className="font-chalk text-xl">{stat.value}</div>
-              <div className="text-label text-[9px] text-muted-foreground">{stat.label}</div>
+              <div className="font-chalk text-xl text-journal-lg">{stat.value}</div>
+              <div className="text-label text-[9px] text-muted-foreground text-journal-sm">{stat.label}</div>
             </div>
           );
         })}
       </div>
 
       {/* Volume chart */}
-      <div className="border border-foreground/10 bg-card p-4">
-        <h4 className="mb-3 text-label text-sm text-foreground">WEEKLY VOLUME</h4>
+      <div className="border border-foreground/10 bg-card p-4 skeuo-card surface-inset">
+        <h4 className="mb-3 text-label text-sm text-foreground text-embossed text-journal">WEEKLY VOLUME</h4>
         <ResponsiveContainer width="100%" height={180}>
           <AreaChart data={weeklyData}>
             <defs>
@@ -79,8 +79,8 @@ export function AnalyticsCanvas() {
       </div>
 
       {/* Muscle coverage */}
-      <div className="border border-foreground/10 bg-card p-4">
-        <h4 className="mb-3 text-label text-sm text-foreground">MUSCLE COVERAGE</h4>
+      <div className="border border-foreground/10 bg-card p-4 skeuo-card skeuo-grain">
+        <h4 className="mb-3 text-label text-sm text-foreground text-embossed text-journal">MUSCLE COVERAGE</h4>
         <div className="flex items-center gap-4">
           <ResponsiveContainer width={120} height={120}>
             <PieChart>
@@ -93,7 +93,7 @@ export function AnalyticsCanvas() {
           </ResponsiveContainer>
           <div className="flex-1 space-y-1.5">
             {muscleData.map((d, i) => (
-              <div key={d.name} className="flex items-center gap-2 text-sm">
+              <div key={d.name} className="flex items-center gap-2 text-sm text-journal">
                 <div className="h-2.5 w-2.5" style={{ background: COLORS[i] }} />
                 <span className="flex-1 text-muted-foreground">{d.name}</span>
                 <span className="font-chalk text-xs">{d.value}%</span>
