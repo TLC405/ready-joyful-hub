@@ -143,7 +143,11 @@ export const exercises: Exercise[] = [
     failSigns: ['Heels lifting', 'Knees caving in', 'Forward lean'],
     regressTo: [],
     progressTo: ['bulgarian-split-squat', 'pistol-squat'],
-    needsUpload: true,
+    videoUrl: 'https://www.youtube.com/watch?v=cB0cOX7gePg',
+    thumbnailUrl: 'https://i.ytimg.com/vi/cB0cOX7gePg/hqdefault.jpg',
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=cB0cOX7gePg', label: 'Tutorial', primary: true },
+    ],
   },
   {
     id: 'bulgarian-split-squat',
@@ -325,7 +329,11 @@ export const exercises: Exercise[] = [
     failSigns: ['Heels lifting', 'Rounding completely', 'Holding breath'],
     regressTo: [],
     progressTo: ['bodyweight-squat', 'cossack-squat'],
-    needsUpload: true,
+    videoUrl: 'https://www.youtube.com/watch?v=0wzrgyAurT8',
+    thumbnailUrl: 'https://i.ytimg.com/vi/0wzrgyAurT8/hqdefault.jpg',
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=0wzrgyAurT8', label: 'Tutorial', primary: true },
+    ],
   },
   {
     id: 'downward-dog',
@@ -382,7 +390,11 @@ export const exercises: Exercise[] = [
     failSigns: ['Bending elbows', 'Pain in front of shoulder', 'Jerking through sticky spots'],
     regressTo: [],
     progressTo: [],
-    needsUpload: true,
+    videoUrl: 'https://www.youtube.com/watch?v=vP8YmmRMz6I',
+    thumbnailUrl: 'https://i.ytimg.com/vi/vP8YmmRMz6I/hqdefault.jpg',
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=vP8YmmRMz6I', label: 'Tutorial', primary: true },
+    ],
   },
   {
     id: 'worlds-greatest-stretch',
@@ -435,7 +447,11 @@ export const exercises: Exercise[] = [
     failSigns: ['Hips sagging', 'Chin jutting forward', 'Not reaching full ROM'],
     regressTo: [],
     progressTo: ['chin-up', 'pull-up'],
-    needsUpload: true,
+    videoUrl: 'https://www.youtube.com/watch?v=Fl0UMfdEzsE',
+    thumbnailUrl: 'https://i.ytimg.com/vi/Fl0UMfdEzsE/hqdefault.jpg',
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=Fl0UMfdEzsE', label: 'Tutorial', primary: true },
+    ],
   },
   {
     id: 'chin-up',
@@ -452,7 +468,11 @@ export const exercises: Exercise[] = [
     failSigns: ['Kipping', 'Half reps', 'Chicken-necking'],
     regressTo: ['australian-row'],
     progressTo: ['pull-up'],
-    needsUpload: true,
+    videoUrl: 'https://www.youtube.com/watch?v=e1YSApl-QcM',
+    thumbnailUrl: 'https://i.ytimg.com/vi/e1YSApl-QcM/hqdefault.jpg',
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=e1YSApl-QcM', label: 'Tutorial', primary: true },
+    ],
   },
   {
     id: 'pull-up',
@@ -489,7 +509,11 @@ export const exercises: Exercise[] = [
     failSigns: ['Both arms pulling equally', 'Kipping', 'Losing control at bottom'],
     regressTo: ['pull-up'],
     progressTo: ['front-lever-raise'],
-    needsUpload: true,
+    videoUrl: 'https://www.youtube.com/watch?v=AcBYUhgk2_s',
+    thumbnailUrl: 'https://i.ytimg.com/vi/AcBYUhgk2_s/hqdefault.jpg',
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=AcBYUhgk2_s', label: 'Tutorial', primary: true },
+    ],
   },
   {
     id: 'front-lever-raise',
@@ -506,7 +530,11 @@ export const exercises: Exercise[] = [
     failSigns: ['Bending arms', 'Swinging into it', 'Not reaching horizontal'],
     regressTo: ['pull-up', 'skin-the-cat'],
     progressTo: ['front-lever'],
-    needsUpload: true,
+    videoUrl: 'https://www.youtube.com/watch?v=AGhb8V8M758',
+    thumbnailUrl: 'https://i.ytimg.com/vi/AGhb8V8M758/hqdefault.jpg',
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=AGhb8V8M758', label: 'Tutorial', primary: true },
+    ],
   },
   {
     id: 'muscle-up',
@@ -564,6 +592,11 @@ export const exercises: Exercise[] = [
     failSigns: ['Swinging wildly', 'Elbows flaring wide', 'Falling over the top'],
     regressTo: ['pull-up'],
     progressTo: ['muscle-up'],
+    videoUrl: 'https://www.youtube.com/watch?v=eworH_YuaOM',
+    thumbnailUrl: 'https://i.ytimg.com/vi/eworH_YuaOM/hqdefault.jpg',
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=eworH_YuaOM', label: 'Tutorial', primary: true },
+    ],
   },
 
   // ==================== PUSH ====================
@@ -622,7 +655,11 @@ export const exercises: Exercise[] = [
     failSigns: ['Bending the extended arm', 'Rotating torso', 'Partial range'],
     regressTo: ['diamond-push-up', 'push-up'],
     progressTo: [],
-    needsUpload: true,
+    videoUrl: 'https://www.youtube.com/watch?v=hPJvnA6Z2pg',
+    thumbnailUrl: 'https://i.ytimg.com/vi/hPJvnA6Z2pg/hqdefault.jpg',
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=hPJvnA6Z2pg', label: 'Tutorial', primary: true },
+    ],
   },
   {
     id: 'pike-push-up',
@@ -680,7 +717,11 @@ export const exercises: Exercise[] = [
     failSigns: ['Shallow range', 'Shoulders shrugging', 'Excessive forward lean'],
     regressTo: ['push-up'],
     progressTo: ['ring-dip'],
-    needsUpload: true,
+    videoUrl: 'https://www.youtube.com/watch?v=85u_8mz5lBA',
+    thumbnailUrl: 'https://i.ytimg.com/vi/85u_8mz5lBA/hqdefault.jpg',
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=85u_8mz5lBA', label: 'Tutorial', primary: true },
+    ],
   },
   {
     id: 'tiger-bend-pushup',
@@ -698,6 +739,11 @@ export const exercises: Exercise[] = [
     failSigns: ['Hips piking to cheat', 'Partial press', 'Elbow pain'],
     regressTo: ['diamond-push-up'],
     progressTo: ['handstand-push-up'],
+    videoUrl: 'https://www.youtube.com/watch?v=ozk8SOD3FCY',
+    thumbnailUrl: 'https://i.ytimg.com/vi/ozk8SOD3FCY/hqdefault.jpg',
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=ozk8SOD3FCY', label: 'Tutorial', primary: true },
+    ],
   },
 
   // ==================== PLANCHE TRACK ====================
@@ -828,7 +874,11 @@ export const exercises: Exercise[] = [
     failSigns: ['Dropping hips', 'Bending elbows', 'Losing hollow'],
     regressTo: ['tuck-planche'],
     progressTo: ['straddle-planche'],
-    needsUpload: true,
+    videoUrl: 'https://www.youtube.com/watch?v=LgPG0MZPI84',
+    thumbnailUrl: 'https://i.ytimg.com/vi/LgPG0MZPI84/hqdefault.jpg',
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=LgPG0MZPI84', label: 'Tutorial', primary: true },
+    ],
   },
   {
     id: 'straddle-planche',
@@ -845,7 +895,11 @@ export const exercises: Exercise[] = [
     failSigns: ['Arms bending', 'Hips dropping', 'Legs closing'],
     regressTo: ['advanced-tuck-planche'],
     progressTo: ['full-planche'],
-    needsUpload: true,
+    videoUrl: 'https://www.youtube.com/watch?v=LgPG0MZPI84',
+    thumbnailUrl: 'https://i.ytimg.com/vi/LgPG0MZPI84/hqdefault.jpg',
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=LgPG0MZPI84', label: 'Tutorial', primary: true },
+    ],
   },
   {
     id: 'full-planche',
@@ -862,7 +916,11 @@ export const exercises: Exercise[] = [
     failSigns: ['Any elbow bend', 'Hips dropping', 'Losing hollow'],
     regressTo: ['straddle-planche'],
     progressTo: [],
-    needsUpload: true,
+    videoUrl: 'https://www.youtube.com/watch?v=LgPG0MZPI84',
+    thumbnailUrl: 'https://i.ytimg.com/vi/LgPG0MZPI84/hqdefault.jpg',
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=LgPG0MZPI84', label: 'Tutorial', primary: true },
+    ],
   },
 
   // ==================== HANDSTAND TRACK ====================
@@ -1091,7 +1149,11 @@ export const exercises: Exercise[] = [
     failSigns: ['Shoulders shrugging', 'Not lifting off floor', 'Holding breath'],
     regressTo: ['hollow-body-hold'],
     progressTo: ['l-sit'],
-    needsUpload: true,
+    videoUrl: 'https://www.youtube.com/watch?v=cu0fHp8HCDo',
+    thumbnailUrl: 'https://i.ytimg.com/vi/cu0fHp8HCDo/hqdefault.jpg',
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=cu0fHp8HCDo', label: 'Tutorial', primary: true },
+    ],
   },
   {
     id: 'seated-straddle-lift',
@@ -1172,6 +1234,11 @@ export const exercises: Exercise[] = [
     failSigns: ['Losing balance instantly', 'Wrist strain', 'No body tension'],
     regressTo: ['elbow-lever'],
     progressTo: [],
+    videoUrl: 'https://www.youtube.com/watch?v=MhEUfmRGr6g',
+    thumbnailUrl: 'https://i.ytimg.com/vi/MhEUfmRGr6g/hqdefault.jpg',
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=MhEUfmRGr6g', label: 'Tutorial', primary: true },
+    ],
   },
   {
     id: 'back-lever',
@@ -1250,6 +1317,11 @@ export const exercises: Exercise[] = [
     failSigns: ['Hips dropping', 'Grip slipping', 'Bending at waist'],
     regressTo: [],
     progressTo: ['human-flag'],
+    videoUrl: 'https://www.youtube.com/watch?v=NWskCNO3rCo',
+    thumbnailUrl: 'https://i.ytimg.com/vi/NWskCNO3rCo/hqdefault.jpg',
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=NWskCNO3rCo', label: 'Tutorial', primary: true },
+    ],
   },
   {
     id: 'bent-arm-handstand',
@@ -1267,6 +1339,11 @@ export const exercises: Exercise[] = [
     failSigns: ['Collapsing', 'No balance control', 'Elbow pain'],
     regressTo: ['freestanding-handstand', 'tiger-bend-pushup'],
     progressTo: [],
+    videoUrl: 'https://www.youtube.com/watch?v=ozk8SOD3FCY',
+    thumbnailUrl: 'https://i.ytimg.com/vi/ozk8SOD3FCY/hqdefault.jpg',
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=ozk8SOD3FCY', label: 'Tutorial', primary: true },
+    ],
   },
 
   // ==================== HANDSTAND TRACK ADDITIONS ====================
@@ -1691,6 +1768,11 @@ export const exercises: Exercise[] = [
     failSigns: ['Using momentum/bounce', 'Arms bending', 'Cannot clear floor'],
     regressTo: ['straddle-press-to-hs'],
     progressTo: [],
+    videoUrl: 'https://www.youtube.com/watch?v=S4QLsLT2wx8',
+    thumbnailUrl: 'https://i.ytimg.com/vi/S4QLsLT2wx8/hqdefault.jpg',
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=S4QLsLT2wx8', label: 'Tutorial', primary: true },
+    ],
   },
 
   // ==================== YOGA POSES ====================
@@ -1765,6 +1847,11 @@ export const exercises: Exercise[] = [
     failSigns: ['Hip opening to side', 'Standing knee locking hyperextended', 'Falling out immediately'],
     regressTo: ['warrior-ii', 'tree-pose'],
     progressTo: ['half-moon-pose'],
+    videoUrl: 'https://www.youtube.com/watch?v=t-VgOxS9zRQ',
+    thumbnailUrl: 'https://i.ytimg.com/vi/t-VgOxS9zRQ/hqdefault.jpg',
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=t-VgOxS9zRQ', label: 'Tutorial', primary: true },
+    ],
   },
   {
     id: 'tree-pose',
