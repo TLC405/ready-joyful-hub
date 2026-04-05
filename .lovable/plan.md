@@ -1,111 +1,72 @@
+# Fix Track Organization + Add Mobility/Flexibility + Bruce Lee Icon
+
+## Problems
+
+1. **Forearm Stand and Elbow Stand are separate tracks** — they're both forearm-supported inversions and should be one track
+2. **No Mobility & Flexibility track** — flexibility exercises exist but aren't organized into a dedicated track
+3. **Handstand track doesn't follow elbow lever** — the progression should flow through elbow lever skills into handstand
+4. **Dragon Flag exists but isn't in any meaningful track** — just tagged `general`
+5. **No `flag` track defined** despite `flag` being a valid `TrackId` and exercises referencing it
+6. **Bruce Lee exercises (Dragon Flag) have no visual credit** — user wants a cute Bruce Lee cartoon icon next to exercises he made famous and all others that are in famous moves then bruce lee categfory and jean claude for splits and so forth for all that you can find online. make this fun and creative and intriguweiung for leanrign 
+
+## Changes
+
+### 1. Merge Forearm Stand + Elbow Stand → "Inversions" track (`src/lib/tracks.ts`)
+
+Combine into a single **"Inversions"** track. Progression:
+
+- Dolphin Pose → Forearm Stand Toe Pulls → Forearm Stand Line Hold → Elbow Stand Wall Hold → Elbow Stand Straddle Entry → Elbow Stand Exit
+
+This makes sense because forearm stand IS an elbow-supported inversion.
+
+### 2. Create "Flag" track (`src/lib/tracks.ts`)
+
+Add the missing track that exercises already reference:
+
+- Dragon Flag → Clutch Flag → Human Flag
+
+Dragon Flag gets re-tagged from `general` to `flag`. The `creator` field gets set to `'Bruce Lee'` on Dragon Flag.
+
+### 3. Create "Mobility & Flexibility" track (`src/lib/tracks.ts`)
+
+New track for dedicated flexibility work:
+
+- Cat-Cow Stretch → Pigeon Pose → Cossack Squat → Pancake Stretch (new exercise) → Middle Split Hold (new exercise) → Needle Pose → Wheel Pose
+
+### 4. Update Handstand track to flow from Elbow Lever (`src/lib/tracks.ts`)
+
+Revised handstand progression:
+
+- Frog Stand → Elbow Lever → Hollow Body Hold → Chest-to-Wall → Straddle Kick-Up → HS Shrugs → Wall Pull-Aways → Bail → Freestanding HS → Bent-Arm Handstand (Tiger Bend)
+
+### 5. Add new exercises (`src/lib/exercises.ts`)
+
+- **Pancake Stretch** — seated straddle fold, flexibility staple
+- **Middle Split Hold** — isometric split hold
+- Tag Dragon Flag with `creator: 'Bruce Lee'` and add `flag` track
+
+### 6. Bruce Lee cartoon icon (`src/components/shared/ExerciseDetailModal.tsx`)
+
+- Add custom lovable bruce lee martial arts icon (🥋 + custom CSS styling) next to any exercise where `creator === 'Bruce Lee'`
+- Show "BRUCE LEE ORIGINAL" badge in editorial style with a cute cartoon silhouette drawn via CSS/SVG (fighting stance, simple shapes)
+- Generate a small Bruce Lee cartoon image using AI image generation and store as an asset
+
+### 7. Update types (`src/lib/types.ts`)
+
+- Remove `'forearm-stand'` and `'elbow-stand'` from `TrackId`, add `'inversions'` and `'mobility'`
+- Update `Category` to include `'flexibility'` or keep using `'mobility'`
+
+## Files
 
 
-# CoachCare Editorial Restyle + Notebook Feel + Atomic Sweep
+| File                                            | Change                                                                                                     |
+| ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `src/lib/types.ts`                              | Update `TrackId`: remove `forearm-stand`, `elbow-stand`, add `inversions`, `mobility`                      |
+| `src/lib/tracks.ts`                             | Merge forearm/elbow → Inversions, add Flag track, add Mobility track, update Handstand progression         |
+| `src/lib/exercises.ts`                          | Add Pancake Stretch + Middle Split Hold, re-tag Dragon Flag, update track references on affected exercises |
+| `src/components/shared/ExerciseDetailModal.tsx` | Add Bruce Lee cartoon badge for `creator === 'Bruce Lee'` exercises                                        |
+| `src/components/sections/ExerciseLibrary.tsx`   | Update filter dropdowns for new track names                                                                |
+| Generated asset                                 | Bruce Lee cartoon image via AI image generation                                                            |
 
-## Overview
 
-Restyle all CoachCare components to match the newspaper editorial brutalism design system. Add a "training notebook" feel across the app — ruled-line textures, handwritten-style annotations, log-like layouts. Fix critical issues (AnalyticsCanvas using old blue colors, DocumentCanvas using `prose-invert` in light theme, rounded corners everywhere contradicting editorial flat style).
-
-## 1. CSS: Add Notebook Utilities (`src/index.css`)
-
-Add new utility classes:
-- `.notebook-ruled` — repeating horizontal lines background (like ruled paper), subtle gray, 1.5rem spacing
-- `.notebook-margin` — left red vertical margin line (classic notebook)
-- `.notebook-entry` — bordered-bottom entry row with timestamp feel
-- Update `.surface-raised` border-radius references: everything goes `rounded-none` or `rounded-sm` max
-
-## 2. CoachCareStudio.tsx — Editorial Frame
-
-- Remove `rounded-2xl` from ResizablePanelGroup → `rounded-none`
-- Mobile drawer: `rounded-t-2xl` → `rounded-none`, add top border instead
-- Mobile canvas trigger button: square, bordered, not rounded-full
-
-## 3. ChatPanel.tsx — Notebook Chat Log
-
-- Header: Replace `badge-coin rounded-lg bg-primary` icon with flat bordered square, red text "COACH CARE" with `.text-label` style
-- Messages area: Add `notebook-ruled` background so messages sit on "ruled paper"
-- Add a date separator between messages: thin divider + small caps timestamp
-
-## 4. ChatMessage.tsx — Editorial Bubbles
-
-- Replace `rounded-2xl` with `rounded-none` (sharp rectangular)
-- Coach messages: white bg, thin black border (flat card). No `surface-raised` gradients
-- User messages: solid red bg stays, but sharp corners
-- Type badges: add thin left border accent instead of inline icon label
-- "Open on Canvas →" link: red text, uppercase, editorial style
-
-## 5. ChatInput.tsx — Notebook Input
-
-- Replace `surface-inset rounded-xl` input container with flat bordered, no radius
-- Quick action buttons: squared, thin border, editorial hover (bg-foreground text-card)
-- Send button: squared, not rounded-lg
-
-## 6. IdleCanvas.tsx — Editorial Action Grid
-
-- Remove emoji from heading. Use "WHAT SHOULD WE WORK ON?" in `.text-editorial-sm`
-- Action cards: `rounded-xl` → `rounded-none`, thin border, newspaper column divider between them
-- Remove `surface-inset rounded-xl` from icon containers → flat bordered square
-- whileHover: just border-color change to primary, no y translation
-
-## 7. VideoCanvas.tsx — Editorial Analysis
-
-- `rounded-xl` → `rounded-none` everywhere
-- Analysis card: thin black borders, red section headers
-- Score badge: rectangular, bordered, not rounded-full
-
-## 8. ExerciseCanvas.tsx — Already close, minor fixes
-
-- `rounded-xl` → `rounded-none` or `rounded-sm`
-- `rounded-full` badges → rectangular
-- Image container: no rounded, hard crop
-
-## 9. TemplateCanvas.tsx — Notebook Workout Log
-
-- Template blocks: look like notebook entries with ruled-line feel
-- Number badges: square, not rounded-full
-- Input fields: flat bordered, no radius
-- "ADD EXERCISE" button: editorial bordered, full-width
-
-## 10. DocumentCanvas.tsx — Notebook Editor
-
-- Remove `prose-invert` (breaks light theme)
-- Flat bordered toolbar and content area
-- Edit/Preview toggle: editorial tab style (bg-foreground text-card for active)
-
-## 11. AnalyticsCanvas.tsx — Fix Colors + Editorial
-
-- Replace all hardcoded blue `hsl(220, 70%, 55%)` with red primary `hsl(0, 65%, 42%)`
-- COLORS array: use editorial palette (red, black, muted gray, amber, dark green)
-- Tooltip: use `bg-card border-foreground/15` (not dark theme hardcoded)
-- Cards: `rounded-xl` → `rounded-none`
-- Grid lines: use `foreground/10` not hardcoded dark values
-
-## 12. Atomic Sweep — Other Components
-
-Audit remaining components for stale styles:
-- **HeroSection.tsx**: Already editorial, fine
-- **Navigation.tsx**: Already editorial, fine
-- **ProgressDashboard.tsx**: Check for any remaining `rounded-xl` → `rounded-sm`
-- **SettingsPanel.tsx**: Check rounded corners on form groups
-- **ExerciseLibrary.tsx**: Check for remaining old styles
-
-## Files Changed
-
-| File | Change |
-|------|--------|
-| `src/index.css` | Add notebook utilities (ruled lines, margin, entry) |
-| `src/components/CoachCare/CoachCareStudio.tsx` | Remove rounded corners, editorial frame |
-| `src/components/CoachCare/ChatPanel.tsx` | Notebook ruled background, editorial header |
-| `src/components/CoachCare/ChatMessage.tsx` | Sharp rectangles, editorial type badges |
-| `src/components/CoachCare/ChatInput.tsx` | Flat bordered input, square buttons |
-| `src/components/CoachCare/Canvas/IdleCanvas.tsx` | Editorial grid, no emoji, flat cards |
-| `src/components/CoachCare/Canvas/VideoCanvas.tsx` | Sharp corners, editorial analysis cards |
-| `src/components/CoachCare/Canvas/ExerciseCanvas.tsx` | Minor corner/badge fixes |
-| `src/components/CoachCare/Canvas/TemplateCanvas.tsx` | Notebook entry style blocks |
-| `src/components/CoachCare/Canvas/DocumentCanvas.tsx` | Fix prose-invert, flat borders |
-| `src/components/CoachCare/Canvas/AnalyticsCanvas.tsx` | Fix blue→red colors, editorial cards |
-| `src/components/sections/ProgressDashboard.tsx` | Corner radius sweep |
-| `src/components/sections/SettingsPanel.tsx` | Corner radius sweep |
-
-**13 files, 0 new files, 0 new dependencies**
-
+**6 files, 0-1 new assets, 0 new dependencies**
