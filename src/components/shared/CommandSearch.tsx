@@ -67,11 +67,11 @@ export function CommandSearch({ open, onClose }: CommandSearchProps) {
     <div className="fixed inset-0 z-[100] flex items-start justify-center pt-[15vh]" onClick={onClose}>
       <div className="absolute inset-0 bg-foreground/40 backdrop-blur-sm" />
       <div
-        className="relative z-10 w-full max-w-lg border-2 border-foreground bg-card shadow-2xl"
+        className="relative z-10 w-full max-w-lg border-2 border-foreground bg-card shadow-2xl skeuo-card skeuo-grain"
         onClick={e => e.stopPropagation()}
       >
         {/* Search input */}
-        <div className="flex items-center gap-3 border-b-2 border-foreground px-4 py-3">
+        <div className="flex items-center gap-3 border-b-2 border-foreground px-4 py-3 surface-inset">
           <Search className="h-5 w-5 text-primary shrink-0" />
           <input
             ref={inputRef}
@@ -80,7 +80,7 @@ export function CommandSearch({ open, onClose }: CommandSearchProps) {
             onChange={e => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Search exercises... (Esc to close)"
-            className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none font-chalk"
+            className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none font-chalk text-journal"
           />
           <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
             <X className="h-4 w-4" />
@@ -88,25 +88,25 @@ export function CommandSearch({ open, onClose }: CommandSearchProps) {
         </div>
 
         {/* Results */}
-        <div className="max-h-[50vh] overflow-y-auto">
+        <div className="max-h-[50vh] overflow-y-auto notebook-ruled">
           {results.length === 0 ? (
-            <div className="p-6 text-center text-sm text-muted-foreground">No exercises found</div>
+            <div className="p-6 text-center text-sm text-muted-foreground text-journal">No exercises found</div>
           ) : (
             results.map((ex, i) => (
               <button
                 key={ex.id}
                 onClick={() => handleSelect(ex.id)}
                 className={cn(
-                  "flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors border-b border-foreground/5",
+                  "notebook-entry flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors",
                   i === selectedIndex ? "bg-primary/10" : "hover:bg-surface-0"
                 )}
               >
-                <span className={cn("shrink-0 border px-1.5 py-0 text-label text-[8px]", difficultyBadge[ex.difficulty])}>
+                <span className={cn("shrink-0 border px-1.5 py-0 text-label text-[8px] skeuo-metal", difficultyBadge[ex.difficulty])}>
                   {ex.difficulty.toUpperCase()}
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="font-chalk text-sm truncate text-foreground">{ex.name}</p>
-                  <p className="text-[10px] text-muted-foreground truncate">{ex.category} · {ex.tracks.slice(0, 2).join(', ')}</p>
+                  <p className="font-chalk text-sm truncate text-foreground text-journal">{ex.name}</p>
+                  <p className="text-[10px] text-muted-foreground truncate text-journal-sm">{ex.category} · {ex.tracks.slice(0, 2).join(', ')}</p>
                 </div>
                 {(ex.videoUrl || ex.videoSources?.length) ? (
                   <Play className="h-3.5 w-3.5 text-primary shrink-0" />
@@ -119,14 +119,14 @@ export function CommandSearch({ open, onClose }: CommandSearchProps) {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between border-t border-foreground/10 px-4 py-2">
-          <span className="text-[10px] text-muted-foreground">
+        <div className="flex items-center justify-between border-t border-foreground/10 px-4 py-2 skeuo-leather">
+          <span className="text-[10px] text-primary-foreground/70">
             {results.length} result{results.length !== 1 ? 's' : ''}
           </span>
-          <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
-            <kbd className="border border-foreground/20 px-1.5 py-0.5 text-[9px]">↑↓</kbd>
+          <div className="flex items-center gap-2 text-[10px] text-primary-foreground/70">
+            <kbd className="skeuo-metal px-1.5 py-0.5 text-[9px]">↑↓</kbd>
             <span>navigate</span>
-            <kbd className="border border-foreground/20 px-1.5 py-0.5 text-[9px]">↵</kbd>
+            <kbd className="skeuo-metal px-1.5 py-0.5 text-[9px]">↵</kbd>
             <span>select</span>
           </div>
         </div>

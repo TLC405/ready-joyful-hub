@@ -9,24 +9,23 @@ export function HeroSection() {
   ];
 
   return (
-    <section className="px-4 py-8 lg:px-8 lg:py-12">
-      {/* Massive editorial headline */}
+    <section className="px-4 py-8 lg:px-8 lg:py-12 notebook-ruled notebook-margin">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="mb-2 text-label text-xs text-muted-foreground text-center">TLC CALISTHEtICs est 2026</div>
-        <h1 className="text-editorial text-foreground text-6xl font-serif text-center">
+        <div className="mb-2 text-label text-xs text-muted-foreground text-center text-journal-sm">TLC CALISTHEtICs est 2026</div>
+        <h1 className="text-editorial text-foreground text-6xl font-serif text-center text-embossed">
           MASTER<br />
           <span className="text-primary">YOUR BODY.</span>
         </h1>
-        <p className="mt-4 max-w-lg text-base text-card-foreground my-[21px] border-primary border-solid text-right">
+        <p className="mt-4 max-w-lg text-base text-card-foreground my-[21px] border-primary border-solid text-right text-journal">
           Build super human strength with a hydbrid approach.
         </p>
       </motion.div>
 
-      {/* Stat bar — newspaper column dividers */}
+      {/* Stat bar */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -36,10 +35,10 @@ export function HeroSection() {
         {stats.map((stat, i) => (
           <div
             key={stat.label}
-            className={`flex-1 py-4 text-center ${i > 0 ? 'border-l border-foreground/15' : ''}`}
+            className={`flex-1 py-4 text-center skeuo-card skeuo-grain ${i > 0 ? 'border-l border-foreground/15' : ''}`}
           >
-            <div className="font-chalk text-xl sm:text-2xl text-foreground">{stat.value}</div>
-            <div className="text-label text-[10px] text-muted-foreground">{stat.label}</div>
+            <div className="font-chalk text-xl sm:text-2xl text-foreground text-journal-lg">{stat.value}</div>
+            <div className="text-label text-[10px] text-muted-foreground text-journal-sm">{stat.label}</div>
           </div>
         ))}
       </motion.div>
@@ -51,7 +50,8 @@ export function HeroSection() {
         transition={{ delay: 0.5, duration: 0.4 }}
         className="mt-6"
       >
-        <button className="bg-primary px-8 py-3 font-chalk text-sm text-primary-foreground transition-opacity hover:opacity-90">
+        <button className="bg-primary px-8 py-3 font-chalk text-sm text-primary-foreground transition-opacity hover:opacity-90 btn-raised active:skeuo-pressed text-journal"
+          style={{ background: 'hsl(var(--primary))' }}>
           GET STARTED →
         </button>
       </motion.div>

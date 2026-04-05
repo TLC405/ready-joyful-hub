@@ -16,16 +16,16 @@ const actions = [
 
 export function IdleCanvas({ onAction }: IdleCanvasProps) {
   return (
-    <div className="flex h-full flex-col items-center justify-center p-8">
+    <div className="flex h-full flex-col items-center justify-center p-8 notebook-ruled">
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         className="mb-8 text-center"
       >
-        <h3 className="text-editorial-sm text-foreground">
+        <h3 className="text-editorial-sm text-foreground text-embossed">
           WHAT SHOULD WE WORK ON?
         </h3>
-        <p className="mt-2 text-sm text-muted-foreground">
+        <p className="mt-2 text-sm text-muted-foreground text-journal">
           Pick an action or type in chat to get started
         </p>
       </motion.div>
@@ -42,13 +42,13 @@ export function IdleCanvas({ onAction }: IdleCanvasProps) {
               whileHover={{ borderColor: 'hsl(0, 65%, 42%)' }}
               whileTap={{ scale: 0.97 }}
               onClick={() => onAction(action.id)}
-              className="flex flex-col items-center gap-2 bg-card p-5 text-center transition-colors hover:bg-surface-0"
+              className="flex flex-col items-center gap-2 bg-card p-5 text-center transition-colors hover:bg-surface-0 skeuo-card skeuo-grain"
             >
-              <div className="flex h-12 w-12 items-center justify-center border border-foreground/10">
+              <div className="flex h-12 w-12 items-center justify-center surface-inset">
                 <Icon className="h-6 w-6 text-primary" />
               </div>
-              <span className="text-label text-sm">{action.label}</span>
-              <span className="text-[11px] text-muted-foreground">{action.desc}</span>
+              <span className="text-label text-sm text-journal">{action.label}</span>
+              <span className="text-[11px] text-muted-foreground text-journal-sm">{action.desc}</span>
             </motion.button>
           );
         })}

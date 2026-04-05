@@ -6,7 +6,7 @@ interface AppShellProps {
 
 export function AppShell({ children }: AppShellProps) {
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-background skeuo-grain">
+    <div className="relative min-h-screen overflow-x-hidden bg-background skeuo-grain notebook-ruled">
       {children}
     </div>
   );

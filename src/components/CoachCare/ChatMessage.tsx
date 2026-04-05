@@ -28,14 +28,14 @@ export function ChatMessageBubble({ message }: ChatMessageBubbleProps) {
   return (
     <div className={cn("flex", isCoach ? "justify-start" : "justify-end")}>
       <div className={cn(
-        "max-w-[85%] px-4 py-3 text-sm leading-relaxed",
+        "max-w-[85%] px-4 py-3 text-sm leading-relaxed text-journal",
         isCoach
-          ? "border border-foreground/12 bg-card text-foreground"
-          : "bg-primary text-primary-foreground",
+          ? "border border-foreground/12 bg-card text-foreground skeuo-card skeuo-grain"
+          : "bg-primary text-primary-foreground skeuo-pressed",
       )}>
         {message.type !== 'text' && Icon && (
           <div className={cn(
-            "mb-2 flex items-center gap-2 border-l-2 pl-2 text-label text-[10px]",
+            "mb-2 flex items-center gap-2 border-l-2 pl-2 text-label text-[10px] text-journal-sm",
             isCoach ? "border-primary text-primary" : "border-primary-foreground/40 text-primary-foreground/70"
           )}>
             <Icon className="h-3.5 w-3.5" />
@@ -58,7 +58,7 @@ export function ChatMessageBubble({ message }: ChatMessageBubbleProps) {
         )}
 
         <div className={cn(
-          "mt-1 text-[10px]",
+          "mt-1 text-[10px] text-journal-sm",
           isCoach ? "text-muted-foreground" : "text-primary-foreground/50"
         )}>
           {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}

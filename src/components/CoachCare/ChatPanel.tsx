@@ -22,18 +22,18 @@ export function ChatPanel({ messages, onSend, onClear }: ChatPanelProps) {
 
   return (
     <div className="flex h-full flex-col">
-      {/* Header */}
-      <div className="flex items-center justify-between border-b border-foreground/15 bg-card px-4 py-3">
+      {/* Header — leather strip */}
+      <div className="flex items-center justify-between px-4 py-3 skeuo-leather">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center border border-foreground/15">
+          <div className="flex h-8 w-8 items-center justify-center surface-inset">
             <MessageSquare className="h-4 w-4 text-primary" />
           </div>
           <div>
-            <h3 className="text-label text-sm text-foreground">COACH CARE</h3>
-            <span className="text-[10px] text-muted-foreground">AI Training Partner</span>
+            <h3 className="text-label text-sm text-primary-foreground text-journal">COACH CARE</h3>
+            <span className="text-[10px] text-primary-foreground/60">AI Training Partner</span>
           </div>
         </div>
-        <button onClick={onClear} className="border border-foreground/10 p-2 text-muted-foreground transition-colors hover:bg-foreground hover:text-card" title="Clear chat">
+        <button onClick={onClear} className="border border-primary-foreground/20 p-2 text-primary-foreground/60 transition-colors hover:bg-primary-foreground/10 hover:text-primary-foreground btn-raised" title="Clear chat">
           <Trash2 className="h-4 w-4" />
         </button>
       </div>

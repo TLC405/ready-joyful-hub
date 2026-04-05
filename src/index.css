@@ -163,6 +163,7 @@
     font-family: 'Space Grotesk', sans-serif;
     letter-spacing: -0.02em;
     font-weight: 700;
+    line-height: var(--journal-line, 1.5rem);
   }
 
   ::-webkit-scrollbar {
@@ -351,6 +352,24 @@
     box-shadow: inset 0 -1px 0 rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.2);
   }
 
+  /* ===== JOURNAL-LINE TEXT SYSTEM ===== */
+  :root {
+    --journal-line: 1.5rem;
+  }
+
+  .text-journal {
+    line-height: var(--journal-line);
+  }
+
+  .text-journal-lg {
+    line-height: calc(var(--journal-line) * 2);
+  }
+
+  .text-journal-sm {
+    line-height: var(--journal-line);
+    font-size: 0.75rem;
+  }
+
   /* ===== TYPOGRAPHY ===== */
   .text-label {
     font-family: 'Space Grotesk', sans-serif;
@@ -358,19 +377,21 @@
     letter-spacing: 0.08em;
     text-transform: uppercase;
     font-weight: 700;
+    line-height: var(--journal-line);
   }
 
   .text-heading {
     font-family: 'Space Grotesk', sans-serif;
     letter-spacing: -0.04em;
     font-weight: 700;
+    line-height: calc(var(--journal-line) * 2);
   }
 
   .text-editorial {
     font-family: 'Space Grotesk', sans-serif;
     font-size: clamp(2.5rem, 7vw, 5rem);
     font-weight: 700;
-    line-height: 0.92;
+    line-height: calc(var(--journal-line) * 3);
     letter-spacing: -0.04em;
     text-transform: uppercase;
   }
@@ -379,7 +400,7 @@
     font-family: 'Space Grotesk', sans-serif;
     font-size: clamp(1.5rem, 4vw, 2.5rem);
     font-weight: 700;
-    line-height: 0.95;
+    line-height: calc(var(--journal-line) * 2);
     letter-spacing: -0.03em;
     text-transform: uppercase;
   }
