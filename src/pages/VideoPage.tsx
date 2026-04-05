@@ -256,6 +256,7 @@ export default function VideoPage() {
           <div className="p-3">
             {sources.length > 0 ? (
               <TLCNotebookPlayer
+                key={exerciseId}
                 sources={sources}
                 title={exercise.name}
                 cues={exercise.cueStack}
