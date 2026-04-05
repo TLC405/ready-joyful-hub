@@ -28,24 +28,21 @@ const dailyTips = [
   "💡 Daily tip: Superset antagonist movements (push + pull) for time-efficient sessions.",
 ];
 
-// ─── URL detection ──────────────────────────────────────────────
 function detectUrl(text: string): { platform: 'youtube' | 'instagram' | 'tiktok'; embedUrl: string; url: string } | null {
   const ytMatch = text.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
-  if (ytMatch) return { platform: 'youtube', url: text, embedUrl: `https://www.youtube.com/embed/${ytMatch[1]}` };
+  if (ytMatch) return { platform: 'youtube', url: text, embedUrl: `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1` };
   const igMatch = text.match(/instagram\.com\/(p|reel)\/([a-zA-Z0-9_-]+)/);
   if (igMatch) return { platform: 'instagram', url: text, embedUrl: `https://www.instagram.com/${igMatch[1]}/${igMatch[2]}/embed` };
   if (text.match(/tiktok\.com/)) return { platform: 'tiktok', url: text, embedUrl: text };
   return null;
 }
 
-// ─── Fuzzy exercise match ───────────────────────────────────────
 function findExercise(text: string) {
   const lower = text.toLowerCase();
   return exercises.find(e => lower.includes(e.name.toLowerCase())) ||
     exercises.find(e => e.name.toLowerCase().split(' ').some(w => w.length > 3 && lower.includes(w)));
 }
 
-// ─── Progression chain helper ───────────────────────────────────
 function getProgressionChain(exerciseId: string) {
   const ex = getExerciseById(exerciseId);
   if (!ex) return null;
@@ -54,7 +51,6 @@ function getProgressionChain(exerciseId: string) {
   return { regressions, current: ex, progressions };
 }
 
-// ─── Workout history helper ─────────────────────────────────────
 function getWorkoutHistory() {
   try {
     const templates = JSON.parse(localStorage.getItem('tlc-templates') || '[]');
@@ -80,7 +76,6 @@ function getStreak(): number {
   } catch { return 0; }
 }
 
-// ─── Smart response engine ──────────────────────────────────────
 function generateResponse(
   text: string,
   setCanvas: (mode: CanvasMode, data: any) => void,
@@ -89,7 +84,6 @@ function generateResponse(
 ) {
   const lower = text.toLowerCase();
 
-  // Daily tip on first message
   if (ctx.messageCount === 0) {
     const tip = dailyTips[new Date().getDay() % dailyTips.length];
     updateCtx({ messageCount: 1 });
@@ -138,7 +132,7 @@ function generateResponse(
         setCanvas('exercise', exData);
         updateCtx({ lastExerciseId: target.id });
         return {
-          content: `${isHarder ? '⬆️ Next progression' : '⬇️ Regression'} from ${chain.current.name}:\n\n**${target.name}** (${target.difficulty})\n${target.shortPurpose}\n\nLoaded on canvas with full details.`,
+          content: `${isHarder ? '⬆️ Next progression' : '⬇️ Regression'} from ${chain.current.name}:\n\n**${target.name}** (${target.difficulty})\n${target.shortPurpose}\n\nLoaded on canvas — click to explore.`,
           type: 'exercise-card' as const,
           exerciseRef: { id: target.id, name: target.name, difficulty: target.difficulty },
           canvasAction: { mode: 'exercise' as CanvasMode, data: exData },
@@ -347,10 +341,16 @@ export function CoachCareStudio() {
     handleSend(message);
   }, [handleSend]);
 
+  // Direct canvas navigation (from chat clicks or exercise canvas clicks)
+  const handleCanvasNavigate = useCallback((mode: CanvasMode, data: any) => {
+    setCanvas(mode, data);
+    if (isMobile) setDrawerOpen(true);
+  }, [setCanvas, isMobile]);
+
   if (isMobile) {
     return (
       <div className="flex h-[calc(100vh-4rem)] flex-col">
-        <ChatPanel messages={messages} onSend={handleSend} onClear={clearHistory} isTyping={isTyping} onQuickReply={handleQuickReply} />
+        <ChatPanel messages={messages} onSend={handleSend} onClear={clearHistory} isTyping={isTyping} onQuickReply={handleQuickReply} onCanvasAction={handleCanvasNavigate} />
         {canvasState.mode !== 'idle' && (
           <Drawer.Root open={drawerOpen} onOpenChange={setDrawerOpen}>
             <Drawer.Trigger asChild>
@@ -362,7 +362,7 @@ export function CoachCareStudio() {
               <Drawer.Overlay className="fixed inset-0 z-50 bg-foreground/50" />
               <Drawer.Content className="fixed bottom-0 left-0 right-0 z-50 mt-24 flex h-[85vh] flex-col border-t-2 border-foreground bg-background">
                 <div className="mx-auto mt-2 h-1 w-12 bg-foreground/20" />
-                <CanvasRouter canvasState={canvasState} onAction={handleCanvasAction} />
+                <CanvasRouter canvasState={canvasState} onAction={handleCanvasAction} onCanvasNavigate={handleCanvasNavigate} />
               </Drawer.Content>
             </Drawer.Portal>
           </Drawer.Root>
@@ -372,16 +372,16 @@ export function CoachCareStudio() {
   }
 
   return (
-    <div className="h-[calc(100vh-2rem)] p-2">
-      <ResizablePanelGroup direction="horizontal" className="h-full overflow-hidden border border-foreground/15">
-        <ResizablePanel defaultSize={35} minSize={25} maxSize={50}>
-          <ChatPanel messages={messages} onSend={handleSend} onClear={clearHistory} isTyping={isTyping} onQuickReply={handleQuickReply} />
-        </ResizablePanel>
-        <ResizableHandle withHandle className="bg-foreground/10" />
-        <ResizablePanel defaultSize={65}>
-          <CanvasRouter canvasState={canvasState} onAction={handleCanvasAction} />
-        </ResizablePanel>
-      </ResizablePanelGroup>
-    </div>
+    <ResizablePanelGroup direction="horizontal" className="h-[calc(100vh-4rem)]">
+      <ResizablePanel defaultSize={38} minSize={28} maxSize={50}>
+        <ChatPanel messages={messages} onSend={handleSend} onClear={clearHistory} isTyping={isTyping} onQuickReply={handleQuickReply} onCanvasAction={handleCanvasNavigate} />
+      </ResizablePanel>
+      <ResizableHandle withHandle className="bg-foreground/10 hover:bg-thunder-orange/20 transition-colors" />
+      <ResizablePanel defaultSize={62} minSize={40}>
+        <div className="h-full overflow-hidden bg-surface-0 skeuo-grain">
+          <CanvasRouter canvasState={canvasState} onAction={handleCanvasAction} onCanvasNavigate={handleCanvasNavigate} />
+        </div>
+      </ResizablePanel>
+    </ResizablePanelGroup>
   );
 }

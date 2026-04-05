@@ -1,7 +1,7 @@
 import { useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Trash2, MessageSquare, Loader2 } from 'lucide-react';
-import { ChatMessage as ChatMessageType } from './types';
+import { Trash2, MessageSquare } from 'lucide-react';
+import { ChatMessage as ChatMessageType, CanvasActionHandler } from './types';
 import { ChatMessageBubble } from './ChatMessage';
 import { ChatInput } from './ChatInput';
 
@@ -11,9 +11,10 @@ interface ChatPanelProps {
   onClear: () => void;
   isTyping?: boolean;
   onQuickReply?: (message: string) => void;
+  onCanvasAction?: CanvasActionHandler;
 }
 
-export function ChatPanel({ messages, onSend, onClear, isTyping, onQuickReply }: ChatPanelProps) {
+export function ChatPanel({ messages, onSend, onClear, isTyping, onQuickReply, onCanvasAction }: ChatPanelProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const lastMessage = messages[messages.length - 1];
 
@@ -25,7 +26,7 @@ export function ChatPanel({ messages, onSend, onClear, isTyping, onQuickReply }:
 
   return (
     <div className="flex h-full flex-col">
-      {/* Header — leather strip */}
+      {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 skeuo-leather">
         <div className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center thunder-inset">
@@ -52,7 +53,7 @@ export function ChatPanel({ messages, onSend, onClear, isTyping, onQuickReply }:
             animate={{ opacity: 1, y: 0 }}
             transition={{ type: 'spring', stiffness: 400, damping: 25 }}
           >
-            <ChatMessageBubble message={msg} onQuickReply={onQuickReply} />
+            <ChatMessageBubble message={msg} onQuickReply={onQuickReply} onCanvasAction={onCanvasAction} />
           </motion.div>
         ))}
 
@@ -78,14 +79,14 @@ export function ChatPanel({ messages, onSend, onClear, isTyping, onQuickReply }:
         </AnimatePresence>
       </div>
 
-      {/* Quick replies from last coach message */}
+      {/* Quick replies */}
       {lastMessage?.role === 'coach' && lastMessage.quickReplies && !isTyping && (
         <div className="px-3 pb-1 flex gap-1.5 overflow-x-auto hide-scrollbar">
           {lastMessage.quickReplies.map((qr, i) => (
             <button
               key={i}
               onClick={() => onQuickReply?.(qr.message)}
-              className="shrink-0 px-3 py-1.5 text-[11px] border border-thunder-orange/30 text-thunder-orange bg-thunder-orange/5 hover:bg-thunder-orange/15 transition-colors skeuo-card whitespace-nowrap"
+              className="shrink-0 px-3 py-1.5 text-[11px] border border-thunder-orange/30 text-thunder-orange bg-thunder-orange/5 hover:bg-thunder-orange/15 transition-colors skeuo-card whitespace-nowrap active:scale-95"
             >
               {qr.label}
             </button>
