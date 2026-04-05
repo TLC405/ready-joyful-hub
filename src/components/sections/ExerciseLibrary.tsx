@@ -35,9 +35,10 @@ const trackFilters: { id: TrackId | 'all'; label: string }[] = [
   { id: 'press', label: 'Press' },
   { id: 'pull-strength', label: 'Pull' },
   { id: 'legs', label: 'Legs' },
-  { id: 'forearm-stand', label: 'Forearm Stand' },
-  { id: 'elbow-stand', label: 'Elbow Stand' },
+  { id: 'inversions', label: 'Inversions' },
+  { id: 'flag', label: 'Flag' },
   { id: 'grip', label: 'Grip' },
+  { id: 'mobility', label: 'Mobility' },
   { id: 'yoga-flow', label: 'Yoga Flow' },
 ];
 
