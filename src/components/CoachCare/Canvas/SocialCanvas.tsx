@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Search, Youtube, Instagram, Play, ExternalLink, Loader2 } from 'lucide-react';
 import { SocialCanvasData, SocialSearchResult } from '../types';
@@ -96,6 +96,14 @@ export function SocialCanvas({ data, onWatchVideo }: SocialCanvasProps) {
       setSearching(false);
     }, 800);
   };
+
+  // Auto-search on mount when query is provided
+  useEffect(() => {
+    if (data.query && data.query.trim() && results.length === 0 && !searching) {
+      handleSearch(data.query);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (selectedResult) {
     return (
