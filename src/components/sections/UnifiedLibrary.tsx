@@ -207,7 +207,7 @@ export function UnifiedLibrary({ defaultCategory, onCategoryReset }: UnifiedLibr
         })}
       </div>
 
-      {activeTab === 'browse' && <ExerciseLibrary embedded />}
+      {activeTab === 'browse' && <ExerciseLibrary embedded defaultCategory={defaultCategory} />}
       {activeTab === 'map' && <ProgressionMap embedded />}
       {activeTab === 'tv' && <InlineTVBrowser />}
     </section>
