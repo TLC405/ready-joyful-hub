@@ -2073,7 +2073,7 @@ export const exercises: Exercise[] = [
     regressTo: [],
     progressTo: ['first-position-plie'],
     videoSources: [
-      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=kImoU2n0MF0', label: 'Relevé Tutorial', primary: true },
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=unv8TS3JO6U', label: 'Relevé Tutorial', primary: true },
     ],
   },
   {
@@ -2092,7 +2092,7 @@ export const exercises: Exercise[] = [
     regressTo: ['releve'],
     progressTo: ['grand-plie', 'tendu'],
     videoSources: [
-      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=2MByO1aYRbM', label: 'Plié Basics', primary: true },
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=DrBhcopjDZQ', label: 'Plié Basics', primary: true },
     ],
   },
   {
@@ -2111,7 +2111,7 @@ export const exercises: Exercise[] = [
     regressTo: ['first-position-plie'],
     progressTo: ['passe-balance'],
     videoSources: [
-      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=Y7G-HIgBqMI', label: 'Tendu Technique', primary: true },
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=zeSVHYSMItg', label: 'Tendu Technique', primary: true },
     ],
   },
   {
@@ -2130,7 +2130,7 @@ export const exercises: Exercise[] = [
     regressTo: ['first-position-plie'],
     progressTo: ['passe-balance'],
     videoSources: [
-      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=6F93k4g8GiE', label: 'Grand Plié', primary: true },
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=k70uyYKlIU0', label: 'Grand Plié', primary: true },
     ],
   },
   {
@@ -2149,7 +2149,7 @@ export const exercises: Exercise[] = [
     regressTo: ['releve'],
     progressTo: ['arabesque-hold'],
     videoSources: [
-      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=K1s6RqjFJjM', label: 'Port de Bras Flow', primary: true },
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=87qF6UGrG9o', label: 'Port de Bras Flow', primary: true },
     ],
   },
   {
@@ -2168,7 +2168,7 @@ export const exercises: Exercise[] = [
     regressTo: ['tendu', 'first-position-plie'],
     progressTo: ['arabesque-hold'],
     videoSources: [
-      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=Dtn_h5I0EWQ', label: 'Passé Balance', primary: true },
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=TqAxGUXxesU', label: 'Passé Balance', primary: true },
     ],
   },
   {
@@ -2187,7 +2187,7 @@ export const exercises: Exercise[] = [
     regressTo: ['passe-balance'],
     progressTo: ['developpe'],
     videoSources: [
-      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=29z0gOKblqk', label: 'Arabesque Technique', primary: true },
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=ACuVnmS7h9A', label: 'Arabesque Technique', primary: true },
     ],
   },
   {
@@ -2206,7 +2206,7 @@ export const exercises: Exercise[] = [
     regressTo: ['arabesque-hold'],
     progressTo: ['rond-de-jambe'],
     videoSources: [
-      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=4Z2Z9HC2MnM', label: 'Développé Tutorial', primary: true },
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=0oVrVwlpXAI', label: 'Développé Tutorial', primary: true },
     ],
   },
   {
@@ -2225,7 +2225,7 @@ export const exercises: Exercise[] = [
     regressTo: ['tendu'],
     progressTo: ['grand-battement'],
     videoSources: [
-      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=V0gsh3VRaHs', label: 'Rond de Jambe', primary: true },
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=z-fYrgfn61o', label: 'Rond de Jambe', primary: true },
     ],
   },
   {
@@ -2244,7 +2244,7 @@ export const exercises: Exercise[] = [
     regressTo: ['developpe', 'rond-de-jambe'],
     progressTo: ['attitude-hold'],
     videoSources: [
-      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=5EBbRpG0k9k', label: 'Grand Battement', primary: true },
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=CgKXn1Evj-o', label: 'Grand Battement', primary: true },
     ],
   },
   {
@@ -2263,7 +2263,7 @@ export const exercises: Exercise[] = [
     regressTo: ['arabesque-hold'],
     progressTo: ['penche'],
     videoSources: [
-      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=NNvlBPaQlTk', label: 'Attitude Tutorial', primary: true },
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=aLA1mUjgdeI', label: 'Attitude Tutorial', primary: true },
     ],
   },
   {
@@ -2282,7 +2282,7 @@ export const exercises: Exercise[] = [
     regressTo: ['attitude-hold', 'arabesque-hold'],
     progressTo: [],
     videoSources: [
-      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=sqB-tJcMH6c', label: 'Penché Mastery', primary: true },
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=_T-qmjgBGx4', label: 'Penché Mastery', primary: true },
     ],
   },
 ];
