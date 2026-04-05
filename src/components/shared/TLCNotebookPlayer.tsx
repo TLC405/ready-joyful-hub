@@ -51,18 +51,16 @@ export function TLCNotebookPlayer({ sources, title, cues = [], failSigns = [], c
   const alternates = sources.filter(s => s !== activeSource);
   const embedUrl = activeSource.platform === 'instagram' ? null : getEmbedUrl(activeSource);
 
-  // Proxy Instagram embeds through edge function
   useEffect(() => {
     if (activeSource.platform === 'instagram' && playing) {
       setIgLoading(true);
       setIgEmbed(null);
       supabase.functions.invoke('proxy-instagram', {
         body: { url: activeSource.url },
-      }).then(({ data, error }) => {
+      }).then(({ data }) => {
         if (data?.html) {
           setIgEmbed(data.html);
         } else {
-          // Fallback: direct embed
           const match = activeSource.url.match(/instagram\.com\/(p|reel|reels)\/([a-zA-Z0-9_-]+)/);
           if (match) {
             setIgEmbed(`<iframe src="https://www.instagram.com/${match[1]}/${match[2]}/embed/captioned" width="100%" height="100%" frameborder="0" scrolling="no" allowtransparency="true"></iframe>`);
@@ -85,15 +83,15 @@ export function TLCNotebookPlayer({ sources, title, cues = [], failSigns = [], c
     <div className={cn("skeuo-grain", className)}>
       {/* Glossy TV Bezel Frame */}
       <div className="skeuo-bezel rounded-sm p-[6px]">
-        {/* TLC TV Header — brushed metal */}
+        {/* TLC TV Header — thunder-accented leather */}
         <div className="flex items-center justify-between px-4 py-2 skeuo-leather">
           <div className="flex items-center gap-3">
-            <div className="skeuo-led" />
+            <div className="thunder-led" />
             <span className="text-label text-[10px] tracking-[0.2em] text-primary-foreground/90">TLC TV</span>
           </div>
-          <div className="skeuo-metal px-2.5 py-0.5 flex items-center gap-2">
+          <div className="thunder-badge px-2.5 py-0.5 flex items-center gap-2 text-[9px]">
             {getPlatformIcon(activeSource.platform)}
-            <span className="text-label text-[9px] tracking-widest">{getPlatformLabel(activeSource.platform)}</span>
+            <span className="text-label tracking-widest">{getPlatformLabel(activeSource.platform)}</span>
           </div>
         </div>
 
@@ -101,15 +99,15 @@ export function TLCNotebookPlayer({ sources, title, cues = [], failSigns = [], c
         <div className="relative bg-card" style={{
           background: `repeating-linear-gradient(transparent, transparent 27px, hsl(var(--muted)) 27px, hsl(var(--muted)) 28px), hsl(var(--card))`,
         }}>
-          {/* Red margin line */}
-          <div className="absolute left-12 top-0 bottom-0 w-px bg-primary/30 z-10 hidden md:block" />
+          {/* Thunder-colored margin line */}
+          <div className="absolute left-12 top-0 bottom-0 w-px z-10 hidden md:block" style={{ background: 'var(--thunder-gradient)' }} />
 
           <div className="flex flex-col md:flex-row">
             {/* Video area */}
             <div className="flex-1 p-3 md:pl-16">
               <h2 className="font-chalk text-lg text-foreground mb-2 border-b border-foreground/10 pb-1 text-embossed">{title}</h2>
               
-              {/* Video frame with inner bezel glow */}
+              {/* Video frame */}
               <div className="relative bg-foreground/95 overflow-hidden" style={{
                 boxShadow: 'inset 0 0 15px rgba(0,0,0,0.6), inset 0 0 3px rgba(255,255,255,0.05), 2px 2px 8px rgba(0,0,0,0.3)',
               }}>
@@ -122,18 +120,15 @@ export function TLCNotebookPlayer({ sources, title, cues = [], failSigns = [], c
                       <span className="font-chalk text-3xl text-card/30">{title}</span>
                     </div>
                     <div className="absolute inset-0 flex items-center justify-center bg-foreground/30 transition-colors group-hover:bg-foreground/50">
-                      {/* Physical play button */}
-                      <div className="flex h-16 w-16 items-center justify-center bg-primary transition-all group-hover:scale-110"
-                        style={{ boxShadow: '3px 3px 8px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.3)' }}
-                      >
-                        <Play className="h-6 w-6 text-primary-foreground ml-1" fill="currentColor" />
+                      <div className="flex h-16 w-16 items-center justify-center btn-thunder transition-all group-hover:scale-110">
+                        <Play className="h-6 w-6 text-white ml-1" fill="currentColor" />
                       </div>
                     </div>
                   </button>
                 ) : isIg ? (
                   igLoading ? (
                     <div className="flex aspect-video w-full items-center justify-center bg-foreground">
-                      <Loader2 className="h-8 w-8 text-primary animate-spin" />
+                      <Loader2 className="h-8 w-8 text-thunder-orange animate-spin" />
                     </div>
                   ) : igEmbed ? (
                     <div className="aspect-video w-full" dangerouslySetInnerHTML={{ __html: igEmbed }} />
@@ -160,7 +155,7 @@ export function TLCNotebookPlayer({ sources, title, cues = [], failSigns = [], c
                   </div>
                 )}
 
-                {/* Tape corners — SVG wrinkle texture */}
+                {/* Tape corners */}
                 <svg className="absolute -top-0.5 -left-0.5 w-10 h-5 rotate-[-5deg] opacity-60" viewBox="0 0 40 20">
                   <rect width="40" height="20" fill="hsl(40 30% 85% / 0.7)" rx="1" />
                   <line x1="0" y1="7" x2="40" y2="9" stroke="hsl(40 20% 70% / 0.3)" strokeWidth="0.5" />
@@ -183,9 +178,9 @@ export function TLCNotebookPlayer({ sources, title, cues = [], failSigns = [], c
               <div className="w-full md:w-56 border-t md:border-t-0 md:border-l border-foreground/10 p-3 space-y-3">
                 {cues.length > 0 && (
                   <div>
-                    <h4 className="text-label text-[9px] tracking-widest text-primary mb-1.5 text-embossed">COACHING CUES</h4>
+                    <h4 className="text-label text-[9px] tracking-widest text-thunder-orange mb-1.5 text-embossed">COACHING CUES</h4>
                     {cues.map((cue, i) => (
-                      <p key={i} className="font-chalk text-xs text-foreground/70 mb-1 pl-2 border-l-2 border-primary/30">
+                      <p key={i} className="font-chalk text-xs text-foreground/70 mb-1 pl-2 border-l-2 border-thunder-orange/30">
                         {cue}
                       </p>
                     ))}
@@ -193,9 +188,9 @@ export function TLCNotebookPlayer({ sources, title, cues = [], failSigns = [], c
                 )}
                 {failSigns.length > 0 && (
                   <div>
-                    <h4 className="text-label text-[9px] tracking-widest text-foreground mb-1.5">⚠ WATCH FOR</h4>
+                    <h4 className="text-label text-[9px] tracking-widest text-thunder-blue mb-1.5">⚠ WATCH FOR</h4>
                     {failSigns.map((fs, i) => (
-                      <p key={i} className="font-chalk text-xs text-foreground/50 mb-1 pl-2 border-l-2 border-foreground/20">
+                      <p key={i} className="font-chalk text-xs text-foreground/50 mb-1 pl-2 border-l-2 border-thunder-blue/30">
                         {fs}
                       </p>
                     ))}
@@ -206,12 +201,12 @@ export function TLCNotebookPlayer({ sources, title, cues = [], failSigns = [], c
           </div>
         </div>
 
-        {/* More Angles — stitched divider */}
+        {/* More Angles */}
         {alternates.length > 0 && (
           <div className="skeuo-stitch">
             <button
               onClick={() => setShowAngles(!showAngles)}
-              className="flex w-full items-center justify-between px-4 py-2 text-label text-[10px] tracking-widest text-primary-foreground/60 hover:text-primary-foreground/90 transition-colors skeuo-leather"
+              className="flex w-full items-center justify-between px-4 py-2 text-label text-[10px] tracking-widest text-primary-foreground/60 hover:text-thunder-orange transition-colors skeuo-leather"
             >
               <span>MORE ANGLES ({alternates.length})</span>
               {showAngles ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
@@ -222,7 +217,7 @@ export function TLCNotebookPlayer({ sources, title, cues = [], failSigns = [], c
                   <button
                     key={i}
                     onClick={() => { setActiveSource(src); setPlaying(false); setIgEmbed(null); }}
-                    className="flex shrink-0 items-center gap-2 border border-foreground/15 bg-surface-0 px-3 py-2 text-xs hover:bg-primary hover:text-primary-foreground transition-colors skeuo-card"
+                    className="flex shrink-0 items-center gap-2 border border-foreground/15 bg-surface-0 px-3 py-2 text-xs hover:text-thunder-orange-foreground transition-colors skeuo-thunder-card hover:thunder-gradient"
                   >
                     {getPlatformIcon(src.platform)}
                     <span className="text-label text-[10px]">{src.label || getPlatformLabel(src.platform)}</span>

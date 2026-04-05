@@ -17,8 +17,8 @@ const difficultyBadge: Record<string, string> = {
 };
 
 const creatorIcons: Record<string, { icon: string; label: string; color: string }> = {
-  'Bruce Lee': { icon: bruceLeeIcon, label: 'BRUCE LEE ORIGINAL', color: 'text-primary' },
-  'Jean-Claude Van Damme': { icon: jcvdIcon, label: 'JCVD SIGNATURE MOVE', color: 'text-primary' },
+  'Bruce Lee': { icon: bruceLeeIcon, label: 'BRUCE LEE ORIGINAL', color: 'thunder-text' },
+  'Jean-Claude Van Damme': { icon: jcvdIcon, label: 'JCVD SIGNATURE MOVE', color: 'thunder-text' },
 };
 
 interface ExerciseDetailModalProps {
@@ -46,27 +46,20 @@ export function ExerciseDetailModal({ exercise: initialExercise, onClose }: Exer
         initial={{ y: 40 }} animate={{ y: 0 }} exit={{ y: 40 }}
         transition={{ duration: 0.25, ease: 'easeOut' as const }}
         onClick={e => e.stopPropagation()}
-        className="relative max-h-[92vh] w-full max-w-3xl overflow-y-auto bg-card border border-foreground/15 sm:border-2 p-5 sm:p-6 lg:p-8 skeuo-grain skeuo-card notebook-ruled"
+        className="relative max-h-[92vh] w-full max-w-3xl overflow-y-auto bg-card border border-foreground/15 sm:border-2 p-5 sm:p-6 lg:p-8 skeuo-grain skeuo-thunder-card notebook-ruled"
       >
         {/* Drag indicator on mobile */}
-        <div className="mx-auto mb-3 h-0.5 w-10 bg-muted-foreground/30 sm:hidden" />
+        <div className="mx-auto mb-3 h-0.5 w-10 thunder-gradient sm:hidden" />
 
-        <button onClick={onClose} className="absolute right-3 top-3 border border-foreground/10 p-2 text-muted-foreground hover:bg-foreground hover:text-card transition-colors z-10 btn-raised">
+        <button onClick={onClose} className="absolute right-3 top-3 border border-foreground/10 p-2 text-muted-foreground hover:text-thunder-orange-foreground hover:thunder-gradient transition-colors z-10 btn-raised">
           ✕
         </button>
 
         {/* Creator Legend Badge */}
         {creatorInfo && (
-          <div className="mb-4 flex items-center gap-3 border-2 border-primary/30 bg-primary/5 p-3 skeuo-card">
+          <div className="mb-4 flex items-center gap-3 border-2 border-thunder-orange/30 p-3 skeuo-thunder-card thunder-gradient-subtle">
             <div className="surface-inset p-1">
-              <img
-                src={creatorInfo.icon}
-                alt={exercise.creator}
-                className="h-12 w-12 object-contain"
-                loading="lazy"
-                width={48}
-                height={48}
-              />
+              <img src={creatorInfo.icon} alt={exercise.creator} className="h-12 w-12 object-contain" loading="lazy" width={48} height={48} />
             </div>
             <div>
               <div className={cn("text-label text-xs font-bold text-journal", creatorInfo.color)}>
@@ -80,14 +73,8 @@ export function ExerciseDetailModal({ exercise: initialExercise, onClose }: Exer
         )}
 
         <div className="grid gap-5 lg:grid-cols-2">
-          {/* Video player or image */}
           {exercise.videoUrl ? (
-            <TLCVideoPlayer
-              videoUrl={exercise.videoUrl}
-              thumbnailUrl={exercise.thumbnailUrl}
-              title={exercise.name}
-              className="aspect-[4/3] sm:aspect-auto"
-            />
+            <TLCVideoPlayer videoUrl={exercise.videoUrl} thumbnailUrl={exercise.thumbnailUrl} title={exercise.name} className="aspect-[4/3] sm:aspect-auto" />
           ) : exercise.image ? (
             <div className="overflow-hidden aspect-[4/3] sm:aspect-auto border border-foreground/10 skeuo-bezel p-[4px]">
               <img src={exercise.image} alt={exercise.name} className="h-full w-full object-cover" />
@@ -104,15 +91,15 @@ export function ExerciseDetailModal({ exercise: initialExercise, onClose }: Exer
             {hasVideo && (
               <button
                 onClick={() => { onClose(); navigate(`/video/${exercise.id}`); }}
-                className="mt-3 flex items-center gap-2 border-2 border-foreground bg-foreground px-4 py-2 text-label text-[10px] tracking-widest text-card hover:bg-primary hover:border-primary transition-colors btn-raised text-journal"
+                className="mt-3 flex items-center gap-2 px-4 py-2 text-label text-[10px] tracking-widest btn-thunder text-journal"
               >
-                <div className="h-2 w-2 bg-primary" />
+                <div className="thunder-led" />
                 WATCH ON TLC TV
               </button>
             )}
 
-            <div className="mt-4 border border-foreground/10 p-3 sm:p-4 skeuo-card">
-              <h4 className="mb-2 text-label text-sm text-primary text-embossed text-journal">DO THIS</h4>
+            <div className="mt-4 border border-foreground/10 p-3 sm:p-4 skeuo-thunder-card">
+              <h4 className="mb-2 text-label text-sm text-thunder-orange text-embossed text-journal">DO THIS</h4>
               <div className="space-y-1 text-sm text-journal">
                 <p><span className="text-muted-foreground">Sets:</span> {exercise.doThis.setsRange}</p>
                 {exercise.doThis.repsRange && <p><span className="text-muted-foreground">Reps:</span> {exercise.doThis.repsRange}</p>}
@@ -122,19 +109,19 @@ export function ExerciseDetailModal({ exercise: initialExercise, onClose }: Exer
             </div>
 
             <div className="mt-4">
-              <h4 className="mb-2 text-label text-sm text-primary text-embossed text-journal">CUES</h4>
+              <h4 className="mb-2 text-label text-sm text-thunder-orange text-embossed text-journal">CUES</h4>
               <ul className="space-y-1">
                 {exercise.cueStack.map((cue, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-journal"><span className="mt-1.5 h-1 w-1 shrink-0 bg-primary" />{cue}</li>
+                  <li key={i} className="flex items-start gap-2 text-sm text-journal"><span className="mt-1.5 h-1 w-1 shrink-0 bg-thunder-orange" />{cue}</li>
                 ))}
               </ul>
             </div>
 
             <div className="mt-4">
-              <h4 className="mb-2 text-label text-sm text-primary text-embossed text-journal">FAIL SIGNS</h4>
+              <h4 className="mb-2 text-label text-sm text-thunder-blue text-embossed text-journal">FAIL SIGNS</h4>
               <ul className="space-y-1">
                 {exercise.failSigns.map((fs, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground text-journal"><span className="mt-1.5 h-1 w-1 shrink-0 bg-foreground" />{fs}</li>
+                  <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground text-journal"><span className="mt-1.5 h-1 w-1 shrink-0 bg-thunder-blue" />{fs}</li>
                 ))}
               </ul>
             </div>
@@ -145,12 +132,8 @@ export function ExerciseDetailModal({ exercise: initialExercise, onClose }: Exer
                   Credit: <span className="text-foreground font-medium">{exercise.creator}</span>
                 </p>
                 {exercise.instagramUrl && (
-                  <a
-                    href={exercise.instagramUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-1 inline-flex items-center gap-1 text-xs text-primary hover:underline text-journal-sm"
-                  >
+                  <a href={exercise.instagramUrl} target="_blank" rel="noopener noreferrer"
+                    className="mt-1 inline-flex items-center gap-1 text-xs text-thunder-orange hover:underline text-journal-sm">
                     Watch on Instagram →
                   </a>
                 )}
@@ -161,22 +144,17 @@ export function ExerciseDetailModal({ exercise: initialExercise, onClose }: Exer
 
         {exercise.coachNotes && (
           <div className="mt-5 grid gap-px bg-foreground/10 grid-cols-1 sm:grid-cols-2">
-            <div className="bg-card p-3 sm:p-4 skeuo-card">
-              <h4 className="mb-1 text-label text-xs text-primary text-embossed text-journal-sm">MECHANIC</h4>
-              <p className="text-sm text-foreground text-journal">{exercise.coachNotes.mechanic}</p>
-            </div>
-            <div className="bg-card p-3 sm:p-4 skeuo-card">
-              <h4 className="mb-1 text-label text-xs text-primary text-embossed text-journal-sm">BRUTALITY</h4>
-              <p className="text-sm text-foreground text-journal">{exercise.coachNotes.brutality}</p>
-            </div>
-            <div className="bg-card p-3 sm:p-4 skeuo-card">
-              <h4 className="mb-1 text-label text-xs text-primary text-embossed text-journal-sm">WATCH OUT</h4>
-              <p className="text-sm text-foreground text-journal">{exercise.coachNotes.watchOut}</p>
-            </div>
-            <div className="bg-card p-3 sm:p-4 skeuo-card">
-              <h4 className="mb-1 text-label text-xs text-primary text-embossed text-journal-sm">RECOVERY</h4>
-              <p className="text-sm text-foreground text-journal">{exercise.coachNotes.recoveryVector}</p>
-            </div>
+            {[
+              { label: 'MECHANIC', text: exercise.coachNotes.mechanic, color: 'text-thunder-orange' },
+              { label: 'BRUTALITY', text: exercise.coachNotes.brutality, color: 'text-thunder-blue' },
+              { label: 'WATCH OUT', text: exercise.coachNotes.watchOut, color: 'text-thunder-orange' },
+              { label: 'RECOVERY', text: exercise.coachNotes.recoveryVector, color: 'text-thunder-blue' },
+            ].map(note => (
+              <div key={note.label} className="bg-card p-3 sm:p-4 skeuo-card">
+                <h4 className={cn("mb-1 text-label text-xs text-embossed text-journal-sm", note.color)}>{note.label}</h4>
+                <p className="text-sm text-foreground text-journal">{note.text}</p>
+              </div>
+            ))}
           </div>
         )}
 
@@ -187,20 +165,17 @@ export function ExerciseDetailModal({ exercise: initialExercise, onClose }: Exer
             <div className="flex flex-col sm:flex-row gap-3">
               {regressExercises.length > 0 && (
                 <div className="flex-1">
-                  <div className="mb-2 text-label text-[10px] text-muted-foreground text-journal-sm">← EASIER (REGRESS TO)</div>
+                  <div className="mb-2 text-label text-[10px] text-thunder-blue text-journal-sm">← EASIER (REGRESS TO)</div>
                   <div className="space-y-1">
                     {regressExercises.map(ex => (
-                      <button
-                        key={ex.id}
-                        onClick={() => setExercise(ex)}
-                        className="flex w-full items-center gap-2 border border-foreground/10 bg-card px-3 py-2 text-left text-sm transition-colors hover:bg-surface-0 btn-raised"
-                      >
+                      <button key={ex.id} onClick={() => setExercise(ex)}
+                        className="flex w-full items-center gap-2 border border-foreground/10 bg-card px-3 py-2 text-left text-sm transition-colors hover:border-thunder-blue/50 btn-raised">
                         {ex.image && <img src={ex.image} alt={ex.name} className="h-8 w-8 object-cover border border-foreground/10 shrink-0" />}
                         <div className="min-w-0 flex-1">
                           <div className="font-chalk text-xs truncate text-journal">{ex.name}</div>
                           <span className={cn("text-label text-[9px]", difficultyBadge[ex.difficulty])}>{ex.difficulty.toUpperCase()}</span>
                         </div>
-                        <span className="text-[10px] text-muted-foreground">←</span>
+                        <span className="text-[10px] text-thunder-blue">←</span>
                       </button>
                     ))}
                   </div>
@@ -208,20 +183,17 @@ export function ExerciseDetailModal({ exercise: initialExercise, onClose }: Exer
               )}
               {progressExercises.length > 0 && (
                 <div className="flex-1">
-                  <div className="mb-2 text-label text-[10px] text-muted-foreground text-journal-sm">HARDER (PROGRESS TO) →</div>
+                  <div className="mb-2 text-label text-[10px] text-thunder-orange text-journal-sm">HARDER (PROGRESS TO) →</div>
                   <div className="space-y-1">
                     {progressExercises.map(ex => (
-                      <button
-                        key={ex.id}
-                        onClick={() => setExercise(ex)}
-                        className="flex w-full items-center gap-2 border border-foreground/10 bg-card px-3 py-2 text-left text-sm transition-colors hover:bg-surface-0 btn-raised"
-                      >
+                      <button key={ex.id} onClick={() => setExercise(ex)}
+                        className="flex w-full items-center gap-2 border border-foreground/10 bg-card px-3 py-2 text-left text-sm transition-colors hover:border-thunder-orange/50 btn-raised">
                         {ex.image && <img src={ex.image} alt={ex.name} className="h-8 w-8 object-cover border border-foreground/10 shrink-0" />}
                         <div className="min-w-0 flex-1">
                           <div className="font-chalk text-xs truncate text-journal">{ex.name}</div>
                           <span className={cn("text-label text-[9px]", difficultyBadge[ex.difficulty])}>{ex.difficulty.toUpperCase()}</span>
                         </div>
-                        <span className="text-[10px] text-primary">→</span>
+                        <span className="text-[10px] text-thunder-orange">→</span>
                       </button>
                     ))}
                   </div>
@@ -231,11 +203,10 @@ export function ExerciseDetailModal({ exercise: initialExercise, onClose }: Exer
           </div>
         )}
 
-        {/* Tracks this exercise belongs to */}
         {exercise.tracks.length > 0 && (
           <div className="mt-4 flex flex-wrap gap-1">
             {exercise.tracks.map(t => (
-              <span key={t} className="border border-foreground/10 px-2 py-0.5 text-label text-[10px] text-muted-foreground skeuo-metal text-journal-sm">{t}</span>
+              <span key={t} className="border border-thunder-blue/20 px-2 py-0.5 text-label text-[10px] text-muted-foreground skeuo-metal text-journal-sm">{t}</span>
             ))}
           </div>
         )}

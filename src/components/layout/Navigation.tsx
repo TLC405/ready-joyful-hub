@@ -58,10 +58,10 @@ export function Navigation({ activeSection, onNavigate, onOpenSearch }: { active
     <>
       {/* Desktop Sidebar */}
       <nav className="fixed left-0 top-0 z-50 hidden h-screen w-20 flex-col items-center border-r border-foreground/10 bg-card py-8 lg:flex skeuo-grain">
-        {/* Leather logo strip */}
+        {/* Logo with thunder gradient border */}
         <div className="mb-12">
-          <div className="flex h-12 w-12 items-center justify-center border-2 border-primary skeuo-card">
-            <span className="font-chalk text-lg text-primary text-journal">TLC</span>
+          <div className="flex h-12 w-12 items-center justify-center border-2 skeuo-card thunder-border">
+            <span className="font-chalk text-lg thunder-text text-journal">TLC</span>
           </div>
         </div>
 
@@ -76,16 +76,16 @@ export function Navigation({ activeSection, onNavigate, onOpenSearch }: { active
                 className={cn(
                   "group relative flex h-14 w-14 items-center justify-center transition-all",
                   isActive 
-                    ? "text-primary skeuo-pressed" 
-                    : "text-muted-foreground hover:text-foreground"
+                    ? "text-thunder-orange skeuo-pressed" 
+                    : "text-muted-foreground hover:text-thunder-blue"
                 )}
               >
                 <Icon className="h-5 w-5" />
-                <div className="pointer-events-none absolute left-full ml-3 flex items-center gap-2 border border-foreground/10 bg-card px-3 py-2 opacity-0 transition-opacity group-hover:opacity-100 skeuo-card">
+                <div className="pointer-events-none absolute left-full ml-3 flex items-center gap-2 border border-foreground/10 bg-card px-3 py-2 opacity-0 transition-opacity group-hover:opacity-100 skeuo-thunder-card">
                   <span className="whitespace-nowrap text-label text-xs text-embossed">{item.label}</span>
                 </div>
                 {isActive && (
-                  <motion.div layoutId="activeIndicator" className="absolute -right-[1px] h-8 w-0.5 bg-primary" transition={{ type: "spring", stiffness: 500, damping: 30 }} />
+                  <motion.div layoutId="activeIndicator" className="absolute -right-[1px] h-8 w-0.5 thunder-gradient" transition={{ type: "spring", stiffness: 500, damping: 30 }} />
                 )}
               </button>
             );
@@ -96,7 +96,7 @@ export function Navigation({ activeSection, onNavigate, onOpenSearch }: { active
         {onOpenSearch && (
           <button
             onClick={onOpenSearch}
-            className="mb-2 flex h-12 w-12 items-center justify-center text-muted-foreground transition-colors hover:text-foreground btn-raised"
+            className="mb-2 flex h-12 w-12 items-center justify-center text-muted-foreground transition-colors hover:text-thunder-blue btn-raised"
             title="Search (⌘K)"
           >
             <Search className="h-5 w-5" />
@@ -105,7 +105,7 @@ export function Navigation({ activeSection, onNavigate, onOpenSearch }: { active
 
         <button
           onClick={toggle}
-          className="mt-2 flex h-12 w-12 items-center justify-center text-muted-foreground transition-colors hover:text-foreground btn-raised"
+          className="mt-2 flex h-12 w-12 items-center justify-center text-muted-foreground transition-colors hover:text-thunder-orange btn-raised"
         >
           <ThemeIcon className="h-5 w-5" />
         </button>
@@ -119,10 +119,10 @@ export function Navigation({ activeSection, onNavigate, onOpenSearch }: { active
             const isActive = activeSection === item.id;
             return (
               <button key={item.id} onClick={() => onNavigate(item.id)}
-                className={cn("flex flex-col items-center gap-1 px-3 py-1 transition-colors", isActive ? "text-primary-foreground" : "text-primary-foreground/50")}>
+                className={cn("flex flex-col items-center gap-1 px-3 py-1 transition-colors", isActive ? "text-thunder-orange" : "text-primary-foreground/50")}>
                 <Icon className="h-5 w-5" />
                 <span className="text-label text-[10px] text-journal-sm">{item.label}</span>
-                {isActive && <div className="h-0.5 w-4 bg-primary" />}
+                {isActive && <div className="h-0.5 w-4 thunder-gradient" />}
               </button>
             );
           })}
@@ -140,26 +140,28 @@ export function Navigation({ activeSection, onNavigate, onOpenSearch }: { active
             <div className="flex h-full flex-col p-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center border-2 border-primary skeuo-card">
-                    <span className="font-chalk text-lg text-primary">TLC</span>
+                  <div className="flex h-10 w-10 items-center justify-center border-2 skeuo-card thunder-border">
+                    <span className="font-chalk text-lg thunder-text">TLC</span>
                   </div>
-                  <span className="font-chalk text-2xl text-journal-lg">TLC CALISTHENICS</span>
+                  <span className="font-chalk text-2xl thunder-text text-journal-lg">TLC CALISTHENICS</span>
                 </div>
                 <button onClick={() => setMobileMenuOpen(false)} className="flex h-10 w-10 items-center justify-center border border-foreground/10 btn-raised">
                   <X className="h-5 w-5" />
                 </button>
               </div>
-              <div className="mt-8 flex flex-1 flex-col gap-1">
+              {/* Thunder divider */}
+              <div className="mt-4 thunder-divider" />
+              <div className="mt-4 flex flex-1 flex-col gap-1">
                 {navItems.map((item, index) => {
                   const Icon = item.icon;
                   const isActive = activeSection === item.id;
                   return (
                     <motion.button key={item.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.05 }}
                       onClick={() => { onNavigate(item.id); setMobileMenuOpen(false); }}
-                      className={cn("notebook-entry flex items-center gap-4 p-4 text-left transition-all", isActive ? "text-primary" : "text-foreground")}>
+                      className={cn("notebook-entry flex items-center gap-4 p-4 text-left transition-all", isActive ? "text-thunder-orange" : "text-foreground hover:text-thunder-blue")}>
                       <Icon className="h-5 w-5" />
                       <span className="font-chalk text-xl text-journal">{item.label}</span>
-                      {isActive && <div className="ml-auto h-2 w-2 bg-primary" />}
+                      {isActive && <div className="ml-auto thunder-led" />}
                     </motion.button>
                   );
                 })}
