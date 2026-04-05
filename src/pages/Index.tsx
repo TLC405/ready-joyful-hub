@@ -56,7 +56,7 @@ const Index = () => {
                 <section className="px-4 pb-8 lg:px-8">
                   <div className="editorial-divider-thick mb-4 pt-4">
                     <div className="flex items-baseline justify-between">
-                      <h3 className="text-editorial-sm text-foreground">FEATURED SKILLS</h3>
+                      <h3 className="text-editorial-sm text-foreground">​tlcs  favorite skills</h3>
                       <button onClick={() => handleNavigate('library')} className="text-label text-xs text-primary hover:underline">
                         VIEW ALL →
                       </button>
