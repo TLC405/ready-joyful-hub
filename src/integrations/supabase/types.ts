@@ -14,7 +14,39 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      exercise_videos: {
+        Row: {
+          created_at: string
+          exercise_id: string
+          id: string
+          is_primary: boolean | null
+          label: string | null
+          platform: string
+          url: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          exercise_id: string
+          id?: string
+          is_primary?: boolean | null
+          label?: string | null
+          platform: string
+          url: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          exercise_id?: string
+          id?: string
+          is_primary?: boolean | null
+          label?: string | null
+          platform?: string
+          url?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
