@@ -213,6 +213,26 @@ export const tracks: Track[] = [
       { exerciseId: 'wheel-pose', prereqs: ['bridge-pose'] },
     ],
   },
+  {
+    id: 'ballet',
+    name: 'Ballet Foundations',
+    description: 'Relevé to Penché. Classical ballet positions adapted for calisthenics athletes.',
+    icon: 'Flower2',
+    nodes: [
+      { exerciseId: 'releve', prereqs: [], unlockTest: { type: 'reps', value: 15, unit: 'reps' } },
+      { exerciseId: 'first-position-plie', prereqs: ['releve'], unlockTest: { type: 'reps', value: 12, unit: 'reps' } },
+      { exerciseId: 'tendu', prereqs: ['first-position-plie'], unlockTest: { type: 'reps', value: 10, unit: 'reps' } },
+      { exerciseId: 'grand-plie', prereqs: ['first-position-plie'], unlockTest: { type: 'reps', value: 10, unit: 'reps' } },
+      { exerciseId: 'port-de-bras', prereqs: ['releve'], unlockTest: { type: 'reps', value: 8, unit: 'reps' } },
+      { exerciseId: 'passe-balance', prereqs: ['tendu', 'grand-plie'], unlockTest: { type: 'hold', value: 20, unit: 'sec' } },
+      { exerciseId: 'arabesque-hold', prereqs: ['passe-balance'], unlockTest: { type: 'hold', value: 20, unit: 'sec' } },
+      { exerciseId: 'developpe', prereqs: ['arabesque-hold'], unlockTest: { type: 'reps', value: 5, unit: 'reps' } },
+      { exerciseId: 'rond-de-jambe', prereqs: ['tendu'], unlockTest: { type: 'reps', value: 8, unit: 'reps' } },
+      { exerciseId: 'grand-battement', prereqs: ['developpe', 'rond-de-jambe'], unlockTest: { type: 'reps', value: 8, unit: 'reps' } },
+      { exerciseId: 'attitude-hold', prereqs: ['arabesque-hold'], unlockTest: { type: 'hold', value: 20, unit: 'sec' } },
+      { exerciseId: 'penche', prereqs: ['attitude-hold'] },
+    ],
+  },
 ];
 
 export const getTrackById = (id: string) => tracks.find(t => t.id === id);
