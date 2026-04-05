@@ -126,6 +126,7 @@ export const tracks: Track[] = [
     icon: 'Hand',
     nodes: [
       { exerciseId: 'dolphin-pose', prereqs: [], unlockTest: { type: 'hold', value: 30, unit: 'sec' } },
+      { exerciseId: 'headstand', prereqs: ['dolphin-pose'], unlockTest: { type: 'hold', value: 30, unit: 'sec' } },
       { exerciseId: 'forearm-stand-toe-pulls', prereqs: ['dolphin-pose'], unlockTest: { type: 'hold', value: 5, unit: 'sec' } },
       { exerciseId: 'forearm-stand-line-hold', prereqs: ['forearm-stand-toe-pulls'], unlockTest: { type: 'hold', value: 10, unit: 'sec' } },
       { exerciseId: 'elbow-stand-wall-hold', prereqs: ['dolphin-pose'], unlockTest: { type: 'hold', value: 20, unit: 'sec' } },
@@ -163,6 +164,7 @@ export const tracks: Track[] = [
     nodes: [
       { exerciseId: 'wall-compression-stretch', prereqs: [], unlockTest: { type: 'hold', value: 30, unit: 'sec' } },
       { exerciseId: 'elevated-chair-compression', prereqs: ['wall-compression-stretch'], unlockTest: { type: 'hold', value: 20, unit: 'sec' } },
+      { exerciseId: 'band-assisted-progressions', prereqs: ['wall-compression-stretch'], unlockTest: { type: 'reps', value: 5, unit: 'reps' } },
       { exerciseId: 'press-hs-journey', prereqs: ['elevated-chair-compression'], unlockTest: { type: 'reps', value: 5, unit: 'reps' } },
       { exerciseId: 'straddle-press-to-hs', prereqs: ['press-hs-journey'], unlockTest: { type: 'reps', value: 3, unit: 'reps' } },
       { exerciseId: 'stalder-press-to-hs', prereqs: ['straddle-press-to-hs'] },
@@ -175,8 +177,11 @@ export const tracks: Track[] = [
     icon: 'Stretch',
     nodes: [
       { exerciseId: 'cat-cow-stretch', prereqs: [], unlockTest: { type: 'reps', value: 10, unit: 'reps' } },
+      { exerciseId: 'deep-squat-hold', prereqs: [], unlockTest: { type: 'hold', value: 60, unit: 'sec' } },
+      { exerciseId: 'shoulder-dislocate', prereqs: [], unlockTest: { type: 'reps', value: 10, unit: 'reps' } },
+      { exerciseId: 'worlds-greatest-stretch', prereqs: ['cat-cow-stretch'], unlockTest: { type: 'reps', value: 5, unit: 'reps' } },
       { exerciseId: 'pigeon-pose', prereqs: ['cat-cow-stretch'], unlockTest: { type: 'hold', value: 60, unit: 'sec' } },
-      { exerciseId: 'cossack-squat', prereqs: ['cat-cow-stretch'], unlockTest: { type: 'reps', value: 8, unit: 'reps' } },
+      { exerciseId: 'cossack-squat', prereqs: ['deep-squat-hold'], unlockTest: { type: 'reps', value: 8, unit: 'reps' } },
       { exerciseId: 'pancake-stretch', prereqs: ['pigeon-pose'], unlockTest: { type: 'hold', value: 60, unit: 'sec' } },
       { exerciseId: 'middle-split-hold', prereqs: ['pancake-stretch'], unlockTest: { type: 'hold', value: 30, unit: 'sec' } },
       { exerciseId: 'needle', prereqs: ['pancake-stretch'] },
