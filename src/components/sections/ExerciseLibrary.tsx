@@ -55,8 +55,10 @@ const difficultyBadge: Record<string, string> = {
 
 const ITEMS_PER_PAGE = 12;
 
-export function ExerciseLibrary({ embedded = false }: { embedded?: boolean }) {
-  const [categoryFilter, setCategoryFilter] = useState<Category | 'all'>('all');
+export function ExerciseLibrary({ embedded = false, defaultCategory }: { embedded?: boolean; defaultCategory?: string }) {
+  const [categoryFilter, setCategoryFilter] = useState<Category | 'all'>(
+    (defaultCategory as Category) || 'all'
+  );
   const [difficultyFilter, setDifficultyFilter] = useState<Difficulty | 'all'>('all');
   const [trackFilter, setTrackFilter] = useState<TrackId | 'all'>('all');
   const [search, setSearch] = useState('');

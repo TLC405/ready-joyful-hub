@@ -42,6 +42,13 @@ const Index = () => {
   const [activeSection, setActiveSection] = useState<Section>('home');
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [libraryCategory, setLibraryCategory] = useState<string | undefined>();
+
+  const handleCategoryClick = useCallback((category: string) => {
+    setLibraryCategory(category);
+    setActiveSection('library');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
 
   // Swipe gesture refs
   const touchStartX = useRef(0);
@@ -91,7 +98,7 @@ const Index = () => {
           <AnimatePresence mode="wait">
             {activeSection === 'home' && (
               <motion.div key="home" {...pageTransition}>
-                <HeroSection />
+                <HeroSection onCategoryClick={handleCategoryClick} />
 
                 {/* Featured Skills */}
                 <section className="px-4 pb-8 lg:px-8">
@@ -138,7 +145,7 @@ const Index = () => {
 
             {activeSection === 'library' && (
               <motion.div key="library" {...pageTransition}>
-                <UnifiedLibrary />
+                <UnifiedLibrary defaultCategory={libraryCategory} onCategoryReset={() => setLibraryCategory(undefined)} />
               </motion.div>
             )}
 

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BookOpen, Map, Tv, Search, Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -160,8 +160,20 @@ function InlineTVBrowser() {
   );
 }
 
-export function UnifiedLibrary() {
+interface UnifiedLibraryProps {
+  defaultCategory?: string;
+  onCategoryReset?: () => void;
+}
+
+export function UnifiedLibrary({ defaultCategory, onCategoryReset }: UnifiedLibraryProps) {
   const [activeTab, setActiveTab] = useState<Tab>('browse');
+
+  // When a defaultCategory is set, switch to browse tab
+  useEffect(() => {
+    if (defaultCategory) {
+      setActiveTab('browse');
+    }
+  }, [defaultCategory]);
 
   const breadcrumbItems = [
     { label: 'HOME' },
@@ -195,7 +207,7 @@ export function UnifiedLibrary() {
         })}
       </div>
 
-      {activeTab === 'browse' && <ExerciseLibrary embedded />}
+      {activeTab === 'browse' && <ExerciseLibrary embedded defaultCategory={defaultCategory} />}
       {activeTab === 'map' && <ProgressionMap embedded />}
       {activeTab === 'tv' && <InlineTVBrowser />}
     </section>
