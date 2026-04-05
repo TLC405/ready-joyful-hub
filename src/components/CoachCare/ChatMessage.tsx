@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Video, Dumbbell, FileText, BarChart3, ChevronRight, ThumbsUp, ThumbsDown, Play, Globe } from 'lucide-react';
-import { ChatMessage } from './types';
+import { ChatMessage, CanvasActionHandler } from './types';
 import { cn } from '@/lib/utils';
 
 interface ChatMessageBubbleProps {
   message: ChatMessage;
   onQuickReply?: (message: string) => void;
+  onCanvasAction?: CanvasActionHandler;
 }
 
 const typeIcons: Record<string, React.ElementType> = {
@@ -25,12 +26,7 @@ const typeLabels: Record<string, string> = {
   'social-search': 'SOCIAL SEARCH',
 };
 
-function getYouTubeThumbnail(exerciseRef?: { id: string; name: string; difficulty: string }) {
-  // We don't have video URLs on the ref, so skip thumbnails for inline
-  return null;
-}
-
-export function ChatMessageBubble({ message, onQuickReply }: ChatMessageBubbleProps) {
+export function ChatMessageBubble({ message, onQuickReply, onCanvasAction }: ChatMessageBubbleProps) {
   const isCoach = message.role === 'coach';
   const Icon = typeIcons[message.type];
   const [reaction, setReaction] = useState<'up' | 'down' | null>(null);
@@ -38,12 +34,17 @@ export function ChatMessageBubble({ message, onQuickReply }: ChatMessageBubblePr
   const handleReaction = (type: 'up' | 'down') => {
     const newReaction = reaction === type ? null : type;
     setReaction(newReaction);
-    // Store reactions for future training
     try {
       const reactions = JSON.parse(localStorage.getItem('tlc-coach-reactions') || '[]');
       reactions.push({ messageId: message.id, reaction: newReaction, timestamp: Date.now() });
       localStorage.setItem('tlc-coach-reactions', JSON.stringify(reactions.slice(-100)));
     } catch {}
+  };
+
+  const handleCanvasClick = () => {
+    if (message.canvasAction && onCanvasAction) {
+      onCanvasAction(message.canvasAction.mode, message.canvasAction.data);
+    }
   };
 
   return (
@@ -66,7 +67,8 @@ export function ChatMessageBubble({ message, onQuickReply }: ChatMessageBubblePr
 
         {/* Exercise inline card */}
         {message.exerciseRef && isCoach && (
-          <div className="mb-2 flex items-center gap-3 border border-foreground/10 bg-surface-0 p-2 skeuo-card">
+          <button onClick={handleCanvasClick}
+            className="mb-2 w-full flex items-center gap-3 border border-foreground/10 bg-surface-0 p-2 skeuo-card hover:border-thunder-orange/40 transition-colors cursor-pointer text-left">
             <div className="flex h-10 w-10 items-center justify-center thunder-inset">
               <Dumbbell className="h-5 w-5 text-thunder-orange" />
             </div>
@@ -81,7 +83,8 @@ export function ChatMessageBubble({ message, onQuickReply }: ChatMessageBubblePr
                 {message.exerciseRef.difficulty.toUpperCase()}
               </span>
             </div>
-          </div>
+            <ChevronRight className="h-4 w-4 text-thunder-orange/50" />
+          </button>
         )}
 
         <p className="whitespace-pre-wrap">{message.content}</p>
@@ -89,8 +92,9 @@ export function ChatMessageBubble({ message, onQuickReply }: ChatMessageBubblePr
         {message.canvasAction && (
           <motion.button
             whileHover={{ x: 3 }}
+            onClick={handleCanvasClick}
             className={cn(
-              "mt-2 flex items-center gap-1 text-label text-[10px]",
+              "mt-2 flex items-center gap-1 text-label text-[10px] cursor-pointer hover:underline",
               isCoach ? "text-thunder-orange" : "text-primary-foreground/80"
             )}
           >
@@ -106,7 +110,6 @@ export function ChatMessageBubble({ message, onQuickReply }: ChatMessageBubblePr
             {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
           </span>
 
-          {/* Reactions for coach messages */}
           {isCoach && (
             <div className="flex gap-1">
               <button onClick={() => handleReaction('up')}

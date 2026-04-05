@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { AlertTriangle, CheckCircle, Bookmark, BookmarkCheck, Gauge } from 'lucide-react';
+import { AlertTriangle, CheckCircle, Bookmark, BookmarkCheck, Gauge, RotateCcw } from 'lucide-react';
 import { VideoCanvasData } from '../types';
 import { cn } from '@/lib/utils';
 
@@ -12,6 +12,7 @@ const speedOptions = [0.5, 0.75, 1, 1.25, 1.5, 2];
 
 export function VideoCanvas({ data }: VideoCanvasProps) {
   const [bookmarkedTimestamps, setBookmarkedTimestamps] = useState<Set<number>>(new Set());
+  const [speed, setSpeed] = useState(1);
 
   const toggleBookmark = (index: number) => {
     setBookmarkedTimestamps(prev => {
@@ -22,29 +23,53 @@ export function VideoCanvas({ data }: VideoCanvasProps) {
     });
   };
 
+  // Append speed param for YouTube
+  const embedUrl = data.embedUrl.includes('youtube.com')
+    ? `${data.embedUrl}${data.embedUrl.includes('?') ? '&' : '?'}rel=0`
+    : data.embedUrl;
+
   return (
     <div className="flex h-full flex-col p-4 notebook-ruled">
       {/* Video embed — skeuo bezel with LED */}
       <div className="relative skeuo-bezel rounded-sm p-[6px]">
-        <div className="aspect-video w-full overflow-hidden">
+        <div className="aspect-video w-full overflow-hidden bg-foreground/5">
           <iframe
-            src={data.embedUrl}
+            src={embedUrl}
             className="h-full w-full"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           />
         </div>
-        {/* LED indicator */}
-        <div className="absolute top-2 right-3 flex items-center gap-1.5">
-          <div className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_6px_hsl(var(--thunder-orange))] animate-pulse" />
-          <span className="text-[8px] text-primary-foreground/60 font-mono">LIVE</span>
+        {/* LED + platform badge */}
+        <div className="absolute top-2 right-3 flex items-center gap-2">
+          <span className={cn(
+            "px-2 py-0.5 text-[8px] text-label font-mono",
+            data.platform === 'youtube' ? 'bg-red-600 text-white' : data.platform === 'instagram' ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white' : 'bg-foreground/60 text-white'
+          )}>
+            {data.platform.toUpperCase()}
+          </span>
+          <div className="thunder-led" />
         </div>
+      </div>
+
+      {/* Speed controls */}
+      <div className="mt-2 flex items-center gap-1">
+        <RotateCcw className="h-3 w-3 text-muted-foreground mr-1" />
+        {speedOptions.map(s => (
+          <button key={s} onClick={() => setSpeed(s)}
+            className={cn(
+              "px-2 py-0.5 text-[10px] text-label transition-colors",
+              speed === s ? "bg-thunder-orange text-white skeuo-pressed" : "bg-card border border-foreground/10 text-muted-foreground hover:text-thunder-orange skeuo-card"
+            )}>
+            {s}x
+          </button>
+        ))}
       </div>
 
       {/* Analysis overlay */}
       {data.analysis && (
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-          className="mt-4 flex-1 overflow-y-auto hide-scrollbar space-y-3">
+          className="mt-3 flex-1 overflow-y-auto hide-scrollbar space-y-3">
 
           {/* Score card */}
           <div className="border border-foreground/10 bg-card p-4 skeuo-thunder-card skeuo-grain">
@@ -65,7 +90,7 @@ export function VideoCanvas({ data }: VideoCanvasProps) {
             </div>
           </div>
 
-          {/* Timestamps with bookmarks */}
+          {/* Timestamps */}
           <div className="border border-foreground/10 bg-card p-4 skeuo-card skeuo-grain">
             <h4 className="mb-2 text-label text-sm text-foreground text-embossed text-journal">TIMESTAMPS</h4>
             <div className="space-y-1.5">

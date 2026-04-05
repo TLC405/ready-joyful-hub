@@ -95,3 +95,6 @@ export interface ChatMessage {
     data: any;
   };
 }
+
+// Callback for canvas actions from chat
+export type CanvasActionHandler = (mode: CanvasMode, data: any) => void;
