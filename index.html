@@ -3,8 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- TODO: Set the document title to the name of your application -->
+    <link id="seasonal-favicon" rel="icon" type="image/png" href="/favicon-spring.png" />
     <title>TLC Calisthenics</title>
+    <script>
+      // Seasonal favicon — rotates by current season
+      (function() {
+        var m = new Date().getMonth();
+        var seasons = { spring: '/favicon-spring.png', summer: '/favicon-summer.png', autumn: '/favicon-autumn.png', winter: '/favicon-winter.png' };
+        var labels = { spring: '🌸 Japan', summer: '☀️ Greece', autumn: '🍂 Switzerland', winter: '❄️ Norway' };
+        var s = m >= 2 && m <= 4 ? 'spring' : m >= 5 && m <= 7 ? 'summer' : m >= 8 && m <= 10 ? 'autumn' : 'winter';
+        document.getElementById('seasonal-favicon').href = seasons[s];
+        document.title = 'TLC Calisthenics ' + labels[s];
+      })();
+    </script>
     <meta name="description" content="Master bodyweight skills with TLC Calisthenics — track progress, follow structured programs, and level up." />
     <meta name="author" content="TLC" />
 
