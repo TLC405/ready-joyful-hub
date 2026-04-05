@@ -1,84 +1,127 @@
 
 
-# Navigation Restructure + Dev Tools Admin + UX Power Features
+# Full-App Skeuomorphism 2.0 Sweep + Journal-Line Text Alignment
 
-## 1. Combine Library + Tracks + TV into One Section
+## Problem
 
-Merge three nav items into a single **"LIBRARY"** section with internal tabs:
+Text across the app doesn't sit on the notebook ruled lines — the `notebook-ruled` utility creates 1.5rem (24px) line spacing but most text uses arbitrary `line-height` values that don't align. Additionally, many components lack the tactile skeuo treatment (grain, raised cards, stitched dividers, embossed text, leather strips) that exists in the TLC TV player but is absent from Navigation, HeroSection, ProgressDashboard, CoachCare canvases, ExerciseLibrary cards, CommandSearch, Breadcrumbs, and Settings.
 
-```text
-NAV (before):  Home | Library | Tracks | Coach | Progress | Settings
-NAV (after):   Home | Library | Coach | Progress | Settings
-                       ├── Browse (current ExerciseLibrary)
-                       ├── Map (current ProgressionMap)
-                       └── TLC TV (current ExerciseBrowser from VideoPage)
-```
+## Approach
 
-- **Navigation.tsx**: Remove `tracks` nav item. 5 items total.
-- **New `src/components/sections/UnifiedLibrary.tsx`**: Wraps all three views with a tab bar at the top (BROWSE | MAP | TLC TV). Each tab renders the existing component. Clicking an exercise in Browse or Map can switch to TLC TV tab with that exercise loaded.
-- **Index.tsx**: Replace `library` and `tracks` cases with single `library` rendering `UnifiedLibrary`.
-- **VideoPage.tsx**: Stays as `/video/:exerciseId` route for direct links, but the ExerciseBrowser is now accessible via the Library tab too.
+### 1. Journal-Line Text System (`index.css`)
 
-## 2. Dev Tools Admin (Settings Overhaul)
+Add a `--journal-line` variable (`1.5rem`) and create utility classes that snap text to this grid:
+- `.text-journal` — `line-height: 1.5rem` for body text (sits on ruled lines)
+- `.text-journal-lg` — `line-height: 3rem` for headings (spans 2 lines)
+- `.text-journal-sm` — `line-height: 1.5rem; font-size: 0.75rem` for labels
+- Update `.text-editorial`, `.text-editorial-sm`, `.font-chalk`, `.text-label` to use multiples of `1.5rem` line-height so all text snaps to the ruled grid
 
-Replace current Settings with a tabbed admin hub:
+### 2. Navigation Skeuo Treatment (`Navigation.tsx`)
 
-**Tabs**: PROFILE | APPEARANCE | TRAINING | DATA | DEV TOOLS
+- Desktop sidebar: `skeuo-grain` background, `skeuo-leather` strip at the top behind the TLC logo, embossed label text on hover tooltips, `skeuo-card` treatment on the active indicator
+- Mobile bottom bar: `skeuo-leather` background strip, `skeuo-stitch` top border replacing the plain `border-t`
+- Mobile full-screen menu: `notebook-ruled notebook-margin` background, entries styled as notebook entries with `notebook-entry` class
 
-- **PROFILE**: Display name, bio, units (existing)
-- **APPEARANCE**: Theme toggle (existing)
-- **TRAINING**: Rest timer, default difficulty, notifications (existing)
-- **DATA**: Export JSON, export exercise list as CSV, clear data. **Remove GitHub button**.
-- **DEV TOOLS** (new):
-  - Download ZIP button (source code)
-  - Exercise list viewer — searchable table of all exercises with ID, name, category, difficulty, video status, track
-  - Inline exercise editor — tap a row to edit fields (name, cues, video URLs) and save to localStorage override layer
-  - Track builder — reorder exercises within tracks, add/remove nodes
-  - App stats — total exercises, exercises with video, track count, version info
+### 3. HeroSection Notebook Feel (`HeroSection.tsx`)
 
-**File**: Rewrite `SettingsPanel.tsx` with tabs.
+- Wrap in `notebook-ruled notebook-margin` container
+- Stat bar cells get `skeuo-card` with `skeuo-grain`
+- CTA button gets `btn-raised` + `skeuo-pressed` active state
+- All text snapped to journal line grid
 
-## 3. Breadcrumb Navigation
+### 4. CoachCare Canvas Sweep (all 6 canvas files + ChatPanel + ChatInput)
 
-- **New `src/components/shared/Breadcrumb.tsx`**: Renders path like `HOME > LIBRARY > PUSH > PLANCHE LEAN`
-- Add to: UnifiedLibrary (showing active tab + any filter), VideoPage (HOME > TLC TV > Exercise Name), ProgressionMap (HOME > LIBRARY > MAP > Track Name)
-- Compact — single line, clickable segments
+- **IdleCanvas**: Action grid cells get `skeuo-card skeuo-grain`, icon containers get `surface-inset`, header text gets `text-embossed`
+- **VideoCanvas**: Video frame gets `skeuo-bezel`, analysis cards get `skeuo-card`, score badge gets `skeuo-metal`
+- **DocumentCanvas**: Toolbar gets `skeuo-leather` strip, edit area gets `notebook-ruled notebook-margin`, mode toggle buttons get `skeuo-pressed` active state
+- **TemplateCanvas**: Each block row gets `notebook-entry`, grip handle gets `surface-inset`, save button gets `btn-raised`
+- **AnalyticsCanvas**: Stat boxes get `skeuo-card`, chart containers get `surface-inset` with `skeuo-grain`
+- **ChatPanel**: Header gets `skeuo-leather` strip, icon container gets `surface-inset`
+- **ChatInput**: Quick action buttons get `skeuo-card`, input bar gets `surface-inset`, send button gets `btn-raised`
+- **ChatMessage**: Coach bubbles get `skeuo-card skeuo-grain`, user bubbles keep primary but add `skeuo-pressed` inset feel
 
-## 4. Global Quick-Access Search
+### 5. ExerciseLibrary Cards (`ExerciseLibrary.tsx`)
 
-- **New `src/components/shared/CommandSearch.tsx`**: Modal overlay (Cmd+K / Ctrl+K trigger), searches all exercises by name. Shows top 8 results with category + difficulty badge. Enter navigates to `/video/:id` or opens detail modal.
-- Accessible from: keyboard shortcut anywhere, search icon in nav sidebar
-- Uses `cmdk`-style UI but built with existing components (no new dep — just a dialog + input + filtered list)
+- Each exercise card gets `skeuo-card skeuo-grain`
+- Filter dropdowns get `surface-inset` treatment
+- Search bar gets `surface-inset` style
+- Pagination buttons get `btn-raised`
 
-## 5. Swipe Gestures (Mobile)
+### 6. ProgressionMap Nodes (`ProgressionMap.tsx`)
 
-- In `Index.tsx`, wrap the section content with touch handlers: swipe left/right cycles through the nav sections (Home → Library → Coach → Progress → Settings)
-- Use `onTouchStart`/`onTouchEnd` with a 50px threshold — no new dependency
-- Visual indicator: subtle horizontal dots at bottom showing current section position
+- Track accordion headers get `skeuo-leather` strip
+- Each exercise node card gets `skeuo-card`
+- Connector lines get stitched-border style (`skeuo-stitch`)
+- Difficulty badges keep current colors but add `skeuo-metal` sheen
 
-## 6. Keyboard Shortcuts
+### 7. ProgressDashboard (`ProgressDashboard.tsx`)
 
-- **New `src/hooks/use-keyboard-shortcuts.ts`**: Global keydown listener
-  - `1-5`: Jump to nav sections
-  - `/` or `Cmd+K`: Open search
-  - `Esc`: Close any modal/overlay
-  - `←` / `→`: Navigate sections (same as swipe)
-- Register in `Index.tsx`
+- Empty state card gets `skeuo-card skeuo-grain notebook-ruled`
+- Stat placeholder boxes get `surface-inset`
+- Heading gets `text-embossed`
+
+### 8. SettingsPanel (`SettingsPanel.tsx`)
+
+- Tab bar gets `skeuo-leather` strip
+- Active tab gets `skeuo-pressed` inset
+- Input fields get `surface-inset`
+- Save/action buttons get `btn-raised`
+- Dev tools table gets `notebook-ruled` background
+
+### 9. CommandSearch + Breadcrumb (`CommandSearch.tsx`, `Breadcrumb.tsx`)
+
+- Search modal gets `skeuo-card skeuo-grain`, border becomes `skeuo-bezel`-like dark frame
+- Result rows get notebook-entry spacing
+- Breadcrumb gets `text-embossed` on the last (current) item
+- Keyboard hint badges get `skeuo-metal`
+
+### 10. UnifiedLibrary Tabs (`UnifiedLibrary.tsx`)
+
+- Tab bar gets `skeuo-leather` strip
+- Active tab gets `skeuo-pressed` inset, inactive tabs get `btn-raised` hover
+- TLC TV browser cards within get same `skeuo-card skeuo-grain` treatment
+
+### 11. ExerciseDetailModal (`ExerciseDetailModal.tsx`)
+
+- Already has `skeuo-grain skeuo-card` — add `notebook-ruled` background to the main content area
+- Progression link buttons get `btn-raised`
+- Creator badge gets `skeuo-metal` sheen on the icon container
+
+### 12. VideoPage (`VideoPage.tsx`)
+
+- Exercise browser cards get `skeuo-card skeuo-grain`
+- Accordion panels get `skeuo-stitch` dividers and `notebook-ruled` content areas
+- Top bar already has `skeuo-leather` — keep as-is
+
+### 13. AppShell (`AppShell.tsx`)
+
+- Already has `skeuo-grain` — add `notebook-ruled` as a subtle global background pattern on the main content area
 
 ## Files
 
 | File | Change |
 |------|--------|
-| `src/components/layout/Navigation.tsx` | Remove `tracks` item, add search icon, 5 items |
-| `src/components/sections/UnifiedLibrary.tsx` | **New** — tabbed wrapper for Browse + Map + TLC TV |
-| `src/components/sections/ExerciseLibrary.tsx` | Minor: remove own header (UnifiedLibrary provides it) |
-| `src/components/sections/ProgressionMap.tsx` | Minor: remove own header |
-| `src/components/sections/SettingsPanel.tsx` | Full rewrite — tabbed admin hub with dev tools |
-| `src/components/shared/Breadcrumb.tsx` | **New** — contextual breadcrumb bar |
-| `src/components/shared/CommandSearch.tsx` | **New** — Cmd+K search overlay |
-| `src/hooks/use-keyboard-shortcuts.ts` | **New** — global keyboard shortcut handler |
-| `src/pages/Index.tsx` | Swap library/tracks for UnifiedLibrary, add swipe + shortcuts |
-| `src/pages/VideoPage.tsx` | Add breadcrumb, minor cleanup |
+| `src/index.css` | Add journal-line text utilities, update typography classes to snap to 1.5rem grid |
+| `src/components/layout/Navigation.tsx` | Skeuo grain/leather/stitch on sidebar and mobile bar |
+| `src/components/layout/AppShell.tsx` | Add notebook-ruled to main content |
+| `src/components/sections/HeroSection.tsx` | Notebook ruled + skeuo cards on stats + journal text |
+| `src/components/sections/ExerciseLibrary.tsx` | Skeuo cards, inset search/filters |
+| `src/components/sections/ProgressionMap.tsx` | Leather accordion headers, skeuo nodes |
+| `src/components/sections/ProgressDashboard.tsx` | Skeuo grain card, inset stats, embossed heading |
+| `src/components/sections/SettingsPanel.tsx` | Leather tab bar, inset inputs, raised buttons |
+| `src/components/sections/UnifiedLibrary.tsx` | Leather tab strip, skeuo TV cards |
+| `src/components/CoachCare/ChatPanel.tsx` | Leather header strip |
+| `src/components/CoachCare/ChatInput.tsx` | Skeuo cards on quick actions, inset input |
+| `src/components/CoachCare/ChatMessage.tsx` | Skeuo card on coach bubbles, grain overlay |
+| `src/components/CoachCare/Canvas/IdleCanvas.tsx` | Skeuo cards, inset icons, embossed text |
+| `src/components/CoachCare/Canvas/VideoCanvas.tsx` | Bezel frame, skeuo cards, metal score badge |
+| `src/components/CoachCare/Canvas/DocumentCanvas.tsx` | Leather toolbar, notebook-ruled editor |
+| `src/components/CoachCare/Canvas/TemplateCanvas.tsx` | Notebook entries, raised save button |
+| `src/components/CoachCare/Canvas/AnalyticsCanvas.tsx` | Skeuo cards, inset chart containers |
+| `src/components/shared/CommandSearch.tsx` | Skeuo grain card, metal kbd badges, notebook entries |
+| `src/components/shared/Breadcrumb.tsx` | Embossed current item |
+| `src/components/shared/ExerciseDetailModal.tsx` | Notebook-ruled body, raised progression buttons |
+| `src/pages/VideoPage.tsx` | Skeuo cards on browser, stitched accordion dividers |
 
-**10 files (4 new, 6 modified), 0 new dependencies**
+**21 files, 0 new files, 0 new dependencies**
 
