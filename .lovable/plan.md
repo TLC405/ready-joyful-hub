@@ -1,74 +1,67 @@
-
-
-# Fix Clutch Flag + Fill Exercise Gaps + Add Ballet Track + UI Deepening
+# Fix Missing Filters + Thumbnails + Simplify UI Readability
 
 ## Problems Found
 
-1. **Clutch Flag shares the same YouTube URL as Human Flag** (`NWskCNO3rCo`) — needs its own unique video source
-2. **20 exercises exist in the data but are NOT assigned to any track** — they're invisible on the Map view (plank, skin-the-cat, push-up, diamond push-up, headstand, back-lever, etc.)
-3. **No ballet/dance category or track** — ballet moves (relevé, arabesque, grand plié, développé, etc.) would integrate naturally with the existing mobility, legs, and flexibility content
-4. **Category type missing `ballet`** — needs to be added to the `Category` union type and `TrackId` type
+1. **Ballet exercises have YouTube URLs** — thumbnails already auto-generate via `getThumb()`, but the `**ballet` category is missing from ExerciseLibrary's filter dropdown** (line 9-18 of ExerciseLibrary.tsx), so ballet exercises are invisible when filtering by category
+2. `**push-strength` and `ballet` tracks missing from track filter list** (line 29-43 of ExerciseLibrary.tsx)
+3. **App is visually overwhelming** — too much text, too many elements competing for attention. Needs: reduced text density, better visual hierarchy, breathing room, and progressive disclosure (show less by default, expand on demand) ADD ALL PAGES TO HOMESCREEN THEN OPTIMIZE FDOR MOBILE. ENAHCEN COLORS OR ADD THUNDER COLORS ADD LARGE FADED ART OKC THUNDER LOGO LIKE MOST FAMOUS ARTIST EVER PAINTE IT WITH TLC SIGFNFATURE. ON AEVERY PAGE IN ABCKDGOUDN LIKE 70 PERCETN OF IT IN MIIDDLE. BE CREATVIE AND COMPLEX
 
 ## Plan
 
-### 1. Fix Clutch Flag Video (`exercises.ts`)
-- Replace the shared Human Flag URL with a dedicated Clutch Flag tutorial video (different YouTube source)
-- Ensure `regressTo` includes `dragon-flag` (currently empty)
+### 1. Add Missing Filters (`ExerciseLibrary.tsx`)
 
-### 2. Assign All Orphan Exercises to Tracks (`tracks.ts`)
-Add these 20 orphaned exercises to their logical tracks:
+- Add `{ id: 'ballet', label: 'Ballet' }` to the categories array
+- Add `{ id: 'ballet', label: 'Ballet' }` and `{ id: 'push-strength', label: 'Push Strength' }` to trackFilters array
 
-| Exercise | Track to add to |
-|----------|----------------|
-| `plank` | `general` (new) or `compression` |
-| `push-up`, `diamond-push-up`, `archer-push-up`, `pike-push-up`, `handstand-push-up`, `parallel-bar-dip`, `tiger-bend-pushup` | `planche` (push pipeline) |
-| `skin-the-cat`, `pullover`, `back-lever` | `pull-strength` |
-| `headstand` | `inversions` |
-| `single-arm-elbow-lever` | `handstand` |
-| `crocodile-pose` | `handstand` |
-| `calf-raise` | `legs` |
-| `deep-squat-hold`, `shoulder-dislocate`, `worlds-greatest-stretch` | `mobility` |
-| `hspu-capacity-builder`, `band-assisted-progressions` | `press` |
+### 2. Simplify Visual Density Across Key Components
 
-Create a new **Push Strength** track (`push-strength`) to properly house the push-up → HSPU pipeline instead of cramming them into planche.
+**HeroSection.tsx** — Declutter:
 
-### 3. Add Ballet Category + Track (`exercises.ts`, `tracks.ts`, `types.ts`)
-Add ~12 ballet exercises across all difficulty levels:
+- Remove the stat bar entirely (it shows hardcoded fake data anyway)
+- Keep just the headline + subtitle + single CTA button
+- Add more vertical breathing room (larger padding)
 
-- **Easy**: Relevé (calf rises on balls of feet), First Position Plié, Tendu (foot slides)
-- **Beginner**: Grand Plié, Port de Bras (arm flow), Passé Balance
-- **Intermediate**: Arabesque Hold, Développé (unfolding leg extension), Rond de Jambe
-- **Advanced**: Grand Battement, Attitude Hold, Penché (deep arabesque lean)
+**ExerciseLibrary.tsx** — Reduce cognitive load:
 
-Each gets:
-- Proper `cueStack`, `failSigns`, `doThis` prescription
-- YouTube video sources from reputable ballet channels
-- Muscle groups, equipment (floor/barre)
-- `progressTo`/`regressTo` chains
+- Collapse the 3 filter dropdowns into a single row with smaller, pill-style buttons
+- Default to grid view (remove the grid/list toggle — always grid)
+- Reduce card info to just: thumbnail, name, difficulty badge (hide shortPurpose unless hovered)
+- Reduce items per page from 20 to 12
 
-New track: **Ballet Foundations** — Relevé → Plié → Tendu → Passé → Arabesque → Développé → Attitude → Penché
+**UnifiedLibrary.tsx** — Cleaner TV browser:
 
-### 4. Update Types (`types.ts`)
-- Add `'ballet'` to `Category` union
-- Add `'ballet'` and `'push-strength'` to `TrackId` union
+- When category is "all", show only the category filter row (don't show every category group header AND cards — just the flat grid)
+- Reduce card text: name only visible, purpose on hover
+- Add subtle separator lines between category groups instead of heavy headers
 
-### 5. UI Deepening — Small Touches Across Components
+**ProgressionMap.tsx** — Tighter nodes:
 
-- **VideoPage**: Add a "Related Exercises" row below the accordion showing exercises from the same track — gives context and prevents dead-ends
-- **ExerciseBrowser / UnifiedLibrary TV tab**: Add exercise count badge per category filter button
-- **ProgressionMap**: Add a subtle completion percentage indicator per track header (counts exercises with video vs total)
-- **Navigation**: Add a subtle pulse dot on the Library icon when new exercises are added (stored in localStorage)
+- Reduce per-node card padding
+- Hide cue stack and fail signs by default — show on tap/click
+- Collapse long track descriptions to 1 line with "..." expand
+
+**Navigation.tsx** — Simpler labels:
+
+- Use icons-only on desktop sidebar (labels appear on hover tooltip only)
+- Mobile bottom bar: icons only, active label appears below active icon only
+
+### 3. Typography Hierarchy Fix (`index.css` + components)
+
+- Reduce base body font size slightly for dense views
+- Make section headers more distinct: larger gap before, thinner weight after
+- Muted secondary text more aggressively (opacity 0.5 instead of muted-foreground)
 
 ## Files
 
-| File | Change |
-|------|--------|
-| `src/lib/types.ts` | Add `ballet` to Category, `ballet` + `push-strength` to TrackId |
-| `src/lib/exercises.ts` | Fix clutch flag video URL + regressTo, add ~12 ballet exercises |
-| `src/lib/tracks.ts` | Assign 20 orphans to tracks, add Ballet + Push Strength tracks |
-| `src/pages/VideoPage.tsx` | Add "Related Exercises" row, exercise count badges on filters |
-| `src/components/sections/UnifiedLibrary.tsx` | Exercise count badges on TV tab category filters |
-| `src/components/sections/ProgressionMap.tsx` | Track completion % indicator on headers |
+
+| File                                          | Change                                                                     |
+| --------------------------------------------- | -------------------------------------------------------------------------- |
+| `src/components/sections/ExerciseLibrary.tsx` | Add ballet + push-strength filters, simplify card layout, reduce page size |
+| `src/components/sections/UnifiedLibrary.tsx`  | Flatten TV browser view, reduce text on cards                              |
+| `src/components/sections/HeroSection.tsx`     | Remove stat bar, simplify to headline + CTA only                           |
+| `src/components/sections/ProgressionMap.tsx`  | Tighter nodes, collapsible details                                         |
+| `src/components/layout/Navigation.tsx`        | Icons-only desktop sidebar, cleaner mobile bar                             |
+| `src/index.css`                               | Minor typography spacing adjustments                                       |
+
 
 **6 files modified, 0 new files, 0 new dependencies**
-
