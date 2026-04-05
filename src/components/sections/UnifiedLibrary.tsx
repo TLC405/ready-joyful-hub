@@ -104,8 +104,8 @@ function InlineTVBrowser() {
       {Object.entries(grouped).map(([category, exs]) => (
         <div key={category}>
           {activeCategory === 'all' && (
-            <div className="editorial-divider-thick mb-2 pt-2">
-              <h3 className="text-label text-xs tracking-widest text-foreground text-embossed text-journal">{category.toUpperCase()}</h3>
+            <div className="mb-2 pt-2 skeuo-stitch">
+              <h3 className="text-label text-[10px] tracking-widest text-muted-foreground/60 text-journal-sm">{category.toUpperCase()}</h3>
             </div>
           )}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-px bg-foreground/10 border border-foreground/10">
@@ -145,7 +145,7 @@ function InlineTVBrowser() {
                   </div>
                   <div className="border-t border-foreground/5 p-2">
                     <p className="font-chalk text-xs truncate text-journal">{ex.name}</p>
-                    <p className="text-[10px] text-muted-foreground truncate text-journal-sm">{ex.shortPurpose || ex.category}</p>
+                    <p className="text-[10px] text-muted-foreground/50 truncate text-journal-sm opacity-0 group-hover:opacity-100 transition-opacity">{ex.shortPurpose || ex.category}</p>
                   </div>
                 </button>
               );
