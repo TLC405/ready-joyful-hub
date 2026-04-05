@@ -46,12 +46,12 @@ export function ExerciseDetailModal({ exercise: initialExercise, onClose }: Exer
         initial={{ y: 40 }} animate={{ y: 0 }} exit={{ y: 40 }}
         transition={{ duration: 0.25, ease: 'easeOut' as const }}
         onClick={e => e.stopPropagation()}
-        className="relative max-h-[92vh] w-full max-w-3xl overflow-y-auto bg-card border border-foreground/15 sm:border-2 p-5 sm:p-6 lg:p-8"
+        className="relative max-h-[92vh] w-full max-w-3xl overflow-y-auto bg-card border border-foreground/15 sm:border-2 p-5 sm:p-6 lg:p-8 skeuo-grain skeuo-card"
       >
         {/* Drag indicator on mobile */}
         <div className="mx-auto mb-3 h-0.5 w-10 bg-muted-foreground/30 sm:hidden" />
 
-        <button onClick={onClose} className="absolute right-3 top-3 border border-foreground/10 p-2 text-muted-foreground hover:bg-foreground hover:text-card transition-colors z-10">
+        <button onClick={onClose} className="absolute right-3 top-3 border border-foreground/10 p-2 text-muted-foreground hover:bg-foreground hover:text-card transition-colors z-10 skeuo-card">
           ✕
         </button>
 
@@ -102,7 +102,8 @@ export function ExerciseDetailModal({ exercise: initialExercise, onClose }: Exer
             {hasVideo && (
               <button
                 onClick={() => { onClose(); navigate(`/video/${exercise.id}`); }}
-                className="mt-3 flex items-center gap-2 border-2 border-foreground bg-foreground px-4 py-2 text-label text-[10px] tracking-widest text-card hover:bg-primary hover:border-primary transition-colors"
+                className="mt-3 flex items-center gap-2 border-2 border-foreground bg-foreground px-4 py-2 text-label text-[10px] tracking-widest text-card hover:bg-primary hover:border-primary transition-colors skeuo-card"
+                style={{ boxShadow: '3px 3px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)' }}
               >
                 <div className="h-2 w-2 bg-primary" />
                 WATCH ON TLC TV
