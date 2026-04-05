@@ -19,13 +19,13 @@ export function AppBreadcrumb({ items, className }: AppBreadcrumbProps) {
         const isLast = i === items.length - 1;
         return (
           <span key={i} className="flex items-center gap-1.5">
-            {i > 0 && <ChevronRight className="h-3 w-3 text-muted-foreground/40" />}
+            {i > 0 && <ChevronRight className="h-3 w-3 text-thunder-orange/40" />}
             {isLast ? (
-              <span className="text-foreground text-embossed">{item.label}</span>
+              <span className="thunder-text text-embossed font-bold">{item.label}</span>
             ) : (
               <button
                 onClick={item.onClick}
-                className="text-muted-foreground hover:text-foreground transition-colors"
+                className="text-muted-foreground hover:text-thunder-blue transition-colors"
               >
                 {item.label}
               </button>

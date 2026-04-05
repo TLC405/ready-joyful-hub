@@ -33,32 +33,20 @@ interface MapNode {
 function buildTree(trackId: string): MapNode[][] {
   const track = tracks.find(t => t.id === trackId);
   if (!track) return [];
-
   const nodeMap: Record<string, MapNode> = {};
-
   for (const node of track.nodes) {
     const exercise = getExerciseById(node.exerciseId);
     if (!exercise) continue;
-    nodeMap[node.exerciseId] = {
-      exercise,
-      children: [],
-      parents: node.prereqs.filter(p => track.nodes.some(n => n.exerciseId === p)),
-      depth: 0,
-    };
+    nodeMap[node.exerciseId] = { exercise, children: [], parents: node.prereqs.filter(p => track.nodes.some(n => n.exerciseId === p)), depth: 0 };
   }
-
   for (const node of track.nodes) {
     for (const prereq of node.prereqs) {
-      if (nodeMap[prereq]) {
-        nodeMap[prereq].children.push(node.exerciseId);
-      }
+      if (nodeMap[prereq]) nodeMap[prereq].children.push(node.exerciseId);
     }
   }
-
   const roots = Object.values(nodeMap).filter(n => n.parents.length === 0);
   const queue = [...roots];
   const visited = new Set<string>();
-
   while (queue.length > 0) {
     const current = queue.shift()!;
     const id = current.exercise.id;
@@ -66,21 +54,13 @@ function buildTree(trackId: string): MapNode[][] {
     visited.add(id);
     for (const childId of current.children) {
       const child = nodeMap[childId];
-      if (child) {
-        child.depth = Math.max(child.depth, current.depth + 1);
-        queue.push(child);
-      }
+      if (child) { child.depth = Math.max(child.depth, current.depth + 1); queue.push(child); }
     }
   }
-
   const maxDepth = Math.max(0, ...Object.values(nodeMap).map(n => n.depth));
   const levels: MapNode[][] = [];
   for (let d = 0; d <= maxDepth; d++) {
-    levels.push(
-      Object.values(nodeMap)
-        .filter(n => n.depth === d)
-        .sort((a, b) => difficultyOrder[a.exercise.difficulty] - difficultyOrder[b.exercise.difficulty])
-    );
+    levels.push(Object.values(nodeMap).filter(n => n.depth === d).sort((a, b) => difficultyOrder[a.exercise.difficulty] - difficultyOrder[b.exercise.difficulty]));
   }
   return levels;
 }
@@ -96,25 +76,25 @@ export function ProgressionMap({ embedded = false }: { embedded?: boolean }) {
 
   return (
     <section className={embedded ? "" : "relative px-4 py-8 lg:px-8"}>
-      <div className={cn(embedded ? "mb-4" : "editorial-divider-thick mb-6 pt-2")}>
+      <div className={cn(embedded ? "mb-4" : "mb-6 pt-2")}>
+        {/* Thunder divider instead of plain editorial */}
+        {!embedded && <div className="thunder-divider mb-4" />}
         <div className="flex items-baseline justify-between gap-4">
-          {!embedded && <h2 className="text-editorial-sm text-foreground text-embossed">PROGRESSION MAP</h2>}
+          {!embedded && <h2 className="text-editorial-sm text-foreground text-embossed">PROGRESSION <span className="thunder-text">MAP</span></h2>}
           <div className="relative">
             <button
               onClick={() => setShowTrackSelect(!showTrackSelect)}
-              className="flex items-center gap-2 border border-foreground/10 bg-card px-3 py-2 text-sm font-chalk transition-colors hover:bg-surface-0 skeuo-card text-journal"
+              className="flex items-center gap-2 border border-foreground/10 bg-card px-3 py-2 text-sm font-chalk transition-colors hover:border-thunder-orange/50 skeuo-thunder-card text-journal"
             >
-              <TrackIcon className="h-4 w-4 text-primary" />
+              <TrackIcon className="h-4 w-4 text-thunder-orange" />
               {currentTrack.name}
               <ChevronDown className={cn("h-3 w-3 transition-transform", showTrackSelect && "rotate-180")} />
             </button>
             <AnimatePresence>
               {showTrackSelect && (
                 <motion.div
-                  initial={{ opacity: 0, y: -4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -4 }}
-                  className="absolute right-0 top-full z-30 mt-1 w-56 border border-foreground/10 bg-card shadow-lg skeuo-card skeuo-grain"
+                  initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}
+                  className="absolute right-0 top-full z-30 mt-1 w-56 border border-foreground/10 bg-card shadow-lg skeuo-thunder-card skeuo-grain"
                 >
                   {tracks.map(track => {
                     const Icon = trackIcons[track.icon] || Zap;
@@ -131,12 +111,9 @@ export function ProgressionMap({ embedded = false }: { embedded?: boolean }) {
                         <span className="font-chalk text-xs text-journal">{track.name}</span>
                         <span className="ml-auto text-label text-[10px] opacity-50">{track.nodes.length}</span>
                         {(() => {
-                          const withVid = track.nodes.filter(n => {
-                            const ex = getExerciseById(n.exerciseId);
-                            return ex && (ex.videoUrl || ex.videoSources?.length);
-                          }).length;
+                          const withVid = track.nodes.filter(n => { const ex = getExerciseById(n.exerciseId); return ex && (ex.videoUrl || ex.videoSources?.length); }).length;
                           const pct = Math.round((withVid / track.nodes.length) * 100);
-                          return <span className="text-label text-[9px] text-primary/70">{pct}%</span>;
+                          return <span className="text-label text-[9px] text-thunder-orange/70">{pct}%</span>;
                         })()}
                       </button>
                     );
@@ -149,45 +126,41 @@ export function ProgressionMap({ embedded = false }: { embedded?: boolean }) {
         <p className="mt-2 text-sm text-muted-foreground text-journal">{currentTrack.description}</p>
       </div>
 
-      {/* Visual Tree */}
       <div className="overflow-x-auto pb-4">
         <div className="min-w-[300px] space-y-0">
           {levels.map((level, levelIdx) => (
             <div key={levelIdx}>
-              {/* Connector — stitched */}
               {levelIdx > 0 && (
                 <div className="flex justify-center py-1 skeuo-stitch">
-                  <svg className="h-5 w-5 text-foreground/15" viewBox="0 0 20 20" fill="currentColor">
+                  <svg className="h-5 w-5 text-thunder-orange/30" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M10 16l-5-5h4V4h2v7h4z" />
                   </svg>
                 </div>
               )}
-
-              {/* Level label */}
               <div className="mb-2 flex items-center gap-2">
                 <div className="h-px flex-1 bg-foreground/5" />
-                <span className="text-label text-[9px] text-muted-foreground/50 text-journal-sm">
-                  {levelIdx === 0 ? 'START' : levelIdx === levels.length - 1 ? 'GOAL' : `STAGE ${levelIdx}`}
+                <span className={cn(
+                  "text-label text-[9px] text-journal-sm",
+                  levelIdx === 0 ? "text-thunder-blue" : levelIdx === levels.length - 1 ? "thunder-text font-bold" : "text-muted-foreground/50"
+                )}>
+                  {levelIdx === 0 ? 'START' : levelIdx === levels.length - 1 ? '★ GOAL' : `STAGE ${levelIdx}`}
                 </span>
                 <div className="h-px flex-1 bg-foreground/5" />
               </div>
 
-              {/* Nodes */}
               <div className="flex flex-wrap justify-center gap-2">
                 {level.map((node) => {
                   const ex = node.exercise;
                   const isTerminal = node.children.length === 0;
-
                   return (
                     <motion.button
                       key={ex.id}
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
+                      initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: levelIdx * 0.06, duration: 0.3 }}
                       onClick={() => setSelectedExercise(ex)}
                       className={cn(
-                        "group relative flex items-center gap-2 border bg-card px-3 py-2.5 text-left transition-all hover:bg-surface-0 skeuo-card",
-                        isTerminal ? "border-primary/50 border-2" : "border-foreground/10",
+                        "group relative flex items-center gap-2 border bg-card px-3 py-2.5 text-left transition-all",
+                        isTerminal ? "skeuo-thunder-card border-thunder-orange/50 border-2" : "border-foreground/10 skeuo-card hover:skeuo-thunder-card",
                         "min-w-[140px] max-w-[220px]"
                       )}
                     >
@@ -199,20 +172,15 @@ export function ProgressionMap({ embedded = false }: { embedded?: boolean }) {
                         ex.difficulty === 'advanced' && "bg-difficulty-advanced",
                         ex.difficulty === 'master' && "bg-difficulty-master",
                       )} />
-
                       <div className="min-w-0 flex-1">
                         <div className="font-chalk text-xs truncate text-journal">{ex.name}</div>
                         <span className={cn("text-label text-[8px] skeuo-metal inline-block px-1", difficultyBadge[ex.difficulty])}>
                           {ex.difficulty.toUpperCase()}
                         </span>
                       </div>
-
                       {isTerminal && (
-                        <div className="absolute -right-px -top-px bg-primary px-1.5 py-0.5 text-[8px] font-bold text-primary-foreground">
-                          ★
-                        </div>
+                        <div className="absolute -right-px -top-px thunder-badge px-1.5 py-0.5 text-[8px] font-bold">★</div>
                       )}
-
                       {ex.image && (
                         <div className="hidden h-8 w-8 shrink-0 overflow-hidden border border-foreground/10 sm:block">
                           <img src={ex.image} alt="" className="h-full w-full object-cover" />
@@ -244,15 +212,13 @@ export function ProgressionMap({ embedded = false }: { embedded?: boolean }) {
           </div>
         ))}
         <div className="flex items-center gap-1 ml-auto">
-          <div className="bg-primary px-1 text-[8px] text-primary-foreground">★</div>
+          <div className="thunder-badge px-1 text-[8px]">★</div>
           <span className="text-[10px] text-muted-foreground text-journal-sm">GOAL SKILL</span>
         </div>
       </div>
 
       <AnimatePresence>
-        {selectedExercise && (
-          <ExerciseDetailModal exercise={selectedExercise} onClose={() => setSelectedExercise(null)} />
-        )}
+        {selectedExercise && <ExerciseDetailModal exercise={selectedExercise} onClose={() => setSelectedExercise(null)} />}
       </AnimatePresence>
     </section>
   );

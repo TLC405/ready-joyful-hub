@@ -40,7 +40,7 @@ export function ChatInput({ onSend }: ChatInputProps) {
             <button
               key={action.label}
               onClick={() => setValue(prev => prev + (prev ? ' ' : '') + action.hint)}
-              className="flex items-center gap-1.5 px-2 py-1 text-[10px] text-muted-foreground transition-colors skeuo-card bg-card border border-foreground/10 hover:bg-foreground hover:text-card"
+              className="flex items-center gap-1.5 px-2 py-1 text-[10px] text-muted-foreground transition-colors skeuo-card bg-card border border-foreground/10 hover:border-thunder-orange/40 hover:text-thunder-orange"
               title={action.hint}
             >
               <Icon className="h-3 w-3" />
@@ -51,7 +51,7 @@ export function ChatInput({ onSend }: ChatInputProps) {
       </div>
 
       {/* Input bar */}
-      <div className="flex items-end gap-2 surface-inset px-3 py-2">
+      <div className="flex items-end gap-2 thunder-inset px-3 py-2">
         <textarea
           value={value}
           onChange={(e) => setValue(e.target.value)}
@@ -66,7 +66,7 @@ export function ChatInput({ onSend }: ChatInputProps) {
           disabled={!value.trim()}
           className={cn(
             "flex h-8 w-8 shrink-0 items-center justify-center transition-all",
-            value.trim() ? "bg-primary text-primary-foreground btn-raised" : "bg-surface-2 text-muted-foreground"
+            value.trim() ? "btn-thunder" : "bg-surface-2 text-muted-foreground"
           )}
         >
           <Send className="h-4 w-4" />

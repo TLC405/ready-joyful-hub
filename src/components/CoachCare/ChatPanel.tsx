@@ -22,23 +22,23 @@ export function ChatPanel({ messages, onSend, onClear }: ChatPanelProps) {
 
   return (
     <div className="flex h-full flex-col">
-      {/* Header — leather strip */}
+      {/* Header — leather strip with thunder accents */}
       <div className="flex items-center justify-between px-4 py-3 skeuo-leather">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center surface-inset">
-            <MessageSquare className="h-4 w-4 text-primary" />
+          <div className="flex h-8 w-8 items-center justify-center thunder-inset">
+            <MessageSquare className="h-4 w-4 text-thunder-orange" />
           </div>
           <div>
-            <h3 className="text-label text-sm text-primary-foreground text-journal">COACH CARE</h3>
+            <h3 className="text-label text-sm text-primary-foreground text-journal">COACH <span className="text-thunder-orange">CARE</span></h3>
             <span className="text-[10px] text-primary-foreground/60">AI Training Partner</span>
           </div>
         </div>
-        <button onClick={onClear} className="border border-primary-foreground/20 p-2 text-primary-foreground/60 transition-colors hover:bg-primary-foreground/10 hover:text-primary-foreground btn-raised" title="Clear chat">
+        <button onClick={onClear} className="border border-primary-foreground/20 p-2 text-primary-foreground/60 transition-colors hover:text-thunder-orange hover:border-thunder-orange/40 btn-raised" title="Clear chat">
           <Trash2 className="h-4 w-4" />
         </button>
       </div>
 
-      {/* Messages — notebook ruled background */}
+      {/* Messages */}
       <div ref={scrollRef} className="hide-scrollbar notebook-ruled notebook-margin flex-1 overflow-y-auto p-4 space-y-4">
         {messages.map((msg, i) => (
           <motion.div
@@ -52,7 +52,6 @@ export function ChatPanel({ messages, onSend, onClear }: ChatPanelProps) {
         ))}
       </div>
 
-      {/* Input */}
       <ChatInput onSend={onSend} />
     </div>
   );
