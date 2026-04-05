@@ -38,6 +38,9 @@ export const exercises: Exercise[] = [
     failSigns: ['Lower back lifts off floor', 'Neck straining forward', 'Legs shaking uncontrollably'],
     regressTo: [],
     progressTo: ['l-sit', 'planche-lean'],
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=44ScXWFaVBs', label: 'Full Tutorial', primary: true },
+    ],
     needsUpload: true,
   },
   {
@@ -55,6 +58,9 @@ export const exercises: Exercise[] = [
     failSigns: ['Hips sagging', 'Butt piking up', 'Holding breath'],
     regressTo: [],
     progressTo: ['hollow-body-hold'],
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=ASdvN_XEl_c', label: 'Perfect Form Guide', primary: true },
+    ],
     needsUpload: true,
   },
   {
@@ -74,6 +80,9 @@ export const exercises: Exercise[] = [
     cueStack: ['Depress shoulders hard', 'Point toes', 'Push floor away'],
     failSigns: ['Shoulders creeping to ears', 'Legs dropping below parallel', 'Bent knees (unless regressing)'],
     regressTo: ['tuck-sit', 'hollow-body-hold'],
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=cu0fHp8HCDo', label: 'Full Breakdown', primary: true },
+    ],
     progressTo: ['seated-straddle-lift', 'straddle-press-to-hs'],
   },
   {
@@ -92,6 +101,9 @@ export const exercises: Exercise[] = [
     failSigns: ['Hips bending', 'Lower back arching', 'Dropping too fast'],
     regressTo: ['hollow-body-hold'],
     progressTo: ['clutch-flag'],
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=moyFIvRrS0s', label: 'Bruce Lee Tutorial', primary: true },
+    ],
     needsUpload: true,
   },
   {
@@ -109,6 +121,9 @@ export const exercises: Exercise[] = [
     failSigns: ['Swinging/kipping', 'Bent knees at top', 'Losing grip'],
     regressTo: ['hollow-body-hold'],
     progressTo: ['dragon-flag'],
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=Pr1ieGZ5atk', label: 'Progression Guide', primary: true },
+    ],
     needsUpload: true,
   },
 
@@ -181,6 +196,9 @@ export const exercises: Exercise[] = [
     cueStack: ['Hips extended throughout', 'Lower as slowly as possible', 'Catch yourself at the bottom'],
     failSigns: ['Hips breaking/bending', 'Falling uncontrolled', 'Using arms to push back up'],
     regressTo: ['bodyweight-squat'],
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=DQQleh4xUjU', label: 'Full Tutorial', primary: true },
+    ],
     progressTo: [],
   },
   {
@@ -200,6 +218,9 @@ export const exercises: Exercise[] = [
     cueStack: ['Arms forward for counterbalance', 'Heel stays planted', 'Stand up without wobble'],
     failSigns: ['Heel lifting', 'Knee caving inward', 'Falling at bottom'],
     regressTo: ['bulgarian-split-squat', 'bodyweight-squat'],
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=_5R7wFS6l9o', label: 'Step-by-Step', primary: true },
+    ],
     progressTo: ['shrimp-squat'],
   },
   {
@@ -217,6 +238,9 @@ export const exercises: Exercise[] = [
     failSigns: ['Losing grip on rear foot', 'Falling forward', 'Knee slamming down'],
     regressTo: ['pistol-squat', 'bulgarian-split-squat'],
     progressTo: [],
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=2YW5b4U7d2c', label: 'Progression', primary: true },
+    ],
     needsUpload: true,
   },
 
@@ -236,6 +260,9 @@ export const exercises: Exercise[] = [
     failSigns: ['Shoulders not over wrists', 'Pain in lower back', 'Holding breath'],
     regressTo: [],
     progressTo: ['wheel-pose'],
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=WILKtjX6P5g', label: 'Bridge Tutorial', primary: true },
+    ],
     needsUpload: true,
   },
   {
@@ -304,6 +331,9 @@ export const exercises: Exercise[] = [
     failSigns: ['Shoulders dumping', 'Rounded upper back', 'Locked knees with pain'],
     regressTo: [],
     progressTo: ['chest-to-wall-handstand', 'dolphin-pose'],
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=YqOqM79McYY', label: 'Downward Dog', primary: true },
+    ],
     needsUpload: true,
   },
   {
@@ -425,6 +455,9 @@ export const exercises: Exercise[] = [
     failSigns: ['Kipping/swinging', 'Half reps', 'Losing core tension'],
     regressTo: ['chin-up', 'australian-row'],
     progressTo: ['archer-pull-up'],
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=eGo4IYlbE5g', label: 'Perfect Pull-Up', primary: true },
+    ],
     needsUpload: true,
   },
   {
@@ -476,6 +509,9 @@ export const exercises: Exercise[] = [
     failSigns: ['Chicken winging', 'No height on pull', 'Elbow pain'],
     regressTo: ['pull-up', 'pullover'],
     progressTo: [],
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=NtS6MYnIYaw', label: 'Unlock Muscle-Up', primary: true },
+    ],
     needsUpload: true,
   },
   {
@@ -493,6 +529,9 @@ export const exercises: Exercise[] = [
     cueStack: ['Tuck knees first', 'Roll through slowly', 'Control German hang'],
     failSigns: ['Dropping into German hang', 'Losing grip', 'Forcing range of motion'],
     regressTo: ['shoulder-dislocate'],
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=K9xHRYyoFe0', label: 'Full Tutorial', primary: true },
+    ],
     progressTo: ['back-lever'],
   },
   {
@@ -529,6 +568,9 @@ export const exercises: Exercise[] = [
     failSigns: ['Hips sagging', 'Elbows flaring 90°', 'Partial reps'],
     regressTo: [],
     progressTo: ['diamond-push-up', 'pseudo-planche-push-up', 'archer-push-up'],
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=IODxDxX7oi4', label: 'Perfect Push-Up', primary: true },
+    ],
     needsUpload: true,
   },
   {
@@ -546,6 +588,9 @@ export const exercises: Exercise[] = [
     failSigns: ['Elbows flaring wide', 'Hips sagging', 'Not touching chest to hands'],
     regressTo: ['push-up'],
     progressTo: ['archer-push-up'],
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=J0DnG1_S3lg', label: 'Form Guide', primary: true },
+    ],
     needsUpload: true,
   },
   {
@@ -580,6 +625,9 @@ export const exercises: Exercise[] = [
     failSigns: ['Hips dropping', 'Elbows flaring', 'Incomplete ROM'],
     regressTo: ['push-up'],
     progressTo: ['handstand-push-up'],
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=sposDXWEB0A', label: 'Progression', primary: true },
+    ],
     needsUpload: true,
   },
   {
@@ -598,6 +646,9 @@ export const exercises: Exercise[] = [
     failSigns: ['Kipping with hips', 'Arching excessively', 'Not reaching full ROM'],
     regressTo: ['pike-push-up'],
     progressTo: ['bent-arm-handstand'],
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=tQhrk6WMcKw', label: 'HSPU Tutorial', primary: true },
+    ],
     needsUpload: true,
   },
   {
@@ -660,6 +711,9 @@ export const exercises: Exercise[] = [
       watchOut: 'Bent elbows = instant fail. Reset, reduce lean.',
       recoveryVector: 'Forearm flush + gentle biceps tendon unload (easy stretch).',
     },
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=xLPP33cZVI4', label: 'Planche Lean Guide', primary: true },
+    ],
   },
   {
     id: 'pseudo-planche-push-up',
@@ -732,6 +786,9 @@ export const exercises: Exercise[] = [
       watchOut: 'Jumping into it = wrist tax. Float only.',
       recoveryVector: 'Forearm massage + scap wall slides.',
     },
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=qvWvfZuUN4k', label: 'Tuck Planche', primary: true },
+    ],
   },
   {
     id: 'advanced-tuck-planche',
@@ -854,6 +911,9 @@ export const exercises: Exercise[] = [
     cueStack: ['Push floor away', 'Fingers grip for balance', 'Breathe and stack'],
     failSigns: ['Banana back', 'Not using fingers', 'Holding breath'],
     regressTo: ['wall-pull-aways', 'hs-shrugs'],
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=olA58oW-21A', label: 'Freestanding HS', primary: true },
+    ],
     progressTo: ['handstand-push-up'],
   },
   {
@@ -927,6 +987,9 @@ export const exercises: Exercise[] = [
     cueStack: ['Turn rings out at top', 'Shoulders below elbows', 'Control the descent'],
     failSigns: ['Rings flaring out', 'Partial ROM', 'Shoulder pain'],
     regressTo: ['rto-support-hold', 'parallel-bar-dip'],
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=RFODjZQos8E', label: 'Ring Dip Guide', primary: true },
+    ],
     progressTo: ['muscle-up'],
   },
   {
@@ -962,6 +1025,9 @@ export const exercises: Exercise[] = [
     failSigns: ['Slipping out of grip', 'Wrist pain', 'Shoulders at ears'],
     regressTo: ['ring-support-hold'],
     progressTo: ['muscle-up'],
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=bHO0A4ZF_Zg', label: 'False Grip', primary: true },
+    ],
     needsUpload: true,
   },
 
@@ -1018,6 +1084,9 @@ export const exercises: Exercise[] = [
     cueStack: ['Knees on triceps', 'Lean forward slowly', 'Gaze slightly forward'],
     failSigns: ['Tipping forward', 'Wrist pain', 'Not leaning enough'],
     regressTo: [],
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=7MNNGqec0Dc', label: 'Frog Stand Guide', primary: true },
+    ],
     progressTo: ['planche-lean', 'elbow-lever'],
   },
   {
@@ -1035,6 +1104,9 @@ export const exercises: Exercise[] = [
     cueStack: ['Elbow in hip crease', 'Lean forward', 'Spread fingers wide'],
     failSigns: ['Tipping sideways', 'Elbow slipping', 'Not enough lean'],
     regressTo: ['frog-stand'],
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=MhEUfmRGr6g', label: 'Elbow Lever Tutorial', primary: true },
+    ],
     progressTo: ['single-arm-elbow-lever'],
   },
   {
@@ -1069,6 +1141,9 @@ export const exercises: Exercise[] = [
     failSigns: ['Bent arms', 'Hips dropping', 'Shoulder pain'],
     regressTo: ['skin-the-cat'],
     progressTo: ['front-lever'],
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=PVDP_WVkJtI', label: 'Back Lever Tutorial', primary: true },
+    ],
     needsUpload: true,
   },
   {
@@ -1086,6 +1161,9 @@ export const exercises: Exercise[] = [
     failSigns: ['Hips dropping', 'Arms bending', 'Losing body tension'],
     regressTo: ['front-lever-raise', 'back-lever'],
     progressTo: [],
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=K2uOvPYeMi4', label: 'Front Lever Guide', primary: true },
+    ],
     needsUpload: true,
   },
   {
@@ -1104,6 +1182,9 @@ export const exercises: Exercise[] = [
     cueStack: ['Bottom arm pushes', 'Top arm pulls', 'Full body straight'],
     failSigns: ['Hips dropping', 'Bending at waist', 'Grip failure'],
     regressTo: ['clutch-flag'],
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=NWskCNO3rCo', label: 'Human Flag Progression', primary: true },
+    ],
     progressTo: [],
   },
   {
@@ -1402,6 +1483,9 @@ export const exercises: Exercise[] = [
     cueStack: ['Heel down on working leg', 'Chest up', 'Straight leg toes point up'],
     failSigns: ['Heel lifting', 'Rounding back at bottom', 'Knee caving inward'],
     regressTo: ['bodyweight-squat', 'deep-squat-hold'],
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=tpczTeSkHz0', label: 'Cossack Squat', primary: true },
+    ],
     progressTo: ['pistol-squat'],
   },
 
@@ -1564,6 +1648,9 @@ export const exercises: Exercise[] = [
     cueStack: ['Back foot at 45°', 'Front knee over ankle', 'Arms reach high, shoulders down'],
     failSigns: ['Back heel lifting', 'Front knee past toes', 'Shoulders at ears'],
     regressTo: ['childs-pose'],
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=k4qaVoAbeHM', label: 'Warrior I Tutorial', primary: true },
+    ],
     progressTo: ['warrior-ii'],
   },
   {
@@ -1660,6 +1747,9 @@ export const exercises: Exercise[] = [
     cueStack: ['Knees on backs of arms', 'Lean forward until feet lift', 'Gaze slightly forward'],
     failSigns: ['Face-planting', 'Wrist pain', 'Not leaning enough'],
     regressTo: ['frog-stand'],
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=Pu3KsHHM2II', label: 'Crow Pose Tutorial', primary: true },
+    ],
     progressTo: ['planche-lean'],
   },
   {
@@ -1692,6 +1782,9 @@ export const exercises: Exercise[] = [
     cueStack: ['Push through hands and feet', 'Straighten arms', 'Press chest through arms'],
     failSigns: ['Cannot straighten arms', 'Pain in lower back', 'Feet turning out'],
     regressTo: ['bridge-pose', 'cobra-pose'],
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=JGH3cXT0hGU', label: 'Wheel Pose Guide', primary: true },
+    ],
     progressTo: [],
   },
   {
@@ -1747,6 +1840,9 @@ export const exercises: Exercise[] = [
     failSigns: ['Rounding upper back to cheat depth', 'Knees bending', 'Forcing with bounce'],
     regressTo: ['pigeon-pose'],
     progressTo: ['middle-split-hold'],
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=PpPGqxPkME0', label: 'Pancake Progression', primary: true },
+    ],
     needsUpload: true,
   },
   {
@@ -1765,6 +1861,9 @@ export const exercises: Exercise[] = [
     failSigns: ['Knees rotating inward', 'Lower back pain', 'Forcing depth too fast'],
     regressTo: ['pancake-stretch', 'cossack-squat'],
     progressTo: [],
+    videoSources: [
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=XiigRY6kMfU', label: 'Middle Split Tutorial', primary: true },
+    ],
     needsUpload: true,
   },
 ];

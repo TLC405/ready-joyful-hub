@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import type { Exercise } from '@/lib/types';
 import { getExerciseById } from '@/lib/exercises';
 import { cn } from '@/lib/utils';
@@ -26,11 +27,13 @@ interface ExerciseDetailModalProps {
 }
 
 export function ExerciseDetailModal({ exercise: initialExercise, onClose }: ExerciseDetailModalProps) {
+  const navigate = useNavigate();
   const [exercise, setExercise] = useState(initialExercise);
 
   const regressExercises = exercise.regressTo.map(id => getExerciseById(id)).filter(Boolean) as Exercise[];
   const progressExercises = exercise.progressTo.map(id => getExerciseById(id)).filter(Boolean) as Exercise[];
   const creatorInfo = exercise.creator ? creatorIcons[exercise.creator] : null;
+  const hasVideo = exercise.videoUrl || exercise.videoSources?.length || exercise.instagramUrl;
 
   return (
     <motion.div
@@ -95,6 +98,16 @@ export function ExerciseDetailModal({ exercise: initialExercise, onClose }: Exer
             </span>
             <h2 className="font-chalk text-xl sm:text-2xl">{exercise.name}</h2>
             <p className="mt-2 text-sm text-muted-foreground">{exercise.description}</p>
+
+            {hasVideo && (
+              <button
+                onClick={() => { onClose(); navigate(`/video/${exercise.id}`); }}
+                className="mt-3 flex items-center gap-2 border-2 border-foreground bg-foreground px-4 py-2 text-label text-[10px] tracking-widest text-card hover:bg-primary hover:border-primary transition-colors"
+              >
+                <div className="h-2 w-2 bg-primary" />
+                WATCH ON TLC TV
+              </button>
+            )}
 
             <div className="mt-4 border border-foreground/10 p-3 sm:p-4">
               <h4 className="mb-2 text-label text-sm text-primary">DO THIS</h4>
