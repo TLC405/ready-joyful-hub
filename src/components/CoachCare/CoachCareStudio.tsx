@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { Drawer } from 'vaul';
 import { ChatPanel } from './ChatPanel';
@@ -6,12 +6,29 @@ import { CanvasRouter } from './Canvas/CanvasRouter';
 import { useCanvasState } from './hooks/useCanvasState';
 import { useChatHistory } from './hooks/useChatHistory';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { exercises } from '@/lib/exercises';
+import { exercises, getExerciseById } from '@/lib/exercises';
 import { Maximize2 } from 'lucide-react';
-import type { CanvasMode, VideoCanvasData, ExerciseCanvasData, TemplateCanvasData, DocumentCanvasData } from './types';
-import { useState } from 'react';
+import type { CanvasMode, VideoCanvasData, ExerciseCanvasData, TemplateCanvasData, DocumentCanvasData, QuickReply, SocialCanvasData } from './types';
 
-// URL detection
+// ─── Context tracker ────────────────────────────────────────────
+interface CoachContext {
+  lastExerciseId: string | null;
+  lastTopic: string | null;
+  messageCount: number;
+  sessionStart: string;
+}
+
+const dailyTips = [
+  "💡 Daily tip: Controlled negatives (3-5s) build strength faster than cheat reps. Quality > quantity.",
+  "💡 Daily tip: Warm up with 5 min of wrist circles and shoulder dislocates before any skill work.",
+  "💡 Daily tip: Hollow body is the foundation of everything — if it's weak, everything else suffers.",
+  "💡 Daily tip: Rest days aren't lazy days. Active recovery (walking, stretching) speeds adaptation.",
+  "💡 Daily tip: Film yourself from the side. You'll catch form errors you can't feel.",
+  "💡 Daily tip: Grip strength limits pulling movements. Train dead hangs 3×30s at the end of sessions.",
+  "💡 Daily tip: Superset antagonist movements (push + pull) for time-efficient sessions.",
+];
+
+// ─── URL detection ──────────────────────────────────────────────
 function detectUrl(text: string): { platform: 'youtube' | 'instagram' | 'tiktok'; embedUrl: string; url: string } | null {
   const ytMatch = text.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
   if (ytMatch) return { platform: 'youtube', url: text, embedUrl: `https://www.youtube.com/embed/${ytMatch[1]}` };
@@ -21,16 +38,119 @@ function detectUrl(text: string): { platform: 'youtube' | 'instagram' | 'tiktok'
   return null;
 }
 
-// Fuzzy exercise match
+// ─── Fuzzy exercise match ───────────────────────────────────────
 function findExercise(text: string) {
   const lower = text.toLowerCase();
-  return exercises.find(e => lower.includes(e.name.toLowerCase())) || 
+  return exercises.find(e => lower.includes(e.name.toLowerCase())) ||
     exercises.find(e => e.name.toLowerCase().split(' ').some(w => w.length > 3 && lower.includes(w)));
 }
 
-// Smart response generation
-function generateResponse(text: string, setCanvas: (mode: CanvasMode, data: any) => void) {
+// ─── Progression chain helper ───────────────────────────────────
+function getProgressionChain(exerciseId: string) {
+  const ex = getExerciseById(exerciseId);
+  if (!ex) return null;
+  const regressions = ex.regressTo?.map(id => getExerciseById(id)).filter(Boolean) || [];
+  const progressions = ex.progressTo?.map(id => getExerciseById(id)).filter(Boolean) || [];
+  return { regressions, current: ex, progressions };
+}
+
+// ─── Workout history helper ─────────────────────────────────────
+function getWorkoutHistory() {
+  try {
+    const templates = JSON.parse(localStorage.getItem('tlc-templates') || '[]');
+    const logs = JSON.parse(localStorage.getItem('tlc-workout-logs') || '[]');
+    return { templates, logs, count: templates.length + logs.length };
+  } catch { return { templates: [], logs: [], count: 0 }; }
+}
+
+function getStreak(): number {
+  try {
+    const logs = JSON.parse(localStorage.getItem('tlc-workout-logs') || '[]');
+    if (!logs.length) return 0;
+    let streak = 0;
+    const today = new Date();
+    for (let d = 0; d < 365; d++) {
+      const check = new Date(today);
+      check.setDate(check.getDate() - d);
+      const dateStr = check.toISOString().split('T')[0];
+      if (logs.some((l: any) => l.date?.startsWith(dateStr))) streak++;
+      else break;
+    }
+    return streak;
+  } catch { return 0; }
+}
+
+// ─── Smart response engine ──────────────────────────────────────
+function generateResponse(
+  text: string,
+  setCanvas: (mode: CanvasMode, data: any) => void,
+  ctx: CoachContext,
+  updateCtx: (updates: Partial<CoachContext>) => void
+) {
   const lower = text.toLowerCase();
+
+  // Daily tip on first message
+  if (ctx.messageCount === 0) {
+    const tip = dailyTips[new Date().getDay() % dailyTips.length];
+    updateCtx({ messageCount: 1 });
+    return {
+      content: tip + "\n\nWhat are we working on today?",
+      type: 'text' as const,
+      quickReplies: [
+        { label: '🎥 Analyze a video', message: "I'd like to analyze a video" },
+        { label: '💪 Build a workout', message: 'Build me a push day template' },
+        { label: '📊 My stats', message: 'Show my training stats' },
+      ],
+    };
+  }
+
+  updateCtx({ messageCount: ctx.messageCount + 1 });
+
+  // Social search trigger
+  if (lower.match(/find videos?|search|show me|browse|look up|find me/)) {
+    const queryWords = text.replace(/find|videos?|of|for|me|search|show|browse|look up/gi, '').trim();
+    const socialData: SocialCanvasData = {
+      query: queryWords || 'calisthenics',
+      platform: lower.includes('instagram') || lower.includes('ig') ? 'instagram' : lower.includes('youtube') || lower.includes('yt') ? 'youtube' : 'all',
+      results: [],
+    };
+    setCanvas('social', socialData);
+    return {
+      content: `Searching for "${queryWords || 'calisthenics'}" across social media. Use the canvas to browse and play videos in-app.`,
+      type: 'social-search' as const,
+      canvasAction: { mode: 'social' as CanvasMode, data: socialData },
+      quickReplies: [
+        { label: 'YouTube only', message: `Find YouTube videos of ${queryWords}` },
+        { label: 'Instagram reels', message: `Find Instagram videos of ${queryWords}` },
+      ],
+    };
+  }
+
+  // "harder" / "easier" context-aware
+  if ((lower.match(/harder|next|progress|advance/) || lower.match(/easier|regress|step back|scale down/)) && ctx.lastExerciseId) {
+    const chain = getProgressionChain(ctx.lastExerciseId);
+    if (chain) {
+      const isHarder = !!lower.match(/harder|next|progress|advance/);
+      const targets = isHarder ? chain.progressions : chain.regressions;
+      if (targets.length > 0) {
+        const target = targets[0]!;
+        const exData: ExerciseCanvasData = { exerciseId: target.id, exerciseName: target.name };
+        setCanvas('exercise', exData);
+        updateCtx({ lastExerciseId: target.id });
+        return {
+          content: `${isHarder ? '⬆️ Next progression' : '⬇️ Regression'} from ${chain.current.name}:\n\n**${target.name}** (${target.difficulty})\n${target.shortPurpose}\n\nLoaded on canvas with full details.`,
+          type: 'exercise-card' as const,
+          exerciseRef: { id: target.id, name: target.name, difficulty: target.difficulty },
+          canvasAction: { mode: 'exercise' as CanvasMode, data: exData },
+          quickReplies: [
+            { label: isHarder ? 'Even harder' : 'Even easier', message: isHarder ? 'What about harder?' : 'What about easier?' },
+            { label: 'Add to workout', message: `Add ${target.name} to my workout` },
+            { label: 'Watch video', message: `Find videos of ${target.name}` },
+          ],
+        };
+      }
+    }
+  }
 
   // Video URL detection
   const urlData = detectUrl(text);
@@ -57,6 +177,10 @@ function generateResponse(text: string, setCanvas: (mode: CanvasMode, data: any)
       content: `I've loaded your ${urlData.platform} video and analyzed the form. Check the canvas for detailed timestamp breakdowns.\n\nOverall score: 7/10 — solid foundation with a couple of corrections needed.`,
       type: 'video-card' as const,
       canvasAction: { mode: 'video' as CanvasMode, data: videoData },
+      quickReplies: [
+        { label: 'What should I fix first?', message: 'What should I fix first in my form?' },
+        { label: 'Show me drills', message: 'Show me corrective drills' },
+      ],
     };
   }
 
@@ -65,16 +189,33 @@ function generateResponse(text: string, setCanvas: (mode: CanvasMode, data: any)
   if (exercise) {
     const exData: ExerciseCanvasData = { exerciseId: exercise.id, exerciseName: exercise.name };
     setCanvas('exercise', exData);
+    updateCtx({ lastExerciseId: exercise.id, lastTopic: exercise.category });
+
+    const chain = getProgressionChain(exercise.id);
+    const progressionNote = chain?.progressions.length
+      ? `\n\nNext progression: **${chain.progressions[0]!.name}**`
+      : '';
+    const regressionNote = chain?.regressions.length
+      ? `\nRegression: ${chain.regressions[0]!.name}`
+      : '';
+
     return {
-      content: `Here's the full breakdown for **${exercise.name}** — loaded on the canvas.\n\nDifficulty: ${exercise.difficulty}\nCategory: ${exercise.category}\n\n${exercise.shortPurpose}`,
+      content: `Here's the full breakdown for **${exercise.name}** — loaded on the canvas.\n\nDifficulty: ${exercise.difficulty} | Category: ${exercise.category}\n${exercise.shortPurpose}${progressionNote}${regressionNote}`,
       type: 'exercise-card' as const,
+      exerciseRef: { id: exercise.id, name: exercise.name, difficulty: exercise.difficulty },
       canvasAction: { mode: 'exercise' as CanvasMode, data: exData },
+      quickReplies: [
+        ...(chain?.progressions.length ? [{ label: '⬆️ Harder', message: 'What about harder?' }] : []),
+        ...(chain?.regressions.length ? [{ label: '⬇️ Easier', message: 'What about easier?' }] : []),
+        { label: '🎥 Watch video', message: `Find videos of ${exercise.name}` },
+        { label: '➕ Add to workout', message: `Add ${exercise.name} to my workout` },
+      ],
     };
   }
 
   // Template/program request
-  if (lower.match(/build|create|make|template|program|routine|workout/)) {
-    const category = lower.includes('push') ? 'push' : lower.includes('pull') ? 'pull' : lower.includes('leg') ? 'legs' : lower.includes('core') ? 'core' : 'push';
+  if (lower.match(/build|create|make|template|program|routine|workout|add.*to.*workout/)) {
+    const category = lower.includes('push') ? 'push' : lower.includes('pull') ? 'pull' : lower.includes('leg') ? 'legs' : lower.includes('core') ? 'core' : lower.includes('ballet') ? 'ballet' : 'push';
     const matchingExercises = exercises.filter(e => e.category === category).slice(0, 5);
     const templateData: TemplateCanvasData = {
       template: {
@@ -99,16 +240,27 @@ function generateResponse(text: string, setCanvas: (mode: CanvasMode, data: any)
       content: `Built a ${category} day template with ${matchingExercises.length} exercises. It's on the canvas — edit sets/reps and save.\n\nExercises: ${matchingExercises.map(e => e.name).join(', ')}`,
       type: 'template-preview' as const,
       canvasAction: { mode: 'template' as CanvasMode, data: templateData },
+      quickReplies: [
+        { label: '💾 Save template', message: 'Save this template' },
+        { label: 'Add more exercises', message: `Add more ${category} exercises` },
+        { label: 'Switch to pull', message: 'Build me a pull day instead' },
+      ],
     };
   }
 
   // Stats request
-  if (lower.match(/stats|progress|analytics|data|chart/)) {
+  if (lower.match(/stats|progress|analytics|data|chart|streak/)) {
+    const history = getWorkoutHistory();
+    const streak = getStreak();
     setCanvas('analytics', { type: 'overview' });
     return {
-      content: "Training analytics loaded on canvas. 9 sessions this week, 240 minutes volume. Push-to-pull ratio balanced.",
+      content: `Training analytics loaded on canvas.${streak > 0 ? ` 🔥 ${streak}-day streak!` : ''}\n\n${history.count} saved workouts total. Check the canvas for detailed charts.`,
       type: 'chart' as const,
       canvasAction: { mode: 'analytics' as CanvasMode, data: { type: 'overview' } },
+      quickReplies: [
+        { label: 'Build a workout', message: 'Build me a workout template' },
+        { label: 'What should I train?', message: 'What should I train today?' },
+      ],
     };
   }
 
@@ -123,20 +275,32 @@ function generateResponse(text: string, setCanvas: (mode: CanvasMode, data: any)
       content: "Drafted a 6-week program on the canvas. Edit directly or ask me to adjust.",
       type: 'text' as const,
       canvasAction: { mode: 'document' as CanvasMode, data: docData },
+      quickReplies: [
+        { label: 'Make it harder', message: 'Make this program more advanced' },
+        { label: 'Add skill work', message: 'Add handstand and planche work to the program' },
+      ],
     };
   }
 
-  // General responses
+  // General responses with context
+  const streak = getStreak();
+  const streakNote = streak > 0 ? ` (🔥 ${streak}-day streak btw)` : '';
   const generalResponses = [
-    "Good question. For calisthenics progression, patience with perfect form beats rushing to the next variation. What specific skill are you targeting?",
-    "Focus on your weakest link first. Paste a video and I'll give specific corrections, or tell me which exercise to explore.",
-    "Consistency beats intensity. Three solid 45-minute sessions beat one marathon. Want me to build you a template?",
-    "Try pasting a YouTube link, asking about a specific exercise, or saying 'build me a push day'.",
+    `Good question. For calisthenics progression, patience with perfect form beats rushing to the next variation.${streakNote} What specific skill are you targeting?`,
+    `Focus on your weakest link first. Paste a video and I'll give specific corrections, or tell me which exercise to explore.${streakNote}`,
+    `Consistency beats intensity. Three solid 45-minute sessions beat one marathon.${streakNote} Want me to build you a template?`,
+    `Try pasting a YouTube link, asking about a specific exercise, or saying 'build me a push day'.${streakNote}`,
   ];
 
   return {
     content: generalResponses[Math.floor(Math.random() * generalResponses.length)],
     type: 'text' as const,
+    quickReplies: [
+      { label: '🎥 Analyze video', message: "I'd like to analyze a video" },
+      { label: '💪 Build workout', message: 'Build me a push day' },
+      { label: '🔍 Search videos', message: 'Find videos of planche' },
+      { label: '📊 My stats', message: 'Show my training stats' },
+    ],
   };
 }
 
@@ -145,14 +309,27 @@ export function CoachCareStudio() {
   const { messages, addMessage, clearHistory } = useChatHistory();
   const isMobile = useIsMobile();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const [coachCtx, setCoachCtx] = useState<CoachContext>({
+    lastExerciseId: null,
+    lastTopic: null,
+    messageCount: 0,
+    sessionStart: new Date().toISOString(),
+  });
+
+  const updateCtx = useCallback((updates: Partial<CoachContext>) => {
+    setCoachCtx(prev => ({ ...prev, ...updates }));
+  }, []);
 
   const handleSend = useCallback((text: string) => {
     addMessage({ role: 'user', content: text, type: 'text' });
+    setIsTyping(true);
     setTimeout(() => {
-      const response = generateResponse(text, setCanvas);
+      const response = generateResponse(text, setCanvas, coachCtx, updateCtx);
       addMessage({ role: 'coach', ...response });
-    }, 600);
-  }, [addMessage, setCanvas]);
+      setIsTyping(false);
+    }, 800 + Math.random() * 600);
+  }, [addMessage, setCanvas, coachCtx, updateCtx]);
 
   const handleCanvasAction = useCallback((action: string) => {
     const actionMessages: Record<string, string> = {
@@ -161,15 +338,19 @@ export function CoachCareStudio() {
       template: "Build me a workout template",
       exercise: "Show me an exercise — try 'planche lean' or 'l-sit'",
       analytics: "Show my training stats",
-      social: "Let me browse some social media content for inspiration",
+      social: "Find videos of calisthenics",
     };
     handleSend(actionMessages[action] || "Let's get started");
+  }, [handleSend]);
+
+  const handleQuickReply = useCallback((message: string) => {
+    handleSend(message);
   }, [handleSend]);
 
   if (isMobile) {
     return (
       <div className="flex h-[calc(100vh-4rem)] flex-col">
-        <ChatPanel messages={messages} onSend={handleSend} onClear={clearHistory} />
+        <ChatPanel messages={messages} onSend={handleSend} onClear={clearHistory} isTyping={isTyping} onQuickReply={handleQuickReply} />
         {canvasState.mode !== 'idle' && (
           <Drawer.Root open={drawerOpen} onOpenChange={setDrawerOpen}>
             <Drawer.Trigger asChild>
@@ -194,7 +375,7 @@ export function CoachCareStudio() {
     <div className="h-[calc(100vh-2rem)] p-2">
       <ResizablePanelGroup direction="horizontal" className="h-full overflow-hidden border border-foreground/15">
         <ResizablePanel defaultSize={35} minSize={25} maxSize={50}>
-          <ChatPanel messages={messages} onSend={handleSend} onClear={clearHistory} />
+          <ChatPanel messages={messages} onSend={handleSend} onClear={clearHistory} isTyping={isTyping} onQuickReply={handleQuickReply} />
         </ResizablePanel>
         <ResizableHandle withHandle className="bg-foreground/10" />
         <ResizablePanel defaultSize={65}>

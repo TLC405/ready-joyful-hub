@@ -1,10 +1,12 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Video, Dumbbell, FileText, BarChart3, ChevronRight } from 'lucide-react';
+import { Video, Dumbbell, FileText, BarChart3, ChevronRight, ThumbsUp, ThumbsDown, Play, Globe } from 'lucide-react';
 import { ChatMessage } from './types';
 import { cn } from '@/lib/utils';
 
 interface ChatMessageBubbleProps {
   message: ChatMessage;
+  onQuickReply?: (message: string) => void;
 }
 
 const typeIcons: Record<string, React.ElementType> = {
@@ -12,6 +14,7 @@ const typeIcons: Record<string, React.ElementType> = {
   'exercise-card': Dumbbell,
   'template-preview': FileText,
   'chart': BarChart3,
+  'social-search': Globe,
 };
 
 const typeLabels: Record<string, string> = {
@@ -19,11 +22,29 @@ const typeLabels: Record<string, string> = {
   'exercise-card': 'EXERCISE',
   'template-preview': 'TEMPLATE',
   'chart': 'ANALYTICS',
+  'social-search': 'SOCIAL SEARCH',
 };
 
-export function ChatMessageBubble({ message }: ChatMessageBubbleProps) {
+function getYouTubeThumbnail(exerciseRef?: { id: string; name: string; difficulty: string }) {
+  // We don't have video URLs on the ref, so skip thumbnails for inline
+  return null;
+}
+
+export function ChatMessageBubble({ message, onQuickReply }: ChatMessageBubbleProps) {
   const isCoach = message.role === 'coach';
   const Icon = typeIcons[message.type];
+  const [reaction, setReaction] = useState<'up' | 'down' | null>(null);
+
+  const handleReaction = (type: 'up' | 'down') => {
+    const newReaction = reaction === type ? null : type;
+    setReaction(newReaction);
+    // Store reactions for future training
+    try {
+      const reactions = JSON.parse(localStorage.getItem('tlc-coach-reactions') || '[]');
+      reactions.push({ messageId: message.id, reaction: newReaction, timestamp: Date.now() });
+      localStorage.setItem('tlc-coach-reactions', JSON.stringify(reactions.slice(-100)));
+    } catch {}
+  };
 
   return (
     <div className={cn("flex", isCoach ? "justify-start" : "justify-end")}>
@@ -36,10 +57,30 @@ export function ChatMessageBubble({ message }: ChatMessageBubbleProps) {
         {message.type !== 'text' && Icon && (
           <div className={cn(
             "mb-2 flex items-center gap-2 border-l-2 pl-2 text-label text-[10px] text-journal-sm",
-            isCoach ? "border-primary text-primary" : "border-primary-foreground/40 text-primary-foreground/70"
+            isCoach ? "border-thunder-orange text-thunder-orange" : "border-primary-foreground/40 text-primary-foreground/70"
           )}>
             <Icon className="h-3.5 w-3.5" />
             {typeLabels[message.type]}
+          </div>
+        )}
+
+        {/* Exercise inline card */}
+        {message.exerciseRef && isCoach && (
+          <div className="mb-2 flex items-center gap-3 border border-foreground/10 bg-surface-0 p-2 skeuo-card">
+            <div className="flex h-10 w-10 items-center justify-center thunder-inset">
+              <Dumbbell className="h-5 w-5 text-thunder-orange" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-chalk text-sm text-foreground truncate">{message.exerciseRef.name}</p>
+              <span className={cn("text-[9px] text-label px-1.5 py-0",
+                message.exerciseRef.difficulty === 'beginner' && 'text-emerald-600',
+                message.exerciseRef.difficulty === 'intermediate' && 'text-thunder-blue',
+                message.exerciseRef.difficulty === 'advanced' && 'text-thunder-orange',
+                message.exerciseRef.difficulty === 'master' && 'text-primary',
+              )}>
+                {message.exerciseRef.difficulty.toUpperCase()}
+              </span>
+            </div>
           </div>
         )}
 
@@ -50,18 +91,34 @@ export function ChatMessageBubble({ message }: ChatMessageBubbleProps) {
             whileHover={{ x: 3 }}
             className={cn(
               "mt-2 flex items-center gap-1 text-label text-[10px]",
-              isCoach ? "text-primary" : "text-primary-foreground/80"
+              isCoach ? "text-thunder-orange" : "text-primary-foreground/80"
             )}
           >
             OPEN ON CANVAS <ChevronRight className="h-3 w-3" />
           </motion.button>
         )}
 
-        <div className={cn(
-          "mt-1 text-[10px] text-journal-sm",
-          isCoach ? "text-muted-foreground" : "text-primary-foreground/50"
-        )}>
-          {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+        <div className="mt-1 flex items-center justify-between">
+          <span className={cn(
+            "text-[10px] text-journal-sm",
+            isCoach ? "text-muted-foreground" : "text-primary-foreground/50"
+          )}>
+            {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          </span>
+
+          {/* Reactions for coach messages */}
+          {isCoach && (
+            <div className="flex gap-1">
+              <button onClick={() => handleReaction('up')}
+                className={cn("p-1 transition-colors", reaction === 'up' ? 'text-thunder-orange' : 'text-muted-foreground/40 hover:text-muted-foreground')}>
+                <ThumbsUp className="h-3 w-3" />
+              </button>
+              <button onClick={() => handleReaction('down')}
+                className={cn("p-1 transition-colors", reaction === 'down' ? 'text-primary' : 'text-muted-foreground/40 hover:text-muted-foreground')}>
+                <ThumbsDown className="h-3 w-3" />
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
