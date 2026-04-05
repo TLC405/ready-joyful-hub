@@ -23,10 +23,14 @@ export function TLCVideoPlayer({ videoUrl, thumbnailUrl, title, className }: TLC
 
   return (
     <div className={cn("relative w-full overflow-hidden skeuo-bezel rounded-sm p-[4px]", className)}>
-      {/* TLC Brand Bar — leather strip */}
+      {/* TLC Brand Bar — thunder gradient leather */}
       <div className="flex items-center gap-2 skeuo-leather px-3 py-1.5">
-        <div className="skeuo-led" />
+        <div className="thunder-led" />
         <span className="text-label text-[9px] text-primary-foreground/90 tracking-widest">TLC PLAYER</span>
+        <div className="ml-auto flex gap-1">
+          <div className="h-1.5 w-1.5 rounded-full bg-thunder-orange/60" />
+          <div className="h-1.5 w-1.5 rounded-full bg-thunder-blue/60" />
+        </div>
       </div>
 
       {/* Screen */}
@@ -46,10 +50,8 @@ export function TLCVideoPlayer({ videoUrl, thumbnailUrl, title, className }: TLC
               </div>
             )}
             <div className="absolute inset-0 flex items-center justify-center bg-foreground/30 transition-colors group-hover:bg-foreground/50">
-              <div className="flex h-16 w-16 items-center justify-center bg-primary transition-transform group-hover:scale-110"
-                style={{ boxShadow: '3px 3px 8px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2)' }}
-              >
-                <Play className="h-6 w-6 text-primary-foreground ml-1" fill="currentColor" />
+              <div className="flex h-16 w-16 items-center justify-center btn-thunder transition-transform group-hover:scale-110">
+                <Play className="h-6 w-6 text-thunder-orange-foreground ml-1" fill="currentColor" />
               </div>
             </div>
             <div className="absolute bottom-0 left-0 right-0 skeuo-leather px-3 py-2">

@@ -105,13 +105,14 @@ export function SettingsPanel() {
     <section className="relative px-4 py-6 lg:px-8">
       <AppBreadcrumb items={breadcrumbItems} />
 
-      <div className="editorial-divider-thick mb-4 pt-2">
+      <div className="thunder-divider mb-4" />
+      <div className="mb-4 pt-2">
         <div className="flex items-center gap-3">
-          <h2 className="text-editorial-sm text-foreground text-embossed">SETTINGS</h2>
+          <h2 className="text-editorial-sm text-foreground text-embossed">SETT<span className="thunder-text">INGS</span></h2>
         </div>
       </div>
 
-      {/* Tab bar — leather strip */}
+      {/* Tab bar — leather strip with thunder accents */}
       <div className="mb-4 flex overflow-x-auto gap-0 skeuo-leather hide-scrollbar">
         {tabConfig.map(tab => {
           const Icon = tab.icon;
@@ -122,8 +123,8 @@ export function SettingsPanel() {
               className={cn(
                 "flex shrink-0 items-center gap-2 px-4 py-2.5 text-label text-[10px] tracking-widest transition-colors border-r last:border-r-0 border-primary-foreground/10",
                 activeTab === tab.id
-                  ? "skeuo-pressed bg-primary-foreground/15 text-primary-foreground"
-                  : "text-primary-foreground/60 hover:text-primary-foreground/80"
+                  ? "skeuo-pressed thunder-gradient-subtle text-thunder-orange"
+                  : "text-primary-foreground/60 hover:text-thunder-blue"
               )}
             >
               <Icon className="h-3.5 w-3.5" />
@@ -134,7 +135,7 @@ export function SettingsPanel() {
       </div>
 
       {/* Tab content */}
-      <div className="border border-foreground/10 bg-card p-6 skeuo-card skeuo-grain notebook-ruled">
+      <div className="border border-foreground/10 bg-card p-6 skeuo-thunder-card skeuo-grain notebook-ruled">
         {activeTab === 'profile' && (
           <div className="space-y-4 max-w-lg">
             <div>
@@ -229,8 +230,7 @@ export function SettingsPanel() {
 
             {/* Download */}
             <div>
-              <button className="w-full bg-primary px-6 py-3 font-chalk text-sm text-primary-foreground transition-opacity hover:opacity-90 btn-raised text-journal"
-                style={{ background: 'hsl(var(--primary))' }}>
+              <button className="w-full px-6 py-3 font-chalk text-sm transition-opacity hover:opacity-90 btn-thunder text-journal">
                 <Download className="mr-2 inline h-4 w-4" /> DOWNLOAD SOURCE ZIP
               </button>
             </div>

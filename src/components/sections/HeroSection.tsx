@@ -12,11 +12,13 @@ export function HeroSection() {
         <div className="mb-4 text-label text-[10px] text-muted-foreground/60 tracking-[0.2em] text-journal-sm">TLC CALISTHENICS · EST 2026</div>
         <h1 className="text-editorial text-foreground text-embossed">
           MASTER<br />
-          <span className="text-primary">YOUR BODY.</span>
+          <span className="thunder-text">YOUR BODY.</span>
         </h1>
         <p className="mt-6 mx-auto max-w-md text-sm text-muted-foreground/70 text-journal">
           Build superhuman strength with a hybrid approach — calisthenics, yoga, ballet, and beyond.
         </p>
+        {/* Thunder gradient accent line */}
+        <div className="mx-auto mt-4 w-24 thunder-divider" />
       </motion.div>
 
       <motion.div
@@ -25,8 +27,7 @@ export function HeroSection() {
         transition={{ delay: 0.3, duration: 0.4 }}
         className="mt-10 text-center"
       >
-        <button className="bg-primary px-10 py-3.5 font-chalk text-sm text-primary-foreground transition-opacity hover:opacity-90 btn-raised active:skeuo-pressed text-journal"
-          style={{ background: 'hsl(var(--primary))' }}>
+        <button className="px-10 py-3.5 font-chalk text-sm transition-all btn-thunder text-journal">
           GET STARTED →
         </button>
       </motion.div>
