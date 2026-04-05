@@ -1730,6 +1730,43 @@ export const exercises: Exercise[] = [
     regressTo: ['seated-pike-lift', 'wall-compression-stretch'],
     progressTo: ['straddle-press-to-hs'],
   },
+
+  // ==================== MOBILITY & FLEXIBILITY ====================
+  {
+    id: 'pancake-stretch',
+    name: 'Pancake Stretch',
+    category: 'mobility',
+    difficulty: 'intermediate',
+    muscles: ['Hamstrings', 'Adductors', 'Hip Flexors'],
+    equipment: ['floor'],
+    tracks: ['mobility', 'compression'],
+    shortPurpose: 'Seated straddle fold for compression + splits.',
+    description: 'Sit in a wide straddle, fold chest to floor. The essential flexibility drill for straddle press, middle splits, and deep compression work.',
+    doThis: { setsRange: '3–4', timeSecRange: '45–90s', restSecRange: '30s' },
+    cueStack: ['Wide straddle, toes up', 'Hinge from hips, not waist', 'Walk hands forward slowly'],
+    failSigns: ['Rounding upper back to cheat depth', 'Knees bending', 'Forcing with bounce'],
+    regressTo: ['pigeon-pose'],
+    progressTo: ['middle-split-hold'],
+    needsUpload: true,
+  },
+  {
+    id: 'middle-split-hold',
+    name: 'Middle Split Hold',
+    category: 'mobility',
+    difficulty: 'advanced',
+    muscles: ['Adductors', 'Hamstrings', 'Hip Flexors'],
+    equipment: ['floor'],
+    tracks: ['mobility'],
+    shortPurpose: 'Full middle splits — ultimate hip mobility.',
+    description: 'Isometric hold in the full middle split position. Made iconic by Jean-Claude Van Damme. The pinnacle of hip adductor flexibility.',
+    creator: 'Jean-Claude Van Damme',
+    doThis: { setsRange: '3–4', timeSecRange: '30–60s', restSecRange: '60s' },
+    cueStack: ['Slide feet out gradually', 'Keep hips square', 'Breathe and relax into depth'],
+    failSigns: ['Knees rotating inward', 'Lower back pain', 'Forcing depth too fast'],
+    regressTo: ['pancake-stretch', 'cossack-squat'],
+    progressTo: [],
+    needsUpload: true,
+  },
 ];
 
 // Helper functions
