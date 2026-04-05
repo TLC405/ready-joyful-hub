@@ -1,0 +1,207 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { BookOpen, Map, Tv } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { ExerciseLibrary } from './ExerciseLibrary';
+import { ProgressionMap } from './ProgressionMap';
+import { AppBreadcrumb } from '@/components/shared/Breadcrumb';
+
+type Tab = 'browse' | 'map' | 'tv';
+
+const tabs: { id: Tab; label: string; icon: React.ElementType }[] = [
+  { id: 'browse', label: 'BROWSE', icon: BookOpen },
+  { id: 'map', label: 'MAP', icon: Map },
+  { id: 'tv', label: 'TLC TV', icon: Tv },
+];
+
+// Inline TLC TV browser (from VideoPage ExerciseBrowser)
+import { useState as useStateTV, useMemo } from 'react';
+import { Search, Play, LayoutGrid } from 'lucide-react';
+import { exercises } from '@/lib/exercises';
+import type { Exercise } from '@/lib/types';
+
+const difficultyBadge: Record<string, string> = {
+  easy: 'difficulty-easy',
+  beginner: 'difficulty-beginner',
+  intermediate: 'difficulty-intermediate',
+  advanced: 'difficulty-advanced',
+  master: 'difficulty-master',
+};
+const difficultyOrder = ['easy', 'beginner', 'intermediate', 'advanced', 'master'];
+
+function getThumb(ex: Exercise): string | null {
+  if (ex.thumbnailUrl) return ex.thumbnailUrl;
+  const match = ex.videoUrl?.match(/v=([a-zA-Z0-9_-]+)/);
+  if (match) return `https://i.ytimg.com/vi/${match[1]}/hqdefault.jpg`;
+  const ytSrc = ex.videoSources?.find(s => s.platform === 'youtube');
+  if (ytSrc) {
+    const m2 = ytSrc.url.match(/v=([a-zA-Z0-9_-]+)/);
+    if (m2) return `https://i.ytimg.com/vi/${m2[1]}/hqdefault.jpg`;
+  }
+  return null;
+}
+
+const hasVideo = (e: Exercise) => e.videoUrl || e.videoSources?.length || e.instagramUrl;
+
+function InlineTVBrowser() {
+  const navigate = useNavigate();
+  const [search, setSearch] = useState('');
+  const [activeCategory, setActiveCategory] = useState<string>('all');
+
+  const categories = useMemo(() => {
+    const cats = Array.from(new Set(exercises.map(e => e.category)));
+    return ['all', ...cats.sort()];
+  }, []);
+
+  const filtered = useMemo(() => {
+    return exercises.filter(e => {
+      const matchSearch = !search || e.name.toLowerCase().includes(search.toLowerCase());
+      const matchCat = activeCategory === 'all' || e.category === activeCategory;
+      return matchSearch && matchCat;
+    }).sort((a, b) => difficultyOrder.indexOf(a.difficulty) - difficultyOrder.indexOf(b.difficulty));
+  }, [search, activeCategory]);
+
+  const grouped = useMemo(() => {
+    if (activeCategory !== 'all') return { [activeCategory]: filtered };
+    const groups: Record<string, Exercise[]> = {};
+    filtered.forEach(ex => {
+      if (!groups[ex.category]) groups[ex.category] = [];
+      groups[ex.category].push(ex);
+    });
+    return groups;
+  }, [filtered, activeCategory]);
+
+  return (
+    <div className="space-y-3">
+      {/* Search + filters */}
+      <div className="space-y-2">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Search exercises..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="w-full border-2 border-foreground/15 bg-card py-2.5 pl-10 pr-4 text-sm focus:border-primary focus:outline-none"
+          />
+        </div>
+        <div className="flex gap-1.5 overflow-x-auto hide-scrollbar pb-1">
+          {categories.map(cat => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={cn(
+                "shrink-0 border px-3 py-1 text-label text-[10px] tracking-widest transition-colors",
+                activeCategory === cat
+                  ? "border-foreground bg-foreground text-card"
+                  : "border-foreground/15 bg-card text-muted-foreground hover:bg-surface-0"
+              )}
+            >
+              {cat.toUpperCase()}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Grid */}
+      {Object.entries(grouped).map(([category, exs]) => (
+        <div key={category}>
+          {activeCategory === 'all' && (
+            <div className="editorial-divider-thick mb-2 pt-2">
+              <h3 className="text-label text-xs tracking-widest text-foreground">{category.toUpperCase()}</h3>
+            </div>
+          )}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-px bg-foreground/10 border border-foreground/10">
+            {exs.map(ex => {
+              const thumb = getThumb(ex);
+              return (
+                <button
+                  key={ex.id}
+                  onClick={() => navigate(`/video/${ex.id}`)}
+                  className="group flex flex-col bg-card hover:bg-surface-0 transition-all text-left"
+                >
+                  <div className="relative aspect-video overflow-hidden bg-surface-0">
+                    {thumb ? (
+                      <img src={thumb} alt={ex.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+                    ) : ex.image ? (
+                      <img src={ex.image} alt={ex.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center">
+                        <span className="font-chalk text-xl text-muted-foreground/20">{ex.name[0]}</span>
+                      </div>
+                    )}
+                    {hasVideo(ex) && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-foreground/0 group-hover:bg-foreground/30 transition-colors">
+                        <div className="flex h-8 w-8 items-center justify-center bg-primary text-primary-foreground opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Play className="h-3 w-3 ml-0.5" fill="currentColor" />
+                        </div>
+                      </div>
+                    )}
+                    <div className="absolute left-0 top-0">
+                      <span className={cn("border px-1.5 py-0 text-label text-[8px] bg-card/90", difficultyBadge[ex.difficulty])}>
+                        {ex.difficulty.toUpperCase()}
+                      </span>
+                    </div>
+                    {!hasVideo(ex) && (
+                      <div className="absolute right-1 bottom-1 px-1.5 py-0.5 bg-foreground/60 text-card text-label text-[7px] tracking-wider">SOON</div>
+                    )}
+                  </div>
+                  <div className="border-t border-foreground/5 p-2">
+                    <p className="font-chalk text-xs truncate">{ex.name}</p>
+                    <p className="text-[10px] text-muted-foreground truncate">{ex.shortPurpose || ex.category}</p>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+      <p className="text-center text-[10px] text-muted-foreground/50 pb-4">
+        {filtered.length} EXERCISES • {filtered.filter(hasVideo).length} WITH VIDEO
+      </p>
+    </div>
+  );
+}
+
+export function UnifiedLibrary() {
+  const [activeTab, setActiveTab] = useState<Tab>('browse');
+
+  const breadcrumbItems = [
+    { label: 'HOME', section: 'home' },
+    { label: 'LIBRARY' },
+    { label: tabs.find(t => t.id === activeTab)!.label },
+  ];
+
+  return (
+    <section className="relative px-4 py-6 lg:px-8">
+      <AppBreadcrumb items={breadcrumbItems} />
+
+      {/* Tab bar */}
+      <div className="mb-4 flex items-center gap-0 border border-foreground/10">
+        {tabs.map(tab => {
+          const Icon = tab.icon;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={cn(
+                "flex flex-1 items-center justify-center gap-2 px-4 py-2.5 text-label text-[10px] tracking-widest transition-colors border-r last:border-r-0 border-foreground/10",
+                activeTab === tab.id
+                  ? "bg-foreground text-card"
+                  : "bg-card text-muted-foreground hover:bg-surface-0"
+              )}
+            >
+              <Icon className="h-3.5 w-3.5" />
+              {tab.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Tab content */}
+      {activeTab === 'browse' && <ExerciseLibrary embedded />}
+      {activeTab === 'map' && <ProgressionMap embedded />}
+      {activeTab === 'tv' && <InlineTVBrowser />}
+    </section>
+  );
+}
