@@ -19,6 +19,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/video" element={<Suspense fallback={<div className="flex h-screen items-center justify-center"><span className="text-muted-foreground">Loading...</span></div>}><VideoPage /></Suspense>} />
           <Route path="/video/:exerciseId" element={<Suspense fallback={<div className="flex h-screen items-center justify-center"><span className="text-muted-foreground">Loading...</span></div>}><VideoPage /></Suspense>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
