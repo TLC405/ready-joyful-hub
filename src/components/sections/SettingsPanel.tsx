@@ -2,8 +2,8 @@ import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import {
   Settings, User, Palette, Dumbbell, Database, Download,
-  Sun, Moon, Timer, Bell, BellOff, Trash2, FileDown,
-  Code, Info, Search, Edit3, Save, X, ChevronRight
+  Sun, Moon, Timer, Bell, BellOff, Trash2, FileDown, Upload,
+  Code, Info, Search, Edit3, Save, X, ChevronRight, MessageSquare, Zap
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { exercises } from '@/lib/exercises';
@@ -11,6 +11,7 @@ import { tracks } from '@/lib/tracks';
 import { AppBreadcrumb } from '@/components/shared/Breadcrumb';
 
 type Tab = 'profile' | 'appearance' | 'training' | 'data' | 'devtools';
+type CoachPersonality = 'motivational' | 'technical' | 'chill';
 
 const tabConfig: { id: Tab; label: string; icon: React.ElementType }[] = [
   { id: 'profile', label: 'PROFILE', icon: User },
@@ -20,16 +21,28 @@ const tabConfig: { id: Tab; label: string; icon: React.ElementType }[] = [
   { id: 'devtools', label: 'DEV TOOLS', icon: Code },
 ];
 
+const personalityConfig: { id: CoachPersonality; label: string; desc: string; icon: React.ElementType }[] = [
+  { id: 'motivational', label: 'MOTIVATIONAL', desc: 'Hype energy, celebrates wins', icon: Zap },
+  { id: 'technical', label: 'TECHNICAL', desc: 'Detailed cues, biomechanics focus', icon: Settings },
+  { id: 'chill', label: 'CHILL', desc: 'Laid-back, supportive tone', icon: MessageSquare },
+];
+
 export function SettingsPanel() {
   const [activeTab, setActiveTab] = useState<Tab>('profile');
-  const [displayName, setDisplayName] = useState('Athlete');
-  const [bio, setBio] = useState('Working on my handstand game 🤸');
-  const [units, setUnits] = useState<'metric' | 'imperial'>('metric');
-  const [restTimer, setRestTimer] = useState('90');
+  const [displayName, setDisplayName] = useState(() => localStorage.getItem('tlc-display-name') || 'Athlete');
+  const [bio, setBio] = useState(() => localStorage.getItem('tlc-bio') || 'Working on my handstand game 🤸');
+  const [units, setUnits] = useState<'metric' | 'imperial'>(() => (localStorage.getItem('tlc-units') as any) || 'metric');
+  const [restTimer, setRestTimer] = useState(() => localStorage.getItem('tlc-rest-timer') || '90');
   const [notifications, setNotifications] = useState(true);
   const [defaultDifficulty, setDefaultDifficulty] = useState('all');
+  const [coachPersonality, setCoachPersonality] = useState<CoachPersonality>(() =>
+    (localStorage.getItem('tlc-coach-personality') as CoachPersonality) || 'motivational'
+  );
+  const [preferredCategories, setPreferredCategories] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('tlc-preferred-cats') || '[]'); } catch { return []; }
+  });
   const [devSearch, setDevSearch] = useState('');
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const [importStatus, setImportStatus] = useState<string | null>(null);
 
   const currentTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
 
@@ -44,26 +57,62 @@ export function SettingsPanel() {
     }
   };
 
+  // Auto-save settings
+  const saveSettings = (key: string, value: any) => {
+    localStorage.setItem(key, typeof value === 'string' ? value : JSON.stringify(value));
+  };
+
   const handleExport = () => {
-    const data = {
-      displayName, bio, units, restTimer, notifications, defaultDifficulty,
-      exportedAt: new Date().toISOString(),
-      app: 'TLC Calisthenics v1.0',
-    };
+    const data: Record<string, any> = {};
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key?.startsWith('tlc-')) {
+        try { data[key] = JSON.parse(localStorage.getItem(key)!); } catch { data[key] = localStorage.getItem(key); }
+      }
+    }
+    data._exportedAt = new Date().toISOString();
+    data._app = 'TLC Calisthenics v1.0';
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'tlc-calisthenics-data.json';
+    a.download = `tlc-backup-${new Date().toISOString().split('T')[0]}.json`;
     a.click();
     URL.revokeObjectURL(url);
+  };
+
+  const handleImport = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(reader.result as string);
+          Object.entries(data).forEach(([key, value]) => {
+            if (key.startsWith('tlc-')) {
+              localStorage.setItem(key, typeof value === 'string' ? value : JSON.stringify(value));
+            }
+          });
+          setImportStatus('Data imported successfully! Refresh to see changes.');
+          setTimeout(() => setImportStatus(null), 3000);
+        } catch {
+          setImportStatus('Error: Invalid JSON file');
+          setTimeout(() => setImportStatus(null), 3000);
+        }
+      };
+      reader.readAsText(file);
+    };
+    input.click();
   };
 
   const handleExportCSV = () => {
     const headers = ['id', 'name', 'category', 'difficulty', 'tracks', 'hasVideo'];
     const rows = exercises.map(e => [
-      e.id, e.name, e.category, e.difficulty,
-      e.tracks.join(';'),
+      e.id, e.name, e.category, e.difficulty, e.tracks.join(';'),
       (e.videoUrl || e.videoSources?.length) ? 'yes' : 'no'
     ]);
     const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
@@ -95,6 +144,8 @@ export function SettingsPanel() {
     categories: new Set(exercises.map(e => e.category)).size,
   }), []);
 
+  const allCategories = useMemo(() => [...new Set(exercises.map(e => e.category))], []);
+
   const breadcrumbItems = [
     { label: 'HOME' },
     { label: 'SETTINGS' },
@@ -107,12 +158,10 @@ export function SettingsPanel() {
 
       <div className="thunder-divider mb-4" />
       <div className="mb-4 pt-2">
-        <div className="flex items-center gap-3">
-          <h2 className="text-editorial-sm text-foreground text-embossed">SETT<span className="thunder-text">INGS</span></h2>
-        </div>
+        <h2 className="text-editorial-sm text-foreground text-embossed">SETT<span className="thunder-text">INGS</span></h2>
       </div>
 
-      {/* Tab bar — leather strip with thunder accents */}
+      {/* Tab bar */}
       <div className="mb-4 flex overflow-x-auto gap-0 skeuo-leather hide-scrollbar">
         {tabConfig.map(tab => {
           const Icon = tab.icon;
@@ -134,24 +183,26 @@ export function SettingsPanel() {
         })}
       </div>
 
-      {/* Tab content */}
       <div className="border border-foreground/10 bg-card p-6 skeuo-thunder-card skeuo-grain notebook-ruled">
         {activeTab === 'profile' && (
           <div className="space-y-4 max-w-lg">
             <div>
               <label className="mb-1 block text-label text-xs text-muted-foreground text-journal-sm">DISPLAY NAME</label>
-              <input value={displayName} onChange={e => setDisplayName(e.target.value)} className="w-full surface-inset px-3 py-2 font-chalk text-sm text-foreground focus:border-primary focus:outline-none text-journal" />
+              <input value={displayName} onChange={e => { setDisplayName(e.target.value); saveSettings('tlc-display-name', e.target.value); }}
+                className="w-full surface-inset px-3 py-2 font-chalk text-sm text-foreground focus:border-thunder-orange focus:outline-none text-journal" />
             </div>
             <div>
               <label className="mb-1 block text-label text-xs text-muted-foreground text-journal-sm">BIO</label>
-              <input value={bio} onChange={e => setBio(e.target.value)} className="w-full surface-inset px-3 py-2 font-chalk text-sm text-foreground focus:border-primary focus:outline-none text-journal" />
+              <input value={bio} onChange={e => { setBio(e.target.value); saveSettings('tlc-bio', e.target.value); }}
+                className="w-full surface-inset px-3 py-2 font-chalk text-sm text-foreground focus:border-thunder-orange focus:outline-none text-journal" />
             </div>
             <div>
               <label className="mb-1 block text-label text-xs text-muted-foreground text-journal-sm">UNITS</label>
               <div className="flex">
                 {(['metric', 'imperial'] as const).map(u => (
-                  <button key={u} onClick={() => setUnits(u)}
-                    className={cn("flex-1 border border-foreground/10 px-4 py-2 text-label text-sm transition-colors text-journal", units === u ? "skeuo-pressed bg-foreground text-card" : "bg-card text-muted-foreground hover:bg-surface-0 btn-raised")}>
+                  <button key={u} onClick={() => { setUnits(u); saveSettings('tlc-units', u); }}
+                    className={cn("flex-1 border border-foreground/10 px-4 py-2 text-label text-sm transition-colors text-journal active:scale-[0.98]",
+                      units === u ? "skeuo-pressed bg-thunder-orange/10 text-thunder-orange border-thunder-orange/30" : "bg-card text-muted-foreground hover:bg-surface-0 btn-raised")}>
                     {u.toUpperCase()}
                   </button>
                 ))}
@@ -161,20 +212,70 @@ export function SettingsPanel() {
         )}
 
         {activeTab === 'appearance' && (
-          <div className="max-w-lg">
-            <label className="mb-2 block text-label text-xs text-muted-foreground text-journal-sm">THEME</label>
-            <button onClick={toggleTheme} className="flex w-full items-center gap-3 border border-foreground/10 px-4 py-3 text-foreground transition-colors btn-raised text-journal">
-              {currentTheme === 'dark' ? <Sun className="h-5 w-5 text-primary" /> : <Moon className="h-5 w-5 text-primary" />}
-              <span className="font-chalk text-sm">{currentTheme === 'dark' ? 'SWITCH TO LIGHT' : 'SWITCH TO DARK'}</span>
-            </button>
+          <div className="max-w-lg space-y-4">
+            <div>
+              <label className="mb-2 block text-label text-xs text-muted-foreground text-journal-sm">THEME</label>
+              <button onClick={toggleTheme} className="flex w-full items-center gap-3 border border-foreground/10 px-4 py-3 text-foreground transition-colors btn-raised text-journal active:scale-[0.98]">
+                {currentTheme === 'dark' ? <Sun className="h-5 w-5 text-thunder-orange" /> : <Moon className="h-5 w-5 text-thunder-blue" />}
+                <span className="font-chalk text-sm">{currentTheme === 'dark' ? 'SWITCH TO LIGHT' : 'SWITCH TO DARK'}</span>
+              </button>
+            </div>
           </div>
         )}
 
         {activeTab === 'training' && (
-          <div className="space-y-4 max-w-lg">
+          <div className="space-y-5 max-w-lg">
+            {/* Coach personality */}
+            <div>
+              <label className="mb-2 block text-label text-xs text-muted-foreground text-journal-sm">COACH PERSONALITY</label>
+              <div className="grid grid-cols-3 gap-2">
+                {personalityConfig.map(p => {
+                  const Icon = p.icon;
+                  return (
+                    <button key={p.id} onClick={() => { setCoachPersonality(p.id); saveSettings('tlc-coach-personality', p.id); }}
+                      className={cn(
+                        "flex flex-col items-center gap-1.5 border p-3 text-center transition-all active:scale-[0.97]",
+                        coachPersonality === p.id
+                          ? "border-thunder-orange bg-thunder-orange/10 text-thunder-orange skeuo-pressed"
+                          : "border-foreground/10 text-muted-foreground hover:border-thunder-orange/30 skeuo-card"
+                      )}>
+                      <Icon className="h-4 w-4" />
+                      <span className="text-label text-[9px]">{p.label}</span>
+                      <span className="text-[8px] opacity-70">{p.desc}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Preferred categories */}
+            <div>
+              <label className="mb-2 block text-label text-xs text-muted-foreground text-journal-sm">PREFERRED CATEGORIES</label>
+              <div className="flex flex-wrap gap-2">
+                {allCategories.map(cat => (
+                  <button key={cat} onClick={() => {
+                    const next = preferredCategories.includes(cat)
+                      ? preferredCategories.filter(c => c !== cat)
+                      : [...preferredCategories, cat];
+                    setPreferredCategories(next);
+                    saveSettings('tlc-preferred-cats', next);
+                  }}
+                    className={cn(
+                      "px-3 py-1.5 text-[10px] text-label border transition-all active:scale-95",
+                      preferredCategories.includes(cat)
+                        ? "border-thunder-orange bg-thunder-orange/10 text-thunder-orange"
+                        : "border-foreground/10 text-muted-foreground hover:border-thunder-orange/30"
+                    )}>
+                    {cat.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <div>
               <label className="mb-1 block text-label text-xs text-muted-foreground text-journal-sm">DEFAULT REST TIMER (sec)</label>
-              <input type="number" value={restTimer} onChange={e => setRestTimer(e.target.value)} className="w-full surface-inset px-3 py-2 font-chalk text-sm text-foreground focus:border-primary focus:outline-none text-journal" />
+              <input type="number" value={restTimer} onChange={e => { setRestTimer(e.target.value); saveSettings('tlc-rest-timer', e.target.value); }}
+                className="w-full surface-inset px-3 py-2 font-chalk text-sm text-foreground focus:border-thunder-orange focus:outline-none text-journal" />
             </div>
             <div>
               <label className="mb-1 block text-label text-xs text-muted-foreground text-journal-sm">DEFAULT DIFFICULTY</label>
@@ -189,7 +290,8 @@ export function SettingsPanel() {
             <div>
               <label className="mb-1 block text-label text-xs text-muted-foreground text-journal-sm">NOTIFICATIONS</label>
               <button onClick={() => setNotifications(!notifications)}
-                className={cn("flex w-full items-center gap-3 border border-foreground/10 px-4 py-3 transition-colors btn-raised text-journal", notifications ? "text-primary" : "text-muted-foreground")}>
+                className={cn("flex w-full items-center gap-3 border border-foreground/10 px-4 py-3 transition-colors btn-raised text-journal active:scale-[0.98]",
+                  notifications ? "text-thunder-orange border-thunder-orange/30" : "text-muted-foreground")}>
                 {notifications ? <Bell className="h-5 w-5" /> : <BellOff className="h-5 w-5" />}
                 <span className="font-chalk text-sm">{notifications ? 'ENABLED' : 'DISABLED'}</span>
               </button>
@@ -199,13 +301,24 @@ export function SettingsPanel() {
 
         {activeTab === 'data' && (
           <div className="space-y-3 max-w-lg">
-            <button onClick={handleExport} className="flex w-full items-center gap-3 border border-foreground/10 px-4 py-3 font-chalk text-sm text-foreground transition-colors btn-raised text-journal">
-              <FileDown className="h-4 w-4 text-primary" /> EXPORT TRAINING DATA (JSON)
+            <button onClick={handleExport} className="flex w-full items-center gap-3 border border-foreground/10 px-4 py-3 font-chalk text-sm text-foreground transition-colors btn-raised text-journal active:scale-[0.98]">
+              <FileDown className="h-4 w-4 text-thunder-orange" /> EXPORT ALL DATA (JSON)
             </button>
-            <button onClick={handleExportCSV} className="flex w-full items-center gap-3 border border-foreground/10 px-4 py-3 font-chalk text-sm text-foreground transition-colors btn-raised text-journal">
-              <FileDown className="h-4 w-4 text-primary" /> EXPORT EXERCISE LIST (CSV)
+            <button onClick={handleImport} className="flex w-full items-center gap-3 border border-foreground/10 px-4 py-3 font-chalk text-sm text-foreground transition-colors btn-raised text-journal active:scale-[0.98]">
+              <Upload className="h-4 w-4 text-thunder-blue" /> IMPORT DATA (JSON)
             </button>
-            <button onClick={handleClearData} className="flex w-full items-center gap-3 border border-primary/30 bg-primary/5 px-4 py-3 font-chalk text-sm text-primary transition-colors hover:bg-primary hover:text-primary-foreground text-journal">
+            <button onClick={handleExportCSV} className="flex w-full items-center gap-3 border border-foreground/10 px-4 py-3 font-chalk text-sm text-foreground transition-colors btn-raised text-journal active:scale-[0.98]">
+              <FileDown className="h-4 w-4 text-thunder-orange" /> EXPORT EXERCISE LIST (CSV)
+            </button>
+            {importStatus && (
+              <div className={cn("p-3 text-sm font-chalk text-journal",
+                importStatus.includes('Error') ? 'border-primary/30 bg-primary/5 text-primary' : 'border-emerald-500/30 bg-emerald-500/5 text-emerald-600'
+              )}>
+                {importStatus}
+              </div>
+            )}
+            <div className="skeuo-stitch pt-3" />
+            <button onClick={handleClearData} className="flex w-full items-center gap-3 border border-primary/30 bg-primary/5 px-4 py-3 font-chalk text-sm text-primary transition-colors hover:bg-primary hover:text-primary-foreground text-journal active:scale-[0.98]">
               <Trash2 className="h-4 w-4" /> CLEAR ALL LOCAL DATA
             </button>
           </div>
@@ -213,7 +326,6 @@ export function SettingsPanel() {
 
         {activeTab === 'devtools' && (
           <div className="space-y-6">
-            {/* Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-foreground/10 border border-foreground/10">
               {[
                 { label: 'EXERCISES', value: stats.total },
@@ -221,21 +333,17 @@ export function SettingsPanel() {
                 { label: 'TRACKS', value: stats.trackCount },
                 { label: 'CATEGORIES', value: stats.categories },
               ].map(s => (
-                <div key={s.label} className="bg-card p-4 text-center skeuo-card">
+                <div key={s.label} className="bg-card p-4 text-center skeuo-card skeuo-grain">
                   <p className="font-chalk text-2xl text-foreground text-journal-lg">{s.value}</p>
                   <p className="text-label text-[9px] text-muted-foreground text-journal-sm">{s.label}</p>
                 </div>
               ))}
             </div>
 
-            {/* Download */}
-            <div>
-              <button className="w-full px-6 py-3 font-chalk text-sm transition-opacity hover:opacity-90 btn-thunder text-journal">
-                <Download className="mr-2 inline h-4 w-4" /> DOWNLOAD SOURCE ZIP
-              </button>
-            </div>
+            <button className="w-full px-6 py-3 font-chalk text-sm transition-opacity hover:opacity-90 btn-thunder text-journal active:scale-[0.98]">
+              <Download className="mr-2 inline h-4 w-4" /> DOWNLOAD SOURCE ZIP
+            </button>
 
-            {/* Exercise list */}
             <div>
               <div className="mb-3 flex items-center gap-2">
                 <h3 className="font-chalk text-sm text-foreground text-embossed text-journal">EXERCISE DATABASE</h3>
@@ -243,13 +351,9 @@ export function SettingsPanel() {
               </div>
               <div className="relative mb-3">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <input
-                  type="text"
-                  value={devSearch}
-                  onChange={e => setDevSearch(e.target.value)}
+                <input type="text" value={devSearch} onChange={e => setDevSearch(e.target.value)}
                   placeholder="Filter exercises..."
-                  className="w-full surface-inset py-2 pl-10 pr-3 text-sm focus:border-primary focus:outline-none text-journal"
-                />
+                  className="w-full surface-inset py-2 pl-10 pr-3 text-sm focus:border-thunder-orange focus:outline-none text-journal" />
               </div>
               <div className="border border-foreground/10 max-h-[400px] overflow-y-auto skeuo-card">
                 <table className="w-full text-xs">
@@ -278,7 +382,7 @@ export function SettingsPanel() {
                         </td>
                         <td className="px-3 py-2 hidden md:table-cell">
                           {(ex.videoUrl || ex.videoSources?.length) ? (
-                            <span className="text-primary text-[9px]">✓</span>
+                            <span className="text-thunder-orange text-[9px]">✓</span>
                           ) : (
                             <span className="text-muted-foreground/30 text-[9px]">—</span>
                           )}
@@ -295,7 +399,6 @@ export function SettingsPanel() {
               </div>
             </div>
 
-            {/* About */}
             <div className="skeuo-stitch pt-4">
               <div className="flex flex-wrap gap-4 text-sm text-muted-foreground text-journal">
                 <span className="font-chalk text-foreground text-embossed">TLC Calisthenics v1.0</span>
