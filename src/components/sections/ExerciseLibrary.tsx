@@ -75,7 +75,6 @@ export function ExerciseLibrary({ embedded = false }: { embedded?: boolean }) {
         return true;
       })
       .sort((a, b) => {
-        // Sort by difficulty first, then alphabetically within same difficulty
         const diffA = difficultyOrderMap[a.difficulty] ?? 99;
         const diffB = difficultyOrderMap[b.difficulty] ?? 99;
         if (diffA !== diffB) return diffA - diffB;
@@ -96,21 +95,21 @@ export function ExerciseLibrary({ embedded = false }: { embedded?: boolean }) {
       {!embedded && (
       <div className="editorial-divider-thick mb-4 pt-2">
         <div className="flex items-baseline justify-between">
-          <h2 className="text-editorial-sm text-foreground">
+          <h2 className="text-editorial-sm text-foreground text-embossed">
             EXERCISE LIBRARY
           </h2>
           <div className="flex items-center gap-2">
-            <span className="text-label text-xs text-muted-foreground">{filtered.length} exercises</span>
+            <span className="text-label text-xs text-muted-foreground text-journal-sm">{filtered.length} exercises</span>
             <div className="flex gap-px border border-foreground/10">
               <button
                 onClick={() => setViewMode('list')}
-                className={cn("p-2 transition-colors", viewMode === 'list' ? "bg-foreground text-card" : "text-muted-foreground hover:text-foreground")}
+                className={cn("p-2 transition-colors", viewMode === 'list' ? "bg-foreground text-card skeuo-pressed" : "text-muted-foreground hover:text-foreground")}
               >
                 <LayoutList className="h-4 w-4" />
               </button>
               <button
                 onClick={() => setViewMode('grid')}
-                className={cn("p-2 transition-colors", viewMode === 'grid' ? "bg-foreground text-card" : "text-muted-foreground hover:text-foreground")}
+                className={cn("p-2 transition-colors", viewMode === 'grid' ? "bg-foreground text-card skeuo-pressed" : "text-muted-foreground hover:text-foreground")}
               >
                 <LayoutGrid className="h-4 w-4" />
               </button>
@@ -122,34 +121,34 @@ export function ExerciseLibrary({ embedded = false }: { embedded?: boolean }) {
 
       {/* Search + Filters */}
       <div className="sticky top-0 z-20 mb-4 flex flex-wrap items-center gap-2 border-b border-foreground/10 bg-background py-3">
-        <div className="flex flex-1 items-center gap-2 border border-foreground/10 px-3 py-2">
+        <div className="flex flex-1 items-center gap-2 surface-inset px-3 py-2">
           <Search className="h-4 w-4 text-muted-foreground" />
           <input
             type="text"
             value={search}
             onChange={(e) => { setSearch(e.target.value); setPage(1); }}
             placeholder="Search..."
-            className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
+            className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none text-journal"
           />
         </div>
         <select
           value={categoryFilter}
           onChange={(e) => updateFilter(setCategoryFilter, e.target.value as Category | 'all')}
-          className="border border-foreground/10 bg-card px-3 py-2 text-sm text-foreground focus:outline-none"
+          className="surface-inset px-3 py-2 text-sm text-foreground focus:outline-none text-journal"
         >
           {categories.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
         </select>
         <select
           value={difficultyFilter}
           onChange={(e) => updateFilter(setDifficultyFilter, e.target.value as Difficulty | 'all')}
-          className="border border-foreground/10 bg-card px-3 py-2 text-sm text-foreground focus:outline-none"
+          className="surface-inset px-3 py-2 text-sm text-foreground focus:outline-none text-journal"
         >
           {difficulties.map(d => <option key={d.id} value={d.id}>{d.label}</option>)}
         </select>
         <select
           value={trackFilter}
           onChange={(e) => updateFilter(setTrackFilter, e.target.value as TrackId | 'all')}
-          className="border border-foreground/10 bg-card px-3 py-2 text-sm text-foreground focus:outline-none"
+          className="surface-inset px-3 py-2 text-sm text-foreground focus:outline-none text-journal"
         >
           {trackFilters.map(t => <option key={t.id} value={t.id}>{t.label}</option>)}
         </select>
@@ -157,14 +156,14 @@ export function ExerciseLibrary({ embedded = false }: { embedded?: boolean }) {
 
       {/* List View */}
       {viewMode === 'list' ? (
-        <div className="border border-foreground/10">
+        <div className="border border-foreground/10 skeuo-card">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b-2 border-foreground text-left bg-card">
-                <th className="px-4 py-2.5 text-label text-xs text-foreground">EXERCISE</th>
-                <th className="hidden px-4 py-2.5 text-label text-xs text-foreground sm:table-cell">DIFFICULTY</th>
-                <th className="hidden px-4 py-2.5 text-label text-xs text-foreground md:table-cell">CATEGORY</th>
-                <th className="hidden px-4 py-2.5 text-label text-xs text-foreground lg:table-cell">TRACKS</th>
+              <tr className="border-b-2 border-foreground text-left bg-card skeuo-leather">
+                <th className="px-4 py-2.5 text-label text-xs text-primary-foreground/90">EXERCISE</th>
+                <th className="hidden px-4 py-2.5 text-label text-xs text-primary-foreground/90 sm:table-cell">DIFFICULTY</th>
+                <th className="hidden px-4 py-2.5 text-label text-xs text-primary-foreground/90 md:table-cell">CATEGORY</th>
+                <th className="hidden px-4 py-2.5 text-label text-xs text-primary-foreground/90 lg:table-cell">TRACKS</th>
               </tr>
             </thead>
             <tbody>
@@ -172,18 +171,18 @@ export function ExerciseLibrary({ embedded = false }: { embedded?: boolean }) {
                 <tr
                   key={exercise.id}
                   onClick={() => setSelectedExercise(exercise)}
-                  className="cursor-pointer border-b border-foreground/8 bg-card transition-colors hover:bg-surface-0"
+                  className="cursor-pointer border-b border-foreground/8 bg-card transition-colors hover:bg-surface-0 notebook-entry"
                 >
                   <td className="px-4 py-2.5">
-                    <div className="font-chalk">{exercise.name}</div>
-                    <div className="text-xs text-muted-foreground line-clamp-1 sm:hidden">{exercise.difficulty} · {exercise.category}</div>
+                    <div className="font-chalk text-journal">{exercise.name}</div>
+                    <div className="text-xs text-muted-foreground line-clamp-1 sm:hidden text-journal-sm">{exercise.difficulty} · {exercise.category}</div>
                   </td>
                   <td className="hidden px-4 py-2.5 sm:table-cell">
-                    <span className={cn("border px-2 py-0.5 text-label text-[10px]", difficultyBadge[exercise.difficulty])}>
+                    <span className={cn("border px-2 py-0.5 text-label text-[10px] skeuo-metal", difficultyBadge[exercise.difficulty])}>
                       {exercise.difficulty.toUpperCase()}
                     </span>
                   </td>
-                  <td className="hidden px-4 py-2.5 text-muted-foreground md:table-cell">{exercise.category}</td>
+                  <td className="hidden px-4 py-2.5 text-muted-foreground md:table-cell text-journal">{exercise.category}</td>
                   <td className="hidden px-4 py-2.5 lg:table-cell">
                     <div className="flex gap-1">
                       {exercise.tracks.slice(0, 2).map(t => (
@@ -202,7 +201,7 @@ export function ExerciseLibrary({ embedded = false }: { embedded?: boolean }) {
             <div
               key={exercise.id}
               onClick={() => setSelectedExercise(exercise)}
-              className="group cursor-pointer bg-card transition-colors hover:bg-surface-0"
+              className="group cursor-pointer bg-card transition-colors hover:bg-surface-0 skeuo-card skeuo-grain"
             >
               {exercise.image ? (
                 <div className="relative aspect-[16/9] overflow-hidden">
@@ -224,8 +223,8 @@ export function ExerciseLibrary({ embedded = false }: { embedded?: boolean }) {
                 </div>
               )}
               <div className="border-t border-foreground/5 p-3">
-                <h3 className="mb-0.5 font-chalk text-sm truncate">{exercise.name}</h3>
-                <p className="text-xs text-muted-foreground line-clamp-1">{exercise.shortPurpose}</p>
+                <h3 className="mb-0.5 font-chalk text-sm truncate text-journal">{exercise.name}</h3>
+                <p className="text-xs text-muted-foreground line-clamp-1 text-journal-sm">{exercise.shortPurpose}</p>
               </div>
             </div>
           ))}
@@ -238,17 +237,17 @@ export function ExerciseLibrary({ embedded = false }: { embedded?: boolean }) {
           <button
             onClick={() => setPage(p => Math.max(1, p - 1))}
             disabled={page === 1}
-            className="flex items-center gap-1 border border-foreground/10 px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-foreground hover:text-card disabled:opacity-30"
+            className="flex items-center gap-1 btn-raised px-3 py-1.5 text-sm text-muted-foreground disabled:opacity-30"
           >
             <ChevronLeft className="h-4 w-4" /> Prev
           </button>
-          <span className="text-label text-xs text-muted-foreground">
+          <span className="text-label text-xs text-muted-foreground text-journal-sm">
             {page} / {totalPages}
           </span>
           <button
             onClick={() => setPage(p => Math.min(totalPages, p + 1))}
             disabled={page === totalPages}
-            className="flex items-center gap-1 border border-foreground/10 px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-foreground hover:text-card disabled:opacity-30"
+            className="flex items-center gap-1 btn-raised px-3 py-1.5 text-sm text-muted-foreground disabled:opacity-30"
           >
             Next <ChevronRight className="h-4 w-4" />
           </button>

@@ -107,12 +107,12 @@ export function SettingsPanel() {
 
       <div className="editorial-divider-thick mb-4 pt-2">
         <div className="flex items-center gap-3">
-          <h2 className="text-editorial-sm text-foreground">SETTINGS</h2>
+          <h2 className="text-editorial-sm text-foreground text-embossed">SETTINGS</h2>
         </div>
       </div>
 
-      {/* Tab bar */}
-      <div className="mb-4 flex overflow-x-auto gap-0 border border-foreground/10 hide-scrollbar">
+      {/* Tab bar — leather strip */}
+      <div className="mb-4 flex overflow-x-auto gap-0 skeuo-leather hide-scrollbar">
         {tabConfig.map(tab => {
           const Icon = tab.icon;
           return (
@@ -120,10 +120,10 @@ export function SettingsPanel() {
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={cn(
-                "flex shrink-0 items-center gap-2 px-4 py-2.5 text-label text-[10px] tracking-widest transition-colors border-r last:border-r-0 border-foreground/10",
+                "flex shrink-0 items-center gap-2 px-4 py-2.5 text-label text-[10px] tracking-widest transition-colors border-r last:border-r-0 border-primary-foreground/10",
                 activeTab === tab.id
-                  ? "bg-foreground text-card"
-                  : "bg-card text-muted-foreground hover:bg-surface-0"
+                  ? "skeuo-pressed bg-primary-foreground/15 text-primary-foreground"
+                  : "text-primary-foreground/60 hover:text-primary-foreground/80"
               )}
             >
               <Icon className="h-3.5 w-3.5" />
@@ -134,23 +134,23 @@ export function SettingsPanel() {
       </div>
 
       {/* Tab content */}
-      <div className="border border-foreground/10 bg-card p-6">
+      <div className="border border-foreground/10 bg-card p-6 skeuo-card skeuo-grain notebook-ruled">
         {activeTab === 'profile' && (
           <div className="space-y-4 max-w-lg">
             <div>
-              <label className="mb-1 block text-label text-xs text-muted-foreground">DISPLAY NAME</label>
-              <input value={displayName} onChange={e => setDisplayName(e.target.value)} className="w-full border border-foreground/10 bg-surface-0 px-3 py-2 font-chalk text-sm text-foreground focus:border-primary focus:outline-none" />
+              <label className="mb-1 block text-label text-xs text-muted-foreground text-journal-sm">DISPLAY NAME</label>
+              <input value={displayName} onChange={e => setDisplayName(e.target.value)} className="w-full surface-inset px-3 py-2 font-chalk text-sm text-foreground focus:border-primary focus:outline-none text-journal" />
             </div>
             <div>
-              <label className="mb-1 block text-label text-xs text-muted-foreground">BIO</label>
-              <input value={bio} onChange={e => setBio(e.target.value)} className="w-full border border-foreground/10 bg-surface-0 px-3 py-2 font-chalk text-sm text-foreground focus:border-primary focus:outline-none" />
+              <label className="mb-1 block text-label text-xs text-muted-foreground text-journal-sm">BIO</label>
+              <input value={bio} onChange={e => setBio(e.target.value)} className="w-full surface-inset px-3 py-2 font-chalk text-sm text-foreground focus:border-primary focus:outline-none text-journal" />
             </div>
             <div>
-              <label className="mb-1 block text-label text-xs text-muted-foreground">UNITS</label>
+              <label className="mb-1 block text-label text-xs text-muted-foreground text-journal-sm">UNITS</label>
               <div className="flex">
                 {(['metric', 'imperial'] as const).map(u => (
                   <button key={u} onClick={() => setUnits(u)}
-                    className={cn("flex-1 border border-foreground/10 px-4 py-2 text-label text-sm transition-colors", units === u ? "bg-foreground text-card" : "bg-card text-muted-foreground hover:bg-surface-0")}>
+                    className={cn("flex-1 border border-foreground/10 px-4 py-2 text-label text-sm transition-colors text-journal", units === u ? "skeuo-pressed bg-foreground text-card" : "bg-card text-muted-foreground hover:bg-surface-0 btn-raised")}>
                     {u.toUpperCase()}
                   </button>
                 ))}
@@ -161,8 +161,8 @@ export function SettingsPanel() {
 
         {activeTab === 'appearance' && (
           <div className="max-w-lg">
-            <label className="mb-2 block text-label text-xs text-muted-foreground">THEME</label>
-            <button onClick={toggleTheme} className="flex w-full items-center gap-3 border border-foreground/10 px-4 py-3 text-foreground transition-colors hover:bg-surface-0">
+            <label className="mb-2 block text-label text-xs text-muted-foreground text-journal-sm">THEME</label>
+            <button onClick={toggleTheme} className="flex w-full items-center gap-3 border border-foreground/10 px-4 py-3 text-foreground transition-colors btn-raised text-journal">
               {currentTheme === 'dark' ? <Sun className="h-5 w-5 text-primary" /> : <Moon className="h-5 w-5 text-primary" />}
               <span className="font-chalk text-sm">{currentTheme === 'dark' ? 'SWITCH TO LIGHT' : 'SWITCH TO DARK'}</span>
             </button>
@@ -172,13 +172,13 @@ export function SettingsPanel() {
         {activeTab === 'training' && (
           <div className="space-y-4 max-w-lg">
             <div>
-              <label className="mb-1 block text-label text-xs text-muted-foreground">DEFAULT REST TIMER (sec)</label>
-              <input type="number" value={restTimer} onChange={e => setRestTimer(e.target.value)} className="w-full border border-foreground/10 bg-surface-0 px-3 py-2 font-chalk text-sm text-foreground focus:border-primary focus:outline-none" />
+              <label className="mb-1 block text-label text-xs text-muted-foreground text-journal-sm">DEFAULT REST TIMER (sec)</label>
+              <input type="number" value={restTimer} onChange={e => setRestTimer(e.target.value)} className="w-full surface-inset px-3 py-2 font-chalk text-sm text-foreground focus:border-primary focus:outline-none text-journal" />
             </div>
             <div>
-              <label className="mb-1 block text-label text-xs text-muted-foreground">DEFAULT DIFFICULTY</label>
+              <label className="mb-1 block text-label text-xs text-muted-foreground text-journal-sm">DEFAULT DIFFICULTY</label>
               <select value={defaultDifficulty} onChange={e => setDefaultDifficulty(e.target.value)}
-                className="w-full border border-foreground/10 bg-card px-3 py-2 font-chalk text-sm text-foreground focus:outline-none">
+                className="w-full surface-inset px-3 py-2 font-chalk text-sm text-foreground focus:outline-none text-journal">
                 <option value="all">All Levels</option>
                 <option value="beginner">Beginner</option>
                 <option value="intermediate">Intermediate</option>
@@ -186,9 +186,9 @@ export function SettingsPanel() {
               </select>
             </div>
             <div>
-              <label className="mb-1 block text-label text-xs text-muted-foreground">NOTIFICATIONS</label>
+              <label className="mb-1 block text-label text-xs text-muted-foreground text-journal-sm">NOTIFICATIONS</label>
               <button onClick={() => setNotifications(!notifications)}
-                className={cn("flex w-full items-center gap-3 border border-foreground/10 px-4 py-3 transition-colors hover:bg-surface-0", notifications ? "text-primary" : "text-muted-foreground")}>
+                className={cn("flex w-full items-center gap-3 border border-foreground/10 px-4 py-3 transition-colors btn-raised text-journal", notifications ? "text-primary" : "text-muted-foreground")}>
                 {notifications ? <Bell className="h-5 w-5" /> : <BellOff className="h-5 w-5" />}
                 <span className="font-chalk text-sm">{notifications ? 'ENABLED' : 'DISABLED'}</span>
               </button>
@@ -198,13 +198,13 @@ export function SettingsPanel() {
 
         {activeTab === 'data' && (
           <div className="space-y-3 max-w-lg">
-            <button onClick={handleExport} className="flex w-full items-center gap-3 border border-foreground/10 px-4 py-3 font-chalk text-sm text-foreground transition-colors hover:bg-surface-0">
+            <button onClick={handleExport} className="flex w-full items-center gap-3 border border-foreground/10 px-4 py-3 font-chalk text-sm text-foreground transition-colors btn-raised text-journal">
               <FileDown className="h-4 w-4 text-primary" /> EXPORT TRAINING DATA (JSON)
             </button>
-            <button onClick={handleExportCSV} className="flex w-full items-center gap-3 border border-foreground/10 px-4 py-3 font-chalk text-sm text-foreground transition-colors hover:bg-surface-0">
+            <button onClick={handleExportCSV} className="flex w-full items-center gap-3 border border-foreground/10 px-4 py-3 font-chalk text-sm text-foreground transition-colors btn-raised text-journal">
               <FileDown className="h-4 w-4 text-primary" /> EXPORT EXERCISE LIST (CSV)
             </button>
-            <button onClick={handleClearData} className="flex w-full items-center gap-3 border border-primary/30 bg-primary/5 px-4 py-3 font-chalk text-sm text-primary transition-colors hover:bg-primary hover:text-primary-foreground">
+            <button onClick={handleClearData} className="flex w-full items-center gap-3 border border-primary/30 bg-primary/5 px-4 py-3 font-chalk text-sm text-primary transition-colors hover:bg-primary hover:text-primary-foreground text-journal">
               <Trash2 className="h-4 w-4" /> CLEAR ALL LOCAL DATA
             </button>
           </div>
@@ -220,16 +220,17 @@ export function SettingsPanel() {
                 { label: 'TRACKS', value: stats.trackCount },
                 { label: 'CATEGORIES', value: stats.categories },
               ].map(s => (
-                <div key={s.label} className="bg-card p-4 text-center">
-                  <p className="font-chalk text-2xl text-foreground">{s.value}</p>
-                  <p className="text-label text-[9px] text-muted-foreground">{s.label}</p>
+                <div key={s.label} className="bg-card p-4 text-center skeuo-card">
+                  <p className="font-chalk text-2xl text-foreground text-journal-lg">{s.value}</p>
+                  <p className="text-label text-[9px] text-muted-foreground text-journal-sm">{s.label}</p>
                 </div>
               ))}
             </div>
 
             {/* Download */}
             <div>
-              <button className="w-full bg-primary px-6 py-3 font-chalk text-sm text-primary-foreground transition-opacity hover:opacity-90">
+              <button className="w-full bg-primary px-6 py-3 font-chalk text-sm text-primary-foreground transition-opacity hover:opacity-90 btn-raised text-journal"
+                style={{ background: 'hsl(var(--primary))' }}>
                 <Download className="mr-2 inline h-4 w-4" /> DOWNLOAD SOURCE ZIP
               </button>
             </div>
@@ -237,8 +238,8 @@ export function SettingsPanel() {
             {/* Exercise list */}
             <div>
               <div className="mb-3 flex items-center gap-2">
-                <h3 className="font-chalk text-sm text-foreground">EXERCISE DATABASE</h3>
-                <span className="text-label text-[10px] text-muted-foreground">{filteredExercises.length} results</span>
+                <h3 className="font-chalk text-sm text-foreground text-embossed text-journal">EXERCISE DATABASE</h3>
+                <span className="text-label text-[10px] text-muted-foreground text-journal-sm">{filteredExercises.length} results</span>
               </div>
               <div className="relative mb-3">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -247,27 +248,27 @@ export function SettingsPanel() {
                   value={devSearch}
                   onChange={e => setDevSearch(e.target.value)}
                   placeholder="Filter exercises..."
-                  className="w-full border border-foreground/10 bg-surface-0 py-2 pl-10 pr-3 text-sm focus:border-primary focus:outline-none"
+                  className="w-full surface-inset py-2 pl-10 pr-3 text-sm focus:border-primary focus:outline-none text-journal"
                 />
               </div>
-              <div className="border border-foreground/10 max-h-[400px] overflow-y-auto">
+              <div className="border border-foreground/10 max-h-[400px] overflow-y-auto skeuo-card">
                 <table className="w-full text-xs">
                   <thead className="sticky top-0">
-                    <tr className="border-b-2 border-foreground bg-card text-left">
-                      <th className="px-3 py-2 text-label text-[9px]">NAME</th>
-                      <th className="px-3 py-2 text-label text-[9px] hidden sm:table-cell">CAT</th>
-                      <th className="px-3 py-2 text-label text-[9px] hidden sm:table-cell">DIFF</th>
-                      <th className="px-3 py-2 text-label text-[9px] hidden md:table-cell">VIDEO</th>
+                    <tr className="border-b-2 border-foreground skeuo-leather text-left">
+                      <th className="px-3 py-2 text-label text-[9px] text-primary-foreground/90">NAME</th>
+                      <th className="px-3 py-2 text-label text-[9px] text-primary-foreground/90 hidden sm:table-cell">CAT</th>
+                      <th className="px-3 py-2 text-label text-[9px] text-primary-foreground/90 hidden sm:table-cell">DIFF</th>
+                      <th className="px-3 py-2 text-label text-[9px] text-primary-foreground/90 hidden md:table-cell">VIDEO</th>
                       <th className="px-3 py-2 text-label text-[9px] w-10"></th>
                     </tr>
                   </thead>
                   <tbody>
                     {filteredExercises.slice(0, 50).map(ex => (
-                      <tr key={ex.id} className="border-b border-foreground/5 bg-card hover:bg-surface-0 transition-colors">
-                        <td className="px-3 py-2 font-chalk truncate max-w-[200px]">{ex.name}</td>
-                        <td className="px-3 py-2 text-muted-foreground hidden sm:table-cell">{ex.category}</td>
+                      <tr key={ex.id} className="border-b border-foreground/5 bg-card hover:bg-surface-0 transition-colors notebook-entry">
+                        <td className="px-3 py-2 font-chalk truncate max-w-[200px] text-journal">{ex.name}</td>
+                        <td className="px-3 py-2 text-muted-foreground hidden sm:table-cell text-journal-sm">{ex.category}</td>
                         <td className="px-3 py-2 hidden sm:table-cell">
-                          <span className={cn("border px-1.5 py-0 text-[8px] text-label",
+                          <span className={cn("border px-1.5 py-0 text-[8px] text-label skeuo-metal",
                             ex.difficulty === 'easy' && 'difficulty-easy',
                             ex.difficulty === 'beginner' && 'difficulty-beginner',
                             ex.difficulty === 'intermediate' && 'difficulty-intermediate',
@@ -295,9 +296,9 @@ export function SettingsPanel() {
             </div>
 
             {/* About */}
-            <div className="border-t border-foreground/10 pt-4">
-              <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                <span className="font-chalk text-foreground">TLC Calisthenics v1.0</span>
+            <div className="skeuo-stitch pt-4">
+              <div className="flex flex-wrap gap-4 text-sm text-muted-foreground text-journal">
+                <span className="font-chalk text-foreground text-embossed">TLC Calisthenics v1.0</span>
                 <span>·</span>
                 <span>React + Vite + Tailwind</span>
                 <span>·</span>
