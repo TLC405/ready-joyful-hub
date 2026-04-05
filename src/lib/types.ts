@@ -1,5 +1,14 @@
 // ==================== TLC Calisthenics — Core Types ====================
 
+export type VideoPlatform = 'youtube' | 'instagram' | 'x' | 'facebook';
+
+export interface VideoSource {
+  platform: VideoPlatform;
+  url: string;
+  label?: string;
+  primary?: boolean;
+}
+
 export type Category = 'push' | 'pull' | 'legs' | 'core' | 'mobility' | 'skills' | 'yoga';
 export type Difficulty = 'easy' | 'beginner' | 'intermediate' | 'advanced' | 'master';
 export type TrackId = 'planche' | 'handstand' | 'rings' | 'compression' | 'pull-strength' | 'legs' | 'flag' | 'general' | 'inversions' | 'grip' | 'press' | 'yoga-flow' | 'mobility';
