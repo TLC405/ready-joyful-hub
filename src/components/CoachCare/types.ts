@@ -1,4 +1,4 @@
-export type CanvasMode = 'idle' | 'video' | 'exercise' | 'template' | 'document' | 'analytics';
+export type CanvasMode = 'idle' | 'video' | 'exercise' | 'template' | 'document' | 'analytics' | 'social';
 
 export interface VideoCanvasData {
   platform: 'youtube' | 'instagram' | 'tiktok';
@@ -49,12 +49,33 @@ export interface AnalyticsCanvasData {
   type: 'overview';
 }
 
-export interface CanvasState {
-  mode: CanvasMode;
-  data: VideoCanvasData | ExerciseCanvasData | TemplateCanvasData | DocumentCanvasData | AnalyticsCanvasData | null;
+export interface SocialSearchResult {
+  id: string;
+  title: string;
+  thumbnail: string;
+  platform: 'youtube' | 'instagram';
+  url: string;
+  embedUrl: string;
+  channel?: string;
 }
 
-export type MessageType = 'text' | 'video-card' | 'exercise-card' | 'template-preview' | 'chart';
+export interface SocialCanvasData {
+  query: string;
+  platform: 'all' | 'youtube' | 'instagram';
+  results: SocialSearchResult[];
+}
+
+export interface CanvasState {
+  mode: CanvasMode;
+  data: VideoCanvasData | ExerciseCanvasData | TemplateCanvasData | DocumentCanvasData | AnalyticsCanvasData | SocialCanvasData | null;
+}
+
+export interface QuickReply {
+  label: string;
+  message: string;
+}
+
+export type MessageType = 'text' | 'video-card' | 'exercise-card' | 'template-preview' | 'chart' | 'social-search';
 
 export interface ChatMessage {
   id: string;
@@ -62,6 +83,13 @@ export interface ChatMessage {
   content: string;
   timestamp: string;
   type: MessageType;
+  quickReplies?: QuickReply[];
+  exerciseRef?: {
+    id: string;
+    name: string;
+    difficulty: string;
+    thumbnail?: string;
+  };
   canvasAction?: {
     mode: CanvasMode;
     data: any;
