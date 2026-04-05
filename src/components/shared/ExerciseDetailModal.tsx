@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import type { Exercise } from '@/lib/types';
 import { getExerciseById } from '@/lib/exercises';
 import { cn } from '@/lib/utils';
