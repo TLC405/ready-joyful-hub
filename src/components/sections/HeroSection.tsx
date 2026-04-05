@@ -16,13 +16,13 @@ export function HeroSection() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="mb-2 text-label text-xs text-muted-foreground">TLC CALISTHENICS — EST. 2024</div>
-        <h1 className="text-editorial text-foreground">
+        <div className="mb-2 text-label text-xs text-muted-foreground text-center">TLC CALISTHEtICs est 2026</div>
+        <h1 className="text-editorial text-foreground text-6xl font-serif text-center">
           MASTER<br />
           <span className="text-primary">YOUR BODY.</span>
         </h1>
-        <p className="mt-4 max-w-lg text-base text-muted-foreground">
-          Progressive calisthenics training. Track skills, unlock movements, follow structured tracks.
+        <p className="mt-4 max-w-lg text-base text-card-foreground my-[21px] border-primary border-solid text-right">
+          Build super human strength with a hydbrid approach.
         </p>
       </motion.div>
 
