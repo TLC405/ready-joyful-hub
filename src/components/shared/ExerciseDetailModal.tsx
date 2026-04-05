@@ -4,6 +4,8 @@ import type { Exercise } from '@/lib/types';
 import { getExerciseById } from '@/lib/exercises';
 import { cn } from '@/lib/utils';
 import { TLCVideoPlayer } from './TLCVideoPlayer';
+import bruceLeeIcon from '@/assets/bruce-lee-icon.png';
+import jcvdIcon from '@/assets/jcvd-icon.png';
 
 const difficultyBadge: Record<string, string> = {
   easy: 'difficulty-easy',
@@ -11,6 +13,11 @@ const difficultyBadge: Record<string, string> = {
   intermediate: 'difficulty-intermediate',
   advanced: 'difficulty-advanced',
   master: 'difficulty-master',
+};
+
+const creatorIcons: Record<string, { icon: string; label: string; color: string }> = {
+  'Bruce Lee': { icon: bruceLeeIcon, label: 'BRUCE LEE ORIGINAL', color: 'text-primary' },
+  'Jean-Claude Van Damme': { icon: jcvdIcon, label: 'JCVD SIGNATURE MOVE', color: 'text-primary' },
 };
 
 interface ExerciseDetailModalProps {
@@ -23,6 +30,7 @@ export function ExerciseDetailModal({ exercise: initialExercise, onClose }: Exer
 
   const regressExercises = exercise.regressTo.map(id => getExerciseById(id)).filter(Boolean) as Exercise[];
   const progressExercises = exercise.progressTo.map(id => getExerciseById(id)).filter(Boolean) as Exercise[];
+  const creatorInfo = exercise.creator ? creatorIcons[exercise.creator] : null;
 
   return (
     <motion.div
@@ -43,6 +51,28 @@ export function ExerciseDetailModal({ exercise: initialExercise, onClose }: Exer
         <button onClick={onClose} className="absolute right-3 top-3 border border-foreground/10 p-2 text-muted-foreground hover:bg-foreground hover:text-card transition-colors z-10">
           ✕
         </button>
+
+        {/* Creator Legend Badge */}
+        {creatorInfo && (
+          <div className="mb-4 flex items-center gap-3 border-2 border-primary/30 bg-primary/5 p-3">
+            <img
+              src={creatorInfo.icon}
+              alt={exercise.creator}
+              className="h-12 w-12 object-contain"
+              loading="lazy"
+              width={48}
+              height={48}
+            />
+            <div>
+              <div className={cn("text-label text-xs font-bold", creatorInfo.color)}>
+                {creatorInfo.label}
+              </div>
+              <div className="text-[10px] text-muted-foreground mt-0.5">
+                This exercise was made famous by {exercise.creator}
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="grid gap-5 lg:grid-cols-2">
           {/* Video player or image */}
