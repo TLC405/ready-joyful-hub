@@ -130,6 +130,14 @@ export function ProgressionMap({ embedded = false }: { embedded?: boolean }) {
                         <Icon className="h-3 w-3" />
                         <span className="font-chalk text-xs text-journal">{track.name}</span>
                         <span className="ml-auto text-label text-[10px] opacity-50">{track.nodes.length}</span>
+                        {(() => {
+                          const withVid = track.nodes.filter(n => {
+                            const ex = getExerciseById(n.exerciseId);
+                            return ex && (ex.videoUrl || ex.videoSources?.length);
+                          }).length;
+                          const pct = Math.round((withVid / track.nodes.length) * 100);
+                          return <span className="text-label text-[9px] text-primary/70">{pct}%</span>;
+                        })()}
                       </button>
                     );
                   })}
