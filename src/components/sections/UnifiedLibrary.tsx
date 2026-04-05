@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BookOpen, Map, Tv, Search, Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
