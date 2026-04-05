@@ -49,6 +49,9 @@ export interface Exercise {
   thumbnailUrl?: string;
   needsUpload?: boolean;
 
+  // Multi-source video
+  videoSources?: VideoSource[];
+
   // Creator credit
   creator?: string;
   instagramUrl?: string;
