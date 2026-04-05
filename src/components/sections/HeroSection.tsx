@@ -14,13 +14,15 @@ function getYtThumb(videoUrl?: string): string | null {
 export function HeroSection({ onCategoryClick }: HeroSectionProps) {
   const categories = useMemo(() => {
     const cats = [
-      { key: 'calisthenics', label: 'CALISTHENICS', emoji: '💪' },
+      { key: 'all', label: 'CALISTHENICS', emoji: '💪' },
       { key: 'yoga', label: 'YOGA', emoji: '🧘' },
       { key: 'ballet', label: 'BALLET', emoji: '🩰' },
       { key: 'mobility', label: 'MOBILITY', emoji: '🔄' },
     ];
     return cats.map(c => {
-      const catExercises = exercises.filter(e => e.category === c.key);
+      const catExercises = c.key === 'all'
+        ? exercises.filter(e => ['push', 'pull', 'core', 'legs', 'skills'].includes(e.category))
+        : exercises.filter(e => e.category === c.key);
       const thumb = catExercises.find(e => e.videoUrl)?.videoUrl;
       return { ...c, count: catExercises.length, thumb: getYtThumb(thumb) };
     });
