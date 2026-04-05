@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, ChevronRight, ChevronDown, Search, Play, LayoutGrid, AlertTriangle, Wrench } from 'lucide-react';
-import { getExerciseById, exercises } from '@/lib/exercises';
+import { getExerciseById, exercises, getExercisesByTrack } from '@/lib/exercises';
 import { TLCNotebookPlayer } from '@/components/shared/TLCNotebookPlayer';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { AppBreadcrumb } from '@/components/shared/Breadcrumb';
@@ -384,6 +384,43 @@ export default function VideoPage() {
                 </p>
               )}
             </AccordionPanel>
+
+            {/* Related Exercises */}
+            {exercise.tracks.length > 0 && (() => {
+              const related = exercise.tracks.flatMap(t => getExercisesByTrack(t))
+                .filter((ex, i, arr) => ex.id !== exercise.id && arr.findIndex(e => e.id === ex.id) === i)
+                .slice(0, 6);
+              if (!related.length) return null;
+              return (
+                <AccordionPanel title="RELATED EXERCISES">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    {related.map(ex => {
+                      const thumb = getThumb(ex);
+                      return (
+                        <button
+                          key={ex.id}
+                          onClick={() => navigate(`/video/${ex.id}`)}
+                          className="group flex flex-col bg-card hover:bg-surface-0 transition-all text-left skeuo-card border border-foreground/10"
+                        >
+                          <div className="relative aspect-video overflow-hidden bg-surface-0">
+                            {thumb ? (
+                              <img src={thumb} alt={ex.name} className="h-full w-full object-cover" loading="lazy" />
+                            ) : (
+                              <div className="flex h-full w-full items-center justify-center">
+                                <span className="font-chalk text-lg text-muted-foreground/20">{ex.name[0]}</span>
+                              </div>
+                            )}
+                          </div>
+                          <div className="p-1.5">
+                            <p className="font-chalk text-[10px] truncate text-journal">{ex.name}</p>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </AccordionPanel>
+              );
+            })()}
           </div>
         </div>
       </div>

@@ -9,9 +9,9 @@ export interface VideoSource {
   primary?: boolean;
 }
 
-export type Category = 'push' | 'pull' | 'legs' | 'core' | 'mobility' | 'skills' | 'yoga';
+export type Category = 'push' | 'pull' | 'legs' | 'core' | 'mobility' | 'skills' | 'yoga' | 'ballet';
 export type Difficulty = 'easy' | 'beginner' | 'intermediate' | 'advanced' | 'master';
-export type TrackId = 'planche' | 'handstand' | 'rings' | 'compression' | 'pull-strength' | 'legs' | 'flag' | 'general' | 'inversions' | 'grip' | 'press' | 'yoga-flow' | 'mobility';
+export type TrackId = 'planche' | 'handstand' | 'rings' | 'compression' | 'pull-strength' | 'push-strength' | 'legs' | 'flag' | 'general' | 'inversions' | 'grip' | 'press' | 'yoga-flow' | 'mobility' | 'ballet';
 export type Equipment = 'floor' | 'wall' | 'pull-up bar' | 'rings' | 'chair' | 'towel' | 'resistance band' | 'parallettes';
 export type UnlockState = 'locked' | 'preview' | 'try_mode' | 'unlocked' | 'coach_override';
 

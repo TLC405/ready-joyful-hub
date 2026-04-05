@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, Zap, ArrowUp, Circle, Minimize2, ArrowDown, Footprints, Hand, Triangle, GripVertical, TrendingUp, Flower2 } from 'lucide-react';
+import { ChevronDown, Zap, ArrowUp, Circle, Minimize2, ArrowDown, Footprints, Hand, Triangle, GripVertical, TrendingUp, Flower2, Flag } from 'lucide-react';
 import { tracks } from '@/lib/tracks';
 import { getExerciseById } from '@/lib/exercises';
 import type { Exercise } from '@/lib/types';
@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 import { ExerciseDetailModal } from '@/components/shared/ExerciseDetailModal';
 
 const trackIcons: Record<string, React.ElementType> = {
-  Zap, ArrowUp, Circle, Minimize2, ArrowDown, Footprints, Hand, Triangle, Grip: GripVertical, TrendingUp, Flower2,
+  Zap, ArrowUp, Circle, Minimize2, ArrowDown, Footprints, Hand, Triangle, Grip: GripVertical, TrendingUp, Flower2, Flag, Stretch: Triangle,
 };
 
 const difficultyOrder: Record<string, number> = {
@@ -130,6 +130,14 @@ export function ProgressionMap({ embedded = false }: { embedded?: boolean }) {
                         <Icon className="h-3 w-3" />
                         <span className="font-chalk text-xs text-journal">{track.name}</span>
                         <span className="ml-auto text-label text-[10px] opacity-50">{track.nodes.length}</span>
+                        {(() => {
+                          const withVid = track.nodes.filter(n => {
+                            const ex = getExerciseById(n.exerciseId);
+                            return ex && (ex.videoUrl || ex.videoSources?.length);
+                          }).length;
+                          const pct = Math.round((withVid / track.nodes.length) * 100);
+                          return <span className="text-label text-[9px] text-primary/70">{pct}%</span>;
+                        })()}
                       </button>
                     );
                   })}
