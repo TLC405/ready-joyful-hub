@@ -710,10 +710,10 @@ export const exercises: Exercise[] = [
       brutality: 'You are fighting leverage. If you lose the lean, you lose the protocol. Small holds win.',
       watchOut: 'Bent elbows = instant fail. Reset, reduce lean.',
       recoveryVector: 'Forearm flush + gentle biceps tendon unload (easy stretch).',
+    },
     videoSources: [
       { platform: 'youtube', url: 'https://www.youtube.com/watch?v=xLPP33cZVI4', label: 'Planche Lean Guide', primary: true },
     ],
-    },
   },
   {
     id: 'pseudo-planche-push-up',
@@ -785,10 +785,10 @@ export const exercises: Exercise[] = [
       brutality: 'This is where your nervous system panics. Stay calm. Small holds are the correct dose.',
       watchOut: 'Jumping into it = wrist tax. Float only.',
       recoveryVector: 'Forearm massage + scap wall slides.',
+    },
     videoSources: [
       { platform: 'youtube', url: 'https://www.youtube.com/watch?v=qvWvfZuUN4k', label: 'Tuck Planche', primary: true },
     ],
-    },
   },
   {
     id: 'advanced-tuck-planche',
