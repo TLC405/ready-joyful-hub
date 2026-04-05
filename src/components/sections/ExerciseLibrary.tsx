@@ -15,6 +15,7 @@ const categories: { id: Category | 'all'; label: string }[] = [
   { id: 'mobility', label: 'Mobility' },
   { id: 'skills', label: 'Skills' },
   { id: 'yoga', label: 'Yoga' },
+  { id: 'ballet', label: 'Ballet' },
 ];
 
 const difficulties: { id: Difficulty | 'all'; label: string }[] = [
@@ -40,6 +41,8 @@ const trackFilters: { id: TrackId | 'all'; label: string }[] = [
   { id: 'grip', label: 'Grip' },
   { id: 'mobility', label: 'Mobility' },
   { id: 'yoga-flow', label: 'Yoga Flow' },
+  { id: 'push-strength', label: 'Push Strength' },
+  { id: 'ballet', label: 'Ballet' },
 ];
 
 const difficultyBadge: Record<string, string> = {
@@ -50,7 +53,7 @@ const difficultyBadge: Record<string, string> = {
   master: 'difficulty-master',
 };
 
-const ITEMS_PER_PAGE = 20;
+const ITEMS_PER_PAGE = 12;
 
 export function ExerciseLibrary({ embedded = false }: { embedded?: boolean }) {
   const [categoryFilter, setCategoryFilter] = useState<Category | 'all'>('all');
