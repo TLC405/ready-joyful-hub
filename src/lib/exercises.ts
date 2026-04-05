@@ -1315,12 +1315,12 @@ export const exercises: Exercise[] = [
     doThis: { setsRange: '4–6', timeSecRange: '3–8s', restSecRange: '120s' },
     cueStack: ['Underhand top, overhand bottom', 'Pull + push simultaneously', 'Body straight'],
     failSigns: ['Hips dropping', 'Grip slipping', 'Bending at waist'],
-    regressTo: [],
+    regressTo: ['dragon-flag'],
     progressTo: ['human-flag'],
-    videoUrl: 'https://www.youtube.com/watch?v=NWskCNO3rCo',
-    thumbnailUrl: 'https://i.ytimg.com/vi/NWskCNO3rCo/hqdefault.jpg',
+    videoUrl: 'https://www.youtube.com/watch?v=hBaHx4wPMbA',
+    thumbnailUrl: 'https://i.ytimg.com/vi/hBaHx4wPMbA/hqdefault.jpg',
     videoSources: [
-      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=NWskCNO3rCo', label: 'Tutorial', primary: true },
+      { platform: 'youtube', url: 'https://www.youtube.com/watch?v=hBaHx4wPMbA', label: 'Clutch Flag Tutorial', primary: true },
     ],
   },
   {
