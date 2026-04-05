@@ -1,5 +1,5 @@
-import { useState, useRef } from 'react';
-import { Play, Pause, Maximize2, Volume2, VolumeX } from 'lucide-react';
+import { useState } from 'react';
+import { Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface TLCVideoPlayerProps {
@@ -22,46 +22,51 @@ export function TLCVideoPlayer({ videoUrl, thumbnailUrl, title, className }: TLC
   if (!embedUrl) return null;
 
   return (
-    <div className={cn("relative w-full overflow-hidden border border-foreground/10 bg-foreground", className)}>
-      {/* TLC Brand Bar */}
-      <div className="absolute left-0 top-0 z-20 flex items-center gap-2 bg-foreground/90 px-3 py-1.5">
-        <div className="h-2 w-2 bg-primary" />
-        <span className="text-label text-[9px] text-card tracking-widest">TLC PLAYER</span>
+    <div className={cn("relative w-full overflow-hidden skeuo-bezel rounded-sm p-[4px]", className)}>
+      {/* TLC Brand Bar — leather strip */}
+      <div className="flex items-center gap-2 skeuo-leather px-3 py-1.5">
+        <div className="skeuo-led" />
+        <span className="text-label text-[9px] text-primary-foreground/90 tracking-widest">TLC PLAYER</span>
       </div>
 
-      {!playing ? (
-        <button
-          onClick={() => setPlaying(true)}
-          className="group relative aspect-video w-full"
-        >
-          {thumbnailUrl ? (
-            <img src={thumbnailUrl} alt={title} className="h-full w-full object-cover" />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center bg-surface-0">
-              <span className="font-chalk text-2xl text-muted-foreground/30">{title[0]}</span>
+      {/* Screen */}
+      <div className="relative bg-foreground" style={{
+        boxShadow: 'inset 0 0 12px rgba(0,0,0,0.5)',
+      }}>
+        {!playing ? (
+          <button
+            onClick={() => setPlaying(true)}
+            className="group relative aspect-video w-full"
+          >
+            {thumbnailUrl ? (
+              <img src={thumbnailUrl} alt={title} className="h-full w-full object-cover" />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center bg-surface-0">
+                <span className="font-chalk text-2xl text-muted-foreground/30">{title[0]}</span>
+              </div>
+            )}
+            <div className="absolute inset-0 flex items-center justify-center bg-foreground/30 transition-colors group-hover:bg-foreground/50">
+              <div className="flex h-16 w-16 items-center justify-center bg-primary transition-transform group-hover:scale-110"
+                style={{ boxShadow: '3px 3px 8px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2)' }}
+              >
+                <Play className="h-6 w-6 text-primary-foreground ml-1" fill="currentColor" />
+              </div>
             </div>
-          )}
-          {/* Play overlay */}
-          <div className="absolute inset-0 flex items-center justify-center bg-foreground/30 transition-colors group-hover:bg-foreground/50">
-            <div className="flex h-16 w-16 items-center justify-center border-2 border-card bg-primary transition-transform group-hover:scale-110">
-              <Play className="h-6 w-6 text-primary-foreground ml-1" fill="currentColor" />
+            <div className="absolute bottom-0 left-0 right-0 skeuo-leather px-3 py-2">
+              <p className="truncate text-left font-chalk text-xs text-primary-foreground/90">{title}</p>
             </div>
+          </button>
+        ) : (
+          <div className="relative aspect-video w-full">
+            <iframe
+              src={embedUrl}
+              className="h-full w-full"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
           </div>
-          {/* Title bar at bottom */}
-          <div className="absolute bottom-0 left-0 right-0 bg-foreground/80 px-3 py-2">
-            <p className="truncate text-left font-chalk text-xs text-card">{title}</p>
-          </div>
-        </button>
-      ) : (
-        <div className="relative aspect-video w-full">
-          <iframe
-            src={embedUrl}
-            className="h-full w-full"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

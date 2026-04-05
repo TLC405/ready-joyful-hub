@@ -4,7 +4,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* EDITORIAL BRUTALISM DESIGN SYSTEM — Newspaper / Red + Black */
+/* EDITORIAL BRUTALISM + SKEUOMORPHISM 2.0 DESIGN SYSTEM */
 
 @layer base {
   /* ===== LIGHT THEME (default) ===== */
@@ -63,6 +63,14 @@
     --space-2xl: 3rem;
     --space-3xl: 4rem;
 
+    /* Skeuo 2.0 tokens */
+    --skeuo-shadow-pressed: inset 2px 2px 4px rgba(0,0,0,0.25), inset -1px -1px 2px rgba(255,255,255,0.1);
+    --skeuo-shadow-raised: 3px 3px 6px rgba(0,0,0,0.15), -1px -1px 3px rgba(255,255,255,0.7);
+    --skeuo-shadow-card: 2px 2px 8px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.05);
+    --skeuo-bezel: linear-gradient(145deg, #2a2a2a 0%, #111111 50%, #1a1a1a 100%);
+    --skeuo-bezel-inner: inset 0 0 20px rgba(0,0,0,0.5), inset 0 0 3px rgba(255,255,255,0.05);
+    --skeuo-leather: linear-gradient(180deg, hsl(20 10% 18%) 0%, hsl(20 8% 14%) 100%);
+
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 0 0% 8%;
     --sidebar-primary: 0 65% 42%;
@@ -119,6 +127,13 @@
     --input: 0 0% 14%;
     --ring: 0 65% 50%;
 
+    --skeuo-shadow-pressed: inset 2px 2px 4px rgba(0,0,0,0.5), inset -1px -1px 2px rgba(255,255,255,0.03);
+    --skeuo-shadow-raised: 3px 3px 6px rgba(0,0,0,0.4), -1px -1px 3px rgba(255,255,255,0.05);
+    --skeuo-shadow-card: 2px 2px 8px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+    --skeuo-bezel: linear-gradient(145deg, #3a3a3a 0%, #1a1a1a 50%, #222 100%);
+    --skeuo-bezel-inner: inset 0 0 20px rgba(0,0,0,0.7), inset 0 0 3px rgba(255,255,255,0.03);
+    --skeuo-leather: linear-gradient(180deg, hsl(20 8% 12%) 0%, hsl(20 6% 8%) 100%);
+
     --sidebar-background: 0 0% 8%;
     --sidebar-foreground: 40 15% 92%;
     --sidebar-primary: 0 65% 50%;
@@ -172,75 +187,170 @@
 @layer utilities {
   /* ===== EDITORIAL SURFACE UTILITIES ===== */
 
-  /* Flat bordered card */
   .surface-raised {
     background: hsl(var(--card));
     border: 1px solid hsl(var(--foreground) / 0.12);
+    box-shadow: var(--skeuo-shadow-card);
   }
 
   .surface-raised:hover {
     border-color: hsl(var(--foreground) / 0.25);
+    box-shadow: var(--skeuo-shadow-raised);
   }
 
-  /* Recessed area */
   .surface-inset {
     background: hsl(var(--surface-0));
     border: 1px solid hsl(var(--foreground) / 0.08);
+    box-shadow: var(--skeuo-shadow-pressed);
   }
 
-  /* Elevated (same as raised in editorial) */
   .surface-elevated {
     background: hsl(var(--card));
     border: 1px solid hsl(var(--foreground) / 0.12);
+    box-shadow: var(--skeuo-shadow-raised);
   }
 
-  /* Glass (simplified — just translucent bg) */
   .surface-glass {
     background: hsl(var(--card) / 0.95);
     backdrop-filter: blur(12px);
     border: 1px solid hsl(var(--foreground) / 0.1);
+    box-shadow: var(--skeuo-shadow-card);
   }
 
-  /* Premium glass replaced with flat bordered */
   .glass-premium {
     background: hsl(var(--card));
     border: 1px solid hsl(var(--foreground) / 0.15);
+    box-shadow: var(--skeuo-shadow-raised);
   }
 
-  /* Editorial bordered button */
+  /* ===== SKEUO 2.0 UTILITIES ===== */
+
+  /* Paper grain texture overlay */
+  .skeuo-grain {
+    position: relative;
+  }
+  .skeuo-grain::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.3;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+    background-size: 128px 128px;
+    mix-blend-mode: multiply;
+  }
+
+  /* Pressed/inset button */
+  .skeuo-pressed {
+    box-shadow: var(--skeuo-shadow-pressed);
+  }
+  .skeuo-pressed:active {
+    box-shadow: var(--skeuo-shadow-pressed);
+    transform: translateY(1px);
+  }
+
+  /* Raised card with depth */
+  .skeuo-card {
+    box-shadow: var(--skeuo-shadow-card);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .skeuo-card:hover {
+    box-shadow: var(--skeuo-shadow-raised);
+    transform: translateY(-1px);
+  }
+
+  /* Stitched border */
+  .skeuo-stitch {
+    border-top: 2px dashed hsl(var(--foreground) / 0.15);
+    background-image: none;
+  }
+
+  /* Glossy TV bezel */
+  .skeuo-bezel {
+    background: var(--skeuo-bezel);
+    box-shadow: var(--skeuo-bezel-inner), 4px 4px 12px rgba(0,0,0,0.4), -2px -2px 6px rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  /* Leather strip */
+  .skeuo-leather {
+    background: var(--skeuo-leather);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), inset 0 -1px 0 rgba(0,0,0,0.3);
+  }
+
+  /* LED indicator */
+  .skeuo-led {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: hsl(var(--primary));
+    box-shadow: 0 0 4px hsl(var(--primary)), 0 0 8px hsl(var(--primary) / 0.5);
+    animation: led-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes led-pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 4px hsl(var(--primary)), 0 0 8px hsl(var(--primary) / 0.5); }
+    50% { opacity: 0.6; box-shadow: 0 0 2px hsl(var(--primary)), 0 0 4px hsl(var(--primary) / 0.3); }
+  }
+
+  /* Brushed metal badge */
+  .skeuo-metal {
+    background: linear-gradient(135deg, #d4d4d4 0%, #a8a8a8 30%, #c0c0c0 50%, #909090 70%, #b0b0b0 100%);
+    color: #222;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 1px 2px rgba(0,0,0,0.3);
+  }
+  .dark .skeuo-metal {
+    background: linear-gradient(135deg, #555 0%, #3a3a3a 30%, #4a4a4a 50%, #333 70%, #444 100%);
+    color: #ccc;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.1);
+  }
+
+  /* Embossed text */
+  .text-embossed {
+    text-shadow: 0 1px 0 rgba(255,255,255,0.6), 0 -1px 0 rgba(0,0,0,0.1);
+  }
+  .dark .text-embossed {
+    text-shadow: 0 1px 0 rgba(255,255,255,0.05), 0 -1px 0 rgba(0,0,0,0.4);
+  }
+
+  /* ===== EDITORIAL BUTTON ===== */
   .btn-raised {
     background: hsl(var(--card));
     border: 1px solid hsl(var(--foreground) / 0.12);
+    box-shadow: var(--skeuo-shadow-card);
     transition: all 0.15s ease;
   }
   .btn-raised:hover {
     background: hsl(var(--foreground));
     color: hsl(var(--card));
     border-color: hsl(var(--foreground));
+    box-shadow: var(--skeuo-shadow-raised);
   }
   .btn-raised:active {
     transform: translateY(1px);
+    box-shadow: var(--skeuo-shadow-pressed);
   }
 
-  /* Rectangular editorial badge */
   .badge-coin {
     background: hsl(var(--card));
     border: 1px solid hsl(var(--foreground) / 0.15);
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.08);
   }
 
-  /* Flat progress track */
   .track-inset {
     background: hsl(var(--surface-0));
     border: 1px solid hsl(var(--foreground) / 0.08);
     border-radius: 0;
+    box-shadow: var(--skeuo-shadow-pressed);
   }
 
-  /* Flat fill bar */
   .bar-raised {
     border-radius: 0;
+    box-shadow: inset 0 -1px 0 rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.2);
   }
 
-  /* ===== TYPOGRAPHY UTILITIES ===== */
+  /* ===== TYPOGRAPHY ===== */
   .text-label {
     font-family: 'Space Grotesk', sans-serif;
     font-size: 0.75rem;
@@ -255,7 +365,6 @@
     font-weight: 700;
   }
 
-  /* Massive editorial headline */
   .text-editorial {
     font-family: 'Space Grotesk', sans-serif;
     font-size: clamp(2.5rem, 7vw, 5rem);
@@ -265,7 +374,6 @@
     text-transform: uppercase;
   }
 
-  /* Sub-editorial headline */
   .text-editorial-sm {
     font-family: 'Space Grotesk', sans-serif;
     font-size: clamp(1.5rem, 4vw, 2.5rem);
@@ -275,12 +383,6 @@
     text-transform: uppercase;
   }
 
-  /* Embossed text — flat in editorial (just bold) */
-  .text-embossed {
-    text-shadow: none;
-  }
-
-  /* No brushed metal texture */
   .texture-brushed {
     position: relative;
   }
@@ -289,7 +391,6 @@
   .accent-line {
     position: relative;
   }
-
   .accent-line::after {
     content: '';
     position: absolute;
@@ -300,19 +401,18 @@
     background: hsl(var(--primary));
     transition: width 0.3s ease;
   }
-
   .accent-line:hover::after {
     width: 100%;
   }
 
-  /* ===== CARD EFFECTS — minimal ===== */
+  /* ===== CARD EFFECTS ===== */
   .card-hover {
     transition: all 0.2s ease;
   }
-
   .card-hover:hover {
     transform: translateY(-2px);
     border-color: hsl(var(--primary));
+    box-shadow: var(--skeuo-shadow-raised);
   }
 
   .border-brutal {
@@ -323,7 +423,6 @@
     border: 2px solid hsl(var(--primary));
   }
 
-  /* Image overlay — editorial */
   .image-overlay {
     background: linear-gradient(
       to top,
@@ -333,7 +432,6 @@
     );
   }
 
-  /* Newspaper divider */
   .editorial-divider {
     border-top: 1px solid hsl(var(--foreground) / 0.15);
   }
@@ -342,39 +440,34 @@
     border-top: 3px solid hsl(var(--foreground));
   }
 
-  /* ===== DIFFICULTY BADGES — flat editorial ===== */
+  /* ===== DIFFICULTY BADGES ===== */
   .difficulty-easy {
     background: transparent;
     color: hsl(var(--difficulty-easy));
     border-color: hsl(var(--difficulty-easy) / 0.4);
   }
-
   .difficulty-beginner {
     background: transparent;
     color: hsl(var(--difficulty-beginner));
     border-color: hsl(var(--difficulty-beginner) / 0.4);
   }
-
   .difficulty-intermediate {
     background: transparent;
     color: hsl(var(--difficulty-intermediate));
     border-color: hsl(var(--difficulty-intermediate) / 0.4);
   }
-
   .difficulty-advanced {
     background: transparent;
     color: hsl(var(--difficulty-advanced));
     border-color: hsl(var(--difficulty-advanced) / 0.4);
   }
-
   .difficulty-master {
     background: transparent;
     color: hsl(var(--difficulty-master));
     border-color: hsl(var(--difficulty-master) / 0.4);
   }
-  /* ===== NOTEBOOK UTILITIES ===== */
 
-  /* Ruled paper background */
+  /* ===== NOTEBOOK UTILITIES ===== */
   .notebook-ruled {
     background-image: repeating-linear-gradient(
       to bottom,
@@ -386,13 +479,11 @@
     background-size: 100% 1.5rem;
   }
 
-  /* Red margin line */
   .notebook-margin {
     border-left: 2px solid hsl(var(--primary) / 0.25);
     padding-left: 1rem;
   }
 
-  /* Entry row with bottom border + timestamp feel */
   .notebook-entry {
     border-bottom: 1px solid hsl(var(--foreground) / 0.08);
     padding-bottom: 0.75rem;
