@@ -242,11 +242,18 @@ export default function VideoPage() {
 
       {/* Exercise title strip */}
       <div className="shrink-0 border-b border-foreground/10 bg-card px-4 py-2 skeuo-grain">
-        <div className="mx-auto max-w-5xl flex items-center gap-3">
-          <span className={cn("border px-2 py-0.5 text-label text-[9px]", difficultyBadge[exercise.difficulty])}>
-            {exercise.difficulty.toUpperCase()}
-          </span>
-          <h1 className="font-chalk text-lg text-foreground truncate text-embossed">{exercise.name}</h1>
+        <div className="mx-auto max-w-5xl">
+          <AppBreadcrumb items={[
+            { label: 'HOME', onClick: () => navigate('/') },
+            { label: 'TLC TV', onClick: () => navigate('/video') },
+            { label: exercise.name },
+          ]} className="mb-1" />
+          <div className="flex items-center gap-3">
+            <span className={cn("border px-2 py-0.5 text-label text-[9px]", difficultyBadge[exercise.difficulty])}>
+              {exercise.difficulty.toUpperCase()}
+            </span>
+            <h1 className="font-chalk text-lg text-foreground truncate text-embossed">{exercise.name}</h1>
+          </div>
         </div>
       </div>
 
