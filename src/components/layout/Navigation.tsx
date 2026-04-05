@@ -6,11 +6,11 @@ import {
   Menu,
   X,
   Home,
-  GitBranch,
   Library,
   Sun,
   Moon,
-  MessageSquare
+  MessageSquare,
+  Search
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -23,7 +23,6 @@ interface NavItem {
 const navItems: NavItem[] = [
   { id: 'home', label: 'HOME', icon: Home },
   { id: 'library', label: 'LIBRARY', icon: Library },
-  { id: 'tracks', label: 'TRACKS', icon: GitBranch },
   { id: 'coach', label: 'COACH', icon: MessageSquare },
   { id: 'progress', label: 'PROGRESS', icon: Flame },
   { id: 'settings', label: 'SETTINGS', icon: Settings },
@@ -50,14 +49,14 @@ function useTheme() {
   return { theme, toggle };
 }
 
-export function Navigation({ activeSection, onNavigate }: { activeSection: string; onNavigate: (section: string) => void }) {
+export function Navigation({ activeSection, onNavigate, onOpenSearch }: { activeSection: string; onNavigate: (section: string) => void; onOpenSearch?: () => void }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { theme, toggle } = useTheme();
   const ThemeIcon = theme === 'dark' ? Sun : Moon;
 
   return (
     <>
-      {/* Desktop Sidebar — editorial flat */}
+      {/* Desktop Sidebar */}
       <nav className="fixed left-0 top-0 z-50 hidden h-screen w-20 flex-col items-center border-r border-foreground/10 bg-card py-8 lg:flex">
         <div className="mb-12">
           <div className="flex h-12 w-12 items-center justify-center border-2 border-primary">
@@ -92,9 +91,20 @@ export function Navigation({ activeSection, onNavigate }: { activeSection: strin
           })}
         </div>
 
+        {/* Search button */}
+        {onOpenSearch && (
+          <button
+            onClick={onOpenSearch}
+            className="mb-2 flex h-12 w-12 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
+            title="Search (⌘K)"
+          >
+            <Search className="h-5 w-5" />
+          </button>
+        )}
+
         <button
           onClick={toggle}
-          className="mt-4 flex h-12 w-12 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
+          className="mt-2 flex h-12 w-12 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
         >
           <ThemeIcon className="h-5 w-5" />
         </button>

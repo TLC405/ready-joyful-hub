@@ -1,21 +1,24 @@
-import { useState } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play } from 'lucide-react';
 import { Navigation } from '@/components/layout/Navigation';
 import { AppShell } from '@/components/layout/AppShell';
 import { HeroSection } from '@/components/sections/HeroSection';
-import { ExerciseLibrary } from '@/components/sections/ExerciseLibrary';
-import { ProgressionMap } from '@/components/sections/ProgressionMap';
+import { UnifiedLibrary } from '@/components/sections/UnifiedLibrary';
 import { ProgressDashboard } from '@/components/sections/ProgressDashboard';
 import { SettingsPanel } from '@/components/sections/SettingsPanel';
 import { CoachCareStudio } from '@/components/CoachCare/CoachCareStudio';
 import { ExerciseDetailModal } from '@/components/shared/ExerciseDetailModal';
+import { CommandSearch } from '@/components/shared/CommandSearch';
+import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts';
 import { exercises } from '@/lib/exercises';
 import type { Exercise } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
-type Section = 'home' | 'library' | 'tracks' | 'coach' | 'progress' | 'settings';
+type Section = 'home' | 'library' | 'coach' | 'progress' | 'settings';
+
+const sectionOrder: Section[] = ['home', 'library', 'coach', 'progress', 'settings'];
 
 const difficultyBadge: Record<string, string> = {
   easy: 'difficulty-easy',
@@ -38,24 +41,59 @@ const Index = () => {
   const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState<Section>('home');
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
+  const [searchOpen, setSearchOpen] = useState(false);
 
-  const handleNavigate = (section: string) => {
+  // Swipe gesture refs
+  const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
+
+  const handleNavigate = useCallback((section: string) => {
     setActiveSection(section as Section);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  const handleOpenSearch = useCallback(() => setSearchOpen(true), []);
+
+  useKeyboardShortcuts({
+    onNavigate: handleNavigate,
+    activeSection,
+    onOpenSearch: handleOpenSearch,
+  });
+
+  // Swipe handlers
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    const dy = e.changedTouches[0].clientY - touchStartY.current;
+    if (Math.abs(dx) < 60 || Math.abs(dy) > Math.abs(dx)) return;
+    const idx = sectionOrder.indexOf(activeSection);
+    if (dx < 0 && idx < sectionOrder.length - 1) {
+      handleNavigate(sectionOrder[idx + 1]);
+    } else if (dx > 0 && idx > 0) {
+      handleNavigate(sectionOrder[idx - 1]);
+    }
   };
 
   return (
     <AppShell>
       <div className="min-h-screen text-foreground">
-        <Navigation activeSection={activeSection} onNavigate={handleNavigate} />
+        <Navigation activeSection={activeSection} onNavigate={handleNavigate} onOpenSearch={handleOpenSearch} />
         
-        <main className="lg:pl-20">
+        <main
+          className="lg:pl-20"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
           <AnimatePresence mode="wait">
             {activeSection === 'home' && (
               <motion.div key="home" {...pageTransition}>
                 <HeroSection />
 
-                {/* Featured Skills — editorial grid */}
+                {/* Featured Skills */}
                 <section className="px-4 pb-8 lg:px-8">
                   <div className="editorial-divider-thick mb-4 pt-4">
                     <div className="flex items-baseline justify-between">
@@ -100,13 +138,7 @@ const Index = () => {
 
             {activeSection === 'library' && (
               <motion.div key="library" {...pageTransition}>
-                <ExerciseLibrary />
-              </motion.div>
-            )}
-
-            {activeSection === 'tracks' && (
-              <motion.div key="tracks" {...pageTransition}>
-                <ProgressionMap />
+                <UnifiedLibrary />
               </motion.div>
             )}
 
@@ -135,8 +167,17 @@ const Index = () => {
             )}
           </AnimatePresence>
 
-          <div className="h-24 lg:hidden" />
+          {/* Mobile swipe indicator */}
+          <div className="h-24 lg:hidden">
+            <div className="flex items-center justify-center gap-1.5 pt-2">
+              {sectionOrder.map(s => (
+                <div key={s} className={cn("h-1 w-1 rounded-full transition-colors", s === activeSection ? "bg-primary" : "bg-foreground/15")} />
+              ))}
+            </div>
+          </div>
         </main>
+
+        <CommandSearch open={searchOpen} onClose={() => setSearchOpen(false)} />
       </div>
     </AppShell>
   );

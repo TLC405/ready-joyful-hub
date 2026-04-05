@@ -88,7 +88,7 @@ function buildTree(trackId: string): MapNode[][] {
   return levels;
 }
 
-export function ProgressionMap() {
+export function ProgressionMap({ embedded = false }: { embedded?: boolean }) {
   const [activeTrack, setActiveTrack] = useState('planche');
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
   const [showTrackSelect, setShowTrackSelect] = useState(false);
@@ -98,10 +98,10 @@ export function ProgressionMap() {
   const TrackIcon = trackIcons[currentTrack.icon] || Zap;
 
   return (
-    <section className="relative px-4 py-8 lg:px-8">
-      <div className="editorial-divider-thick mb-6 pt-2">
+    <section className={embedded ? "" : "relative px-4 py-8 lg:px-8"}>
+      <div className={cn(embedded ? "mb-4" : "editorial-divider-thick mb-6 pt-2")}>
         <div className="flex items-baseline justify-between gap-4">
-          <h2 className="text-editorial-sm text-foreground">PROGRESSION MAP</h2>
+          {!embedded && <h2 className="text-editorial-sm text-foreground">PROGRESSION MAP</h2>}
           <div className="relative">
             <button
               onClick={() => setShowTrackSelect(!showTrackSelect)}
