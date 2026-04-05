@@ -5,6 +5,7 @@ import { ArrowLeft, ChevronRight, ChevronDown, Search, Play, LayoutGrid, AlertTr
 import { getExerciseById, exercises } from '@/lib/exercises';
 import { TLCNotebookPlayer } from '@/components/shared/TLCNotebookPlayer';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { AppBreadcrumb } from '@/components/shared/Breadcrumb';
 import { cn } from '@/lib/utils';
 import type { VideoSource, Exercise } from '@/lib/types';
 

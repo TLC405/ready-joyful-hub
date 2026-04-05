@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BookOpen, Map, Tv } from 'lucide-react';
+import { BookOpen, Map, Tv, Search, Play } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ExerciseLibrary } from './ExerciseLibrary';
 import { ProgressionMap } from './ProgressionMap';
 import { AppBreadcrumb } from '@/components/shared/Breadcrumb';
+import { exercises } from '@/lib/exercises';
+import type { Exercise } from '@/lib/types';
 
 type Tab = 'browse' | 'map' | 'tv';
 
@@ -13,12 +15,6 @@ const tabs: { id: Tab; label: string; icon: React.ElementType }[] = [
   { id: 'map', label: 'MAP', icon: Map },
   { id: 'tv', label: 'TLC TV', icon: Tv },
 ];
-
-// Inline TLC TV browser (from VideoPage ExerciseBrowser)
-import { useState as useStateTV, useMemo } from 'react';
-import { Search, Play, LayoutGrid } from 'lucide-react';
-import { exercises } from '@/lib/exercises';
-import type { Exercise } from '@/lib/types';
 
 const difficultyBadge: Record<string, string> = {
   easy: 'difficulty-easy',
@@ -73,7 +69,6 @@ function InlineTVBrowser() {
 
   return (
     <div className="space-y-3">
-      {/* Search + filters */}
       <div className="space-y-2">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -103,7 +98,6 @@ function InlineTVBrowser() {
         </div>
       </div>
 
-      {/* Grid */}
       {Object.entries(grouped).map(([category, exs]) => (
         <div key={category}>
           {activeCategory === 'all' && (
@@ -167,7 +161,7 @@ export function UnifiedLibrary() {
   const [activeTab, setActiveTab] = useState<Tab>('browse');
 
   const breadcrumbItems = [
-    { label: 'HOME', section: 'home' },
+    { label: 'HOME' },
     { label: 'LIBRARY' },
     { label: tabs.find(t => t.id === activeTab)!.label },
   ];
@@ -176,7 +170,6 @@ export function UnifiedLibrary() {
     <section className="relative px-4 py-6 lg:px-8">
       <AppBreadcrumb items={breadcrumbItems} />
 
-      {/* Tab bar */}
       <div className="mb-4 flex items-center gap-0 border border-foreground/10">
         {tabs.map(tab => {
           const Icon = tab.icon;
@@ -198,7 +191,6 @@ export function UnifiedLibrary() {
         })}
       </div>
 
-      {/* Tab content */}
       {activeTab === 'browse' && <ExerciseLibrary embedded />}
       {activeTab === 'map' && <ProgressionMap embedded />}
       {activeTab === 'tv' && <InlineTVBrowser />}
