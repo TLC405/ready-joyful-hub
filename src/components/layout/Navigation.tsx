@@ -103,9 +103,14 @@ export function Navigation({ activeSection, onNavigate, onOpenSearch }: { active
           </button>
         )}
 
+        {/* TLC Footer */}
+        <div className="mb-2 text-center">
+          <span className="text-[8px] text-muted-foreground/40 tracking-widest">© 2026 TLC</span>
+        </div>
+
         <button
           onClick={toggle}
-          className="mt-2 flex h-12 w-12 items-center justify-center text-muted-foreground transition-colors hover:text-thunder-orange btn-raised"
+          className="mt-0 flex h-12 w-12 items-center justify-center text-muted-foreground transition-colors hover:text-thunder-orange btn-raised"
         >
           <ThemeIcon className="h-5 w-5" />
         </button>

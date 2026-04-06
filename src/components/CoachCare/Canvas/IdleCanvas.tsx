@@ -35,8 +35,9 @@ export function IdleCanvas({ onAction }: IdleCanvasProps) {
         </motion.div>
 
         <h3 className="text-editorial-sm text-foreground text-embossed">
-          WHAT SHOULD WE <span className="thunder-text">WORK ON</span>?
+          TLC <span className="thunder-text">COACH</span>
         </h3>
+        <div className="mt-1 inline-block px-2 py-0.5 text-[9px] text-thunder-orange/80 border border-thunder-orange/30 tracking-widest">AI-POWERED</div>
         <p className="mt-2 text-sm text-muted-foreground text-journal">
           Pick an action or type in chat to get started
         </p>

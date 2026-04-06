@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useRef } from 'react';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { Drawer } from 'vaul';
 import { ChatPanel } from './ChatPanel';
@@ -8,6 +8,7 @@ import { useChatHistory } from './hooks/useChatHistory';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { exercises, getExerciseById } from '@/lib/exercises';
 import { Maximize2 } from 'lucide-react';
+import { streamCoachResponse } from './hooks/useCoachAI';
 import type { CanvasMode, VideoCanvasData, ExerciseCanvasData, TemplateCanvasData, DocumentCanvasData, QuickReply, SocialCanvasData } from './types';
 
 // ─── Context tracker ────────────────────────────────────────────
@@ -276,26 +277,8 @@ function generateResponse(
     };
   }
 
-  // General responses with context
-  const streak = getStreak();
-  const streakNote = streak > 0 ? ` (🔥 ${streak}-day streak btw)` : '';
-  const generalResponses = [
-    `Good question. For calisthenics progression, patience with perfect form beats rushing to the next variation.${streakNote} What specific skill are you targeting?`,
-    `Focus on your weakest link first. Paste a video and I'll give specific corrections, or tell me which exercise to explore.${streakNote}`,
-    `Consistency beats intensity. Three solid 45-minute sessions beat one marathon.${streakNote} Want me to build you a template?`,
-    `Try pasting a YouTube link, asking about a specific exercise, or saying 'build me a push day'.${streakNote}`,
-  ];
-
-  return {
-    content: generalResponses[Math.floor(Math.random() * generalResponses.length)],
-    type: 'text' as const,
-    quickReplies: [
-      { label: '🎥 Analyze video', message: "I'd like to analyze a video" },
-      { label: '💪 Build workout', message: 'Build me a push day' },
-      { label: '🔍 Search videos', message: 'Find videos of planche' },
-      { label: '📊 My stats', message: 'Show my training stats' },
-    ],
-  };
+  // Return null to signal "use AI for this"
+  return null;
 }
 
 export function CoachCareStudio() {
@@ -315,15 +298,59 @@ export function CoachCareStudio() {
     setCoachCtx(prev => ({ ...prev, ...updates }));
   }, []);
 
+  const streamingMsgId = useRef<string | null>(null);
+
   const handleSend = useCallback((text: string) => {
     addMessage({ role: 'user', content: text, type: 'text' });
     setIsTyping(true);
-    setTimeout(() => {
-      const response = generateResponse(text, setCanvas, coachCtx, updateCtx);
-      addMessage({ role: 'coach', ...response });
-      setIsTyping(false);
-    }, 800 + Math.random() * 600);
-  }, [addMessage, setCanvas, coachCtx, updateCtx]);
+
+    // Try deterministic handlers first
+    const response = generateResponse(text, setCanvas, coachCtx, updateCtx);
+    
+    if (response !== null) {
+      // Deterministic match — use local response
+      setTimeout(() => {
+        addMessage({ role: 'coach', ...response });
+        setIsTyping(false);
+      }, 400);
+    } else {
+      // No match — stream from AI
+      const personality = localStorage.getItem('tlc-coach-personality') || undefined;
+      const recentMsgs = messages.slice(-10).map(m => ({
+        role: (m.role === 'coach' ? 'assistant' : 'user') as 'user' | 'assistant',
+        content: m.content,
+      }));
+      recentMsgs.push({ role: 'user', content: text });
+
+      let accumulated = '';
+      const msgId = crypto.randomUUID();
+      streamingMsgId.current = msgId;
+
+      // Add empty coach message that we'll stream into
+      addMessage({ role: 'coach', content: '...', type: 'text', id: msgId });
+
+      streamCoachResponse({
+        messages: recentMsgs,
+        personality,
+        onDelta: (chunk) => {
+          accumulated += chunk;
+          // Update the last coach message in place
+          addMessage({ role: 'coach', content: accumulated, type: 'text', id: msgId, replace: true });
+        },
+        onDone: () => {
+          setIsTyping(false);
+          streamingMsgId.current = null;
+        },
+        onError: (err) => {
+          if (!accumulated) {
+            addMessage({ role: 'coach', content: `Sorry, I couldn't connect right now. Try again or ask about a specific exercise! ⚡`, type: 'text', id: msgId, replace: true });
+          }
+          setIsTyping(false);
+          streamingMsgId.current = null;
+        },
+      });
+    }
+  }, [addMessage, setCanvas, coachCtx, updateCtx, messages]);
 
   const handleCanvasAction = useCallback((action: string) => {
     const actionMessages: Record<string, string> = {
