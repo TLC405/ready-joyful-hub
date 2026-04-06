@@ -1,56 +1,66 @@
 
-# How-To Guide + Calisthenics Wiki + TLC Branding Enhancement
 
-## 1. New "GUIDE" Nav Section — How to Use the App
+# Fix Layout: Remove YouTube Overlays from TLC TV + Reduce White
 
-Add a new nav item "GUIDE" (BookOpen icon) that shows an interactive walkthrough of the app's features:
+## Problems
 
-- **Getting Started** — overview of the 4 sections (Library, Coach, Progress, Settings)
-- **Using the Coach** — how to paste URLs, ask for exercises, build workouts, search videos
-- **Library & Map** — how to browse exercises, filter categories, follow progression chains
-- **Progress Tracking** — streaks, heatmap, workout logs
-- **Keyboard Shortcuts** — ⌘K search, theme toggle, navigation
+1. **TLC TV / Video Player has excessive overlay elements** — tape corner SVGs, notebook-ruled backgrounds, leather headers, bezel frames, dark overlays on thumbnails — all competing for attention and covering the actual video content
+2. **Too much white** — background `hsl(40 20% 96%)` is very light cream, cards are `hsl(0 0% 100%)` pure white, surfaces are near-white. The whole app washes out
+3. **`skeuo-grain::after`** creates a `position: absolute; inset: 0` overlay that can cause z-index stacking issues with content (already confirmed invisible content bug)
 
-Each section uses expandable accordion cards with icons and short descriptions. Feels like a journal field guide.
+## Changes
 
-## 2. New "WIKI" Tab Inside Library
+### 1. Simplify TLCNotebookPlayer (the main video player)
 
-Add a 4th tab to UnifiedLibrary: **WIKI** — a massive reference encyclopedia covering:
+Remove from `src/components/shared/TLCNotebookPlayer.tsx`:
+- Tape corner SVGs (lines 158-168)
+- Notebook-ruled repeating gradient background (line 100-101)
+- Thunder-colored margin line (line 103)
+- Dark overlay on play button area (the `bg-foreground/30` and `bg-foreground/50` hover)
+- Excessive `skeuo-bezel` + `skeuo-leather` wrapper chrome
 
-### Categories (accordion sections):
-- **Calisthenics** — Progressive overload, skill tiers (beginner→elite), push/pull/legs/core fundamentals, static vs dynamic holds, programming principles
-- **Ballet** — Port de bras, positions (1st-5th), relevé, plié, arabesque, turnout mechanics, conditioning for athletes
-- **Yoga** — Sun salutations, warrior series, inversions, breathing (pranayama), flexibility vs mobility
-- **Gymnastics** — Rings fundamentals, pommel horse basics, floor skills, iron cross progression, strength standards
-- **Mobility** — Joint-by-joint approach, CARs, end-range training, stretching protocols
-- **Nutrition** — Fueling for bodyweight athletes, protein timing, hydration
-- **Recovery** — Deload weeks, sleep optimization, active recovery protocols
+Replace with a clean, minimal TLC-branded player:
+- Simple dark frame with subtle border, no bezel gradients
+- Small "TLC TV" label top-left with thunder-led dot
+- Clean play button overlay (thunder-orange circle, no dark scrim)
+- Platform badge (YouTube/Instagram) as a small pill
+- Coaching cues sidebar stays but simplified
 
-Each entry: title, 2-3 paragraph description, key exercises list, pro tips. All in notebook journal style.
+### 2. Simplify TLCVideoPlayer
 
-## 3. TLC Branding Enhancements
+Same cleanup in `src/components/shared/TLCVideoPlayer.tsx`:
+- Remove `skeuo-bezel`, `skeuo-leather` wrapper
+- Simple border frame, small "TLC" label
+- Clean play overlay without heavy dark scrim
 
-- Welcome message in Coach → "Welcome to TLC Coach"
-- HeroSection subtitle → add "⚡ TLC" badge
-- Wiki footer → "TLC Calisthenics Knowledge Base"
-- Guide header → "TLC Field Guide"
+### 3. Fix app-wide whiteness — warm up color palette
 
-## 4. Text Enhancements
+In `src/index.css` light theme variables:
+- `--background`: `40 20% 96%` → `38 18% 93%` (warmer, slightly darker cream)
+- `--card`: `0 0% 100%` → `39 16% 96%` (warm off-white instead of pure white)
+- `--surface-0`: `40 15% 94%` → `38 14% 91%` (more visible surface distinction)
+- `--surface-1`: `0 0% 100%` → `39 15% 95%`
+- `--surface-2`: `40 10% 98%` → `39 12% 94%`
+- `--sidebar-background`: `0 0% 100%` → `38 16% 95%`
 
-- All section headers use `text-editorial` + `text-embossed` + thunder accents
-- Wiki entries use `text-journal` body with `notebook-ruled` backgrounds
-- Guide cards use `skeuo-card` styling with thunder borders
+### 4. Fix skeuo-grain z-index stacking
+
+In `src/index.css` `.skeuo-grain::after`, change `z-index: 0` to `z-index: -1` to ensure the grain texture never sits above content. This fixes the invisible content bug.
+
+### 5. Clean up TV grid cards in UnifiedLibrary
+
+In `src/components/sections/UnifiedLibrary.tsx` InlineTVBrowser:
+- Remove `skeuo-card skeuo-grain` from exercise cards (line 120) — these add unnecessary overlays and shadows
+- Simplify to clean cards with subtle border and hover state
 
 ## Files
 
 | File | Change |
 |------|--------|
-| `src/components/sections/GuideSection.tsx` | **New** — interactive how-to walkthrough |
-| `src/components/sections/WikiSection.tsx` | **New** — massive calisthenics/ballet/yoga/gymnastics encyclopedia |
-| `src/components/sections/UnifiedLibrary.tsx` | Add WIKI tab |
-| `src/components/layout/Navigation.tsx` | Add GUIDE nav item |
-| `src/pages/Index.tsx` | Wire Guide section |
-| `src/components/CoachCare/hooks/useChatHistory.ts` | Update welcome message branding |
-| `src/components/sections/HeroSection.tsx` | Enhanced TLC branding |
+| `src/components/shared/TLCNotebookPlayer.tsx` | Remove tape SVGs, notebook-ruled bg, margin line, heavy bezels; clean player |
+| `src/components/shared/TLCVideoPlayer.tsx` | Remove skeuo-bezel/leather; simple frame |
+| `src/index.css` | Warm up all white tones, fix skeuo-grain z-index to -1 |
+| `src/components/sections/UnifiedLibrary.tsx` | Remove skeuo-card skeuo-grain from TV grid cards |
 
-**7 files (2 new, 5 modified), 0 new dependencies**
+**4 files modified, 0 new files, 0 new dependencies**
+
