@@ -96,9 +96,8 @@ const Index = () => {
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
-          <AnimatePresence mode="wait">
-            {activeSection === 'home' && (
-              <motion.div key="home" {...pageTransition}>
+          {activeSection === 'home' && (
+              <div key="home">
                 <HeroSection onCategoryClick={handleCategoryClick} />
 
                 {/* Featured Skills */}
@@ -141,39 +140,38 @@ const Index = () => {
                     ))}
                   </div>
                 </section>
-              </motion.div>
+              </div>
             )}
 
             {activeSection === 'library' && (
-              <motion.div key="library" {...pageTransition}>
+              <div key="library">
                 <UnifiedLibrary defaultCategory={libraryCategory} onCategoryReset={() => setLibraryCategory(undefined)} />
-              </motion.div>
+              </div>
             )}
 
             {activeSection === 'coach' && (
-              <motion.div key="coach" {...pageTransition}>
+              <div key="coach">
                 <CoachCareStudio />
-              </motion.div>
+              </div>
             )}
 
             {activeSection === 'progress' && (
-              <motion.div key="progress" {...pageTransition}>
+              <div key="progress">
                 <ProgressDashboard />
-              </motion.div>
+              </div>
             )}
 
             {activeSection === 'settings' && (
-              <motion.div key="settings" {...pageTransition}>
+              <div key="settings">
                 <SettingsPanel />
-              </motion.div>
+              </div>
             )}
 
             {activeSection === 'guide' && (
-              <motion.div key="guide" {...pageTransition}>
+              <div key="guide">
                 <GuideSection />
-              </motion.div>
+              </div>
             )}
-          </AnimatePresence>
 
           <AnimatePresence>
             {selectedExercise && (
