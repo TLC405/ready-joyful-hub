@@ -29,7 +29,7 @@ export function HeroSection({ onCategoryClick }: HeroSectionProps) {
   }, []);
 
   return (
-    <section className="relative px-4 py-6 lg:px-8 lg:py-10" style={{ background: 'red', minHeight: '200px' }}>
+    <section className="relative px-4 py-6 lg:px-8 lg:py-10">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
