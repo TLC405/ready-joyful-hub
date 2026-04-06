@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useRef } from 'react';
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
 import { Drawer } from 'vaul';
 import { ChatPanel } from './ChatPanel';
@@ -8,6 +8,7 @@ import { useChatHistory } from './hooks/useChatHistory';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { exercises, getExerciseById } from '@/lib/exercises';
 import { Maximize2 } from 'lucide-react';
+import { streamCoachResponse } from './hooks/useCoachAI';
 import type { CanvasMode, VideoCanvasData, ExerciseCanvasData, TemplateCanvasData, DocumentCanvasData, QuickReply, SocialCanvasData } from './types';
 
 // ─── Context tracker ────────────────────────────────────────────
@@ -276,26 +277,8 @@ function generateResponse(
     };
   }
 
-  // General responses with context
-  const streak = getStreak();
-  const streakNote = streak > 0 ? ` (🔥 ${streak}-day streak btw)` : '';
-  const generalResponses = [
-    `Good question. For calisthenics progression, patience with perfect form beats rushing to the next variation.${streakNote} What specific skill are you targeting?`,
-    `Focus on your weakest link first. Paste a video and I'll give specific corrections, or tell me which exercise to explore.${streakNote}`,
-    `Consistency beats intensity. Three solid 45-minute sessions beat one marathon.${streakNote} Want me to build you a template?`,
-    `Try pasting a YouTube link, asking about a specific exercise, or saying 'build me a push day'.${streakNote}`,
-  ];
-
-  return {
-    content: generalResponses[Math.floor(Math.random() * generalResponses.length)],
-    type: 'text' as const,
-    quickReplies: [
-      { label: '🎥 Analyze video', message: "I'd like to analyze a video" },
-      { label: '💪 Build workout', message: 'Build me a push day' },
-      { label: '🔍 Search videos', message: 'Find videos of planche' },
-      { label: '📊 My stats', message: 'Show my training stats' },
-    ],
-  };
+  // Return null to signal "use AI for this"
+  return null;
 }
 
 export function CoachCareStudio() {
