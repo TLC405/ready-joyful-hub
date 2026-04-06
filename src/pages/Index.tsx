@@ -9,6 +9,7 @@ import { UnifiedLibrary } from '@/components/sections/UnifiedLibrary';
 import { ProgressDashboard } from '@/components/sections/ProgressDashboard';
 import { SettingsPanel } from '@/components/sections/SettingsPanel';
 import { CoachCareStudio } from '@/components/CoachCare/CoachCareStudio';
+import { GuideSection } from '@/components/sections/GuideSection';
 import { ExerciseDetailModal } from '@/components/shared/ExerciseDetailModal';
 import { CommandSearch } from '@/components/shared/CommandSearch';
 import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts';
@@ -16,9 +17,9 @@ import { exercises } from '@/lib/exercises';
 import type { Exercise } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
-type Section = 'home' | 'library' | 'coach' | 'progress' | 'settings';
+type Section = 'home' | 'library' | 'coach' | 'progress' | 'settings' | 'guide';
 
-const sectionOrder: Section[] = ['home', 'library', 'coach', 'progress', 'settings'];
+const sectionOrder: Section[] = ['home', 'library', 'coach', 'progress', 'guide', 'settings'];
 
 const difficultyBadge: Record<string, string> = {
   easy: 'difficulty-easy',
@@ -164,6 +165,12 @@ const Index = () => {
             {activeSection === 'settings' && (
               <motion.div key="settings" {...pageTransition}>
                 <SettingsPanel />
+              </motion.div>
+            )}
+
+            {activeSection === 'guide' && (
+              <motion.div key="guide" {...pageTransition}>
+                <GuideSection />
               </motion.div>
             )}
           </AnimatePresence>

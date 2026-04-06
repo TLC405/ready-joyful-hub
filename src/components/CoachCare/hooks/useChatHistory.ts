@@ -6,7 +6,7 @@ const STORAGE_KEY = 'tlc-coach-chat';
 const welcomeMessage: ChatMessage = {
   id: 'welcome',
   role: 'coach',
-  content: "Welcome to Coach Care Studio. I'm your AI training partner. Paste a YouTube URL for form analysis, ask about any exercise, or let me build you a program. What are we working on?",
+  content: "⚡ Welcome to **TLC Coach** — your AI-powered training partner. Paste a YouTube URL for form analysis, ask about any exercise, or let me build you a program. What are we working on?",
   timestamp: new Date().toISOString(),
   type: 'text',
 };

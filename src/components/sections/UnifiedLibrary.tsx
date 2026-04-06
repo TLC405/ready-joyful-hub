@@ -1,19 +1,21 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BookOpen, Map, Tv, Search, Play } from 'lucide-react';
+import { BookOpen, Map, Tv, Search, Play, ScrollText } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ExerciseLibrary } from './ExerciseLibrary';
 import { ProgressionMap } from './ProgressionMap';
+import { WikiSection } from './WikiSection';
 import { AppBreadcrumb } from '@/components/shared/Breadcrumb';
 import { exercises } from '@/lib/exercises';
 import type { Exercise } from '@/lib/types';
 
-type Tab = 'browse' | 'map' | 'tv';
+type Tab = 'browse' | 'map' | 'tv' | 'wiki';
 
 const tabs: { id: Tab; label: string; icon: React.ElementType }[] = [
   { id: 'browse', label: 'BROWSE', icon: BookOpen },
   { id: 'map', label: 'MAP', icon: Map },
   { id: 'tv', label: 'TLC TV', icon: Tv },
+  { id: 'wiki', label: 'WIKI', icon: ScrollText },
 ];
 
 const difficultyBadge: Record<string, string> = {
@@ -210,6 +212,7 @@ export function UnifiedLibrary({ defaultCategory, onCategoryReset }: UnifiedLibr
       {activeTab === 'browse' && <ExerciseLibrary embedded defaultCategory={defaultCategory} />}
       {activeTab === 'map' && <ProgressionMap embedded />}
       {activeTab === 'tv' && <InlineTVBrowser />}
+      {activeTab === 'wiki' && <WikiSection />}
     </section>
   );
 }
