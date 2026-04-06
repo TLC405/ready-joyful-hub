@@ -33,9 +33,9 @@ export function ChatPanel({ messages, onSend, onClear, isTyping, onQuickReply, o
             <MessageSquare className="h-4 w-4 text-thunder-orange" />
           </div>
           <div>
-            <h3 className="text-label text-sm text-primary-foreground text-journal">COACH <span className="text-thunder-orange">CARE</span></h3>
+            <h3 className="text-label text-sm text-primary-foreground text-journal">TLC <span className="text-thunder-orange">COACH</span></h3>
             <span className="text-[10px] text-primary-foreground/60">
-              {isTyping ? 'typing...' : 'AI Training Partner'}
+              {isTyping ? 'thinking...' : 'AI-Powered Training Partner'}
             </span>
           </div>
         </div>
