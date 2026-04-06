@@ -1,6 +1,4 @@
 import { useState, useRef, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Play } from 'lucide-react';
 import { Navigation } from '@/components/layout/Navigation';
 import { AppShell } from '@/components/layout/AppShell';
 import { HeroSection } from '@/components/sections/HeroSection';
@@ -12,7 +10,6 @@ import { GuideSection } from '@/components/sections/GuideSection';
 import { ExerciseDetailModal } from '@/components/shared/ExerciseDetailModal';
 import { CommandSearch } from '@/components/shared/CommandSearch';
 import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts';
-import { exercises } from '@/lib/exercises';
 import type { Exercise } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
