@@ -1,44 +1,60 @@
 
 
-# Fix "Find a Video" + Clickable Category Cards + More Visuals
+# Real AI Coach + TLC Branding Sweep + Detail Polish
 
-## Problems
+## Overview
 
-1. **"Find a video" doesn't work in Coach** — The coach correctly detects the query and opens `SocialCanvas` with a query string, but `SocialCanvas` never auto-triggers search on mount. It initializes with `results: []` and waits for the user to manually click "GO". Fix: add a `useEffect` that fires `handleSearch` when the component mounts with a non-empty query and empty results.
+Three changes: (1) Replace the hardcoded `generateResponse` with real AI via Lovable AI gateway so the Coach learns context and generates real responses, (2) remove all "Lovable" references and add "Created with TLC" branding throughout, (3) add more polish details.
 
-2. **Category cards on Home do nothing** — The 4 cards (Calisthenics, Yoga, Ballet, Mobility) are plain `div`s with no `onClick`. They should navigate to the Library tab with that category pre-selected.
+## 1. Real AI Coach via Edge Function
 
-3. **More visuals needed** — Category cards should show thumbnail previews from exercises in that category, and the SocialCanvas results need richer visual treatment.
+Create a new edge function `supabase/functions/coach-chat/index.ts` that:
+- Uses `LOVABLE_API_KEY` (already configured) to call `https://ai.gateway.lovable.dev/v1/chat/completions`
+- System prompt: expert calisthenics coach personality with knowledge of the exercise library, progression chains, and training principles
+- Streams responses token-by-token back to the client
+- Handles 429/402 errors with friendly messages
 
-## Changes
+### Client-side changes (`CoachCareStudio.tsx`):
+- Keep the existing deterministic handlers for URLs, exercise detection, template building, and social search — these are structural commands that open canvas modes
+- For **general/conversational messages** that don't match any pattern, call the AI edge function instead of returning random hardcoded responses
+- Stream tokens into the chat message for a live typing effect
+- Pass recent message history (last 10 messages) as context so the AI maintains conversation continuity
+- The Coach personality is read from `localStorage('tlc-coach-personality')` and sent to the edge function
 
-### 1. Fix SocialCanvas Auto-Search (`SocialCanvas.tsx`)
-- Add `useEffect` that calls `handleSearch(data.query)` when component mounts with a query but no results
-- This makes "find a video of planche" immediately show results on the canvas
+### New streaming utility (`src/components/CoachCare/hooks/useCoachAI.ts`):
+- `streamCoachResponse(messages, onDelta, onDone, onError)` function
+- Calls the edge function with fetch + SSE parsing
+- Handles rate limit and payment errors with toast notifications
 
-### 2. Make Category Cards Navigate to Library (`HeroSection.tsx` + `Index.tsx`)
-- Accept an `onCategoryClick` prop in `HeroSection`
-- Each card calls `onCategoryClick('calisthenics')` etc.
-- In `Index.tsx`, wire this to set `activeSection` to `'library'` and pass a `defaultCategory` filter to `UnifiedLibrary`
-- Add thumbnail images to each card: pick one representative exercise per category and show its YouTube thumbnail as a background
+## 2. Remove Lovable Branding + Add TLC Branding
 
-### 3. Add Visual Thumbnails to Category Cards (`HeroSection.tsx`)
-- For each category, pick the first exercise that has a YouTube URL and extract the video ID for a thumbnail background
-- Show the thumbnail as a blurred background behind the emoji/label for a rich visual card
+| Location | Change |
+|----------|--------|
+| `vite.config.ts` | Remove `lovable-tagger` import and plugin usage |
+| `src/components/layout/Navigation.tsx` | Add "Created with TLC" footer text in sidebar |
+| `src/components/CoachCare/Canvas/IdleCanvas.tsx` | Add "Powered by TLC" subtle text |
+| `src/components/sections/HeroSection.tsx` | Add "TLC" watermark/badge |
+| `src/components/layout/AppShell.tsx` | Add subtle "TLC" footer bar at bottom of all pages |
 
-### 4. Visual Polish on SocialCanvas (`SocialCanvas.tsx`)
-- Add a subtle entrance animation on search trigger
-- Show a "No results? Try these:" section with exercise-based suggestions when search returns few results
-- Larger thumbnail cards with channel avatars
+## 3. Detail Polish
+
+- **IdleCanvas**: Add "TLC COACH" branding with a subtle "AI-Powered" badge
+- **ChatPanel header**: Show "TLC COACH · AI" instead of just "COACH CARE"  
+- **Navigation footer**: "© 2026 TLC Calisthenics" at bottom of sidebar
+- **AppShell**: Thin footer bar with "Created with TLC · AI-Powered Training"
 
 ## Files
 
 | File | Change |
 |------|--------|
-| `src/components/CoachCare/Canvas/SocialCanvas.tsx` | Add `useEffect` auto-search on mount, richer result cards |
-| `src/components/sections/HeroSection.tsx` | Add `onCategoryClick` prop, thumbnail backgrounds on cards |
-| `src/pages/Index.tsx` | Wire category click to Library nav with filter, pass `defaultCategory` |
-| `src/components/sections/UnifiedLibrary.tsx` | Accept optional `defaultCategory` prop to pre-filter |
+| `supabase/functions/coach-chat/index.ts` | **New** — AI gateway edge function with calisthenics system prompt |
+| `src/components/CoachCare/hooks/useCoachAI.ts` | **New** — streaming fetch utility for coach AI |
+| `src/components/CoachCare/CoachCareStudio.tsx` | Route general messages through AI, keep structural commands local |
+| `src/components/CoachCare/ChatPanel.tsx` | Update header branding to "TLC COACH · AI" |
+| `src/components/CoachCare/Canvas/IdleCanvas.tsx` | Add "TLC" branding, "AI-Powered" badge |
+| `src/components/layout/Navigation.tsx` | Add "© 2026 TLC" footer in sidebar |
+| `src/components/layout/AppShell.tsx` | Add subtle TLC footer bar |
+| `vite.config.ts` | Remove lovable-tagger |
 
-**4 files modified, 0 new files, 0 new dependencies**
+**8 files (2 new, 6 modified), 0 new dependencies**
 
