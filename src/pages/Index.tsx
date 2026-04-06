@@ -17,18 +17,7 @@ type Section = 'home' | 'library' | 'coach' | 'progress' | 'settings' | 'guide';
 
 const sectionOrder: Section[] = ['home', 'library', 'coach', 'progress', 'guide', 'settings'];
 
-const difficultyBadge: Record<string, string> = {
-  easy: 'difficulty-easy',
-  beginner: 'difficulty-beginner',
-  intermediate: 'difficulty-intermediate',
-  advanced: 'difficulty-advanced',
-  master: 'difficulty-master',
-};
-
-const featured = exercises.filter(e => e.image).slice(0, 8);
-
 const Index = () => {
-  const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState<Section>('home');
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
