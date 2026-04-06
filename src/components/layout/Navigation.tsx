@@ -10,7 +10,8 @@ import {
   Sun,
   Moon,
   MessageSquare,
-  Search
+  Search,
+  BookOpen
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -25,6 +26,7 @@ const navItems: NavItem[] = [
   { id: 'library', label: 'LIBRARY', icon: Library },
   { id: 'coach', label: 'COACH', icon: MessageSquare },
   { id: 'progress', label: 'PROGRESS', icon: Flame },
+  { id: 'guide', label: 'GUIDE', icon: BookOpen },
   { id: 'settings', label: 'SETTINGS', icon: Settings },
 ];
 
