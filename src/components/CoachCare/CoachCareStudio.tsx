@@ -298,15 +298,59 @@ export function CoachCareStudio() {
     setCoachCtx(prev => ({ ...prev, ...updates }));
   }, []);
 
+  const streamingMsgId = useRef<string | null>(null);
+
   const handleSend = useCallback((text: string) => {
     addMessage({ role: 'user', content: text, type: 'text' });
     setIsTyping(true);
-    setTimeout(() => {
-      const response = generateResponse(text, setCanvas, coachCtx, updateCtx);
-      addMessage({ role: 'coach', ...response });
-      setIsTyping(false);
-    }, 800 + Math.random() * 600);
-  }, [addMessage, setCanvas, coachCtx, updateCtx]);
+
+    // Try deterministic handlers first
+    const response = generateResponse(text, setCanvas, coachCtx, updateCtx);
+    
+    if (response !== null) {
+      // Deterministic match — use local response
+      setTimeout(() => {
+        addMessage({ role: 'coach', ...response });
+        setIsTyping(false);
+      }, 400);
+    } else {
+      // No match — stream from AI
+      const personality = localStorage.getItem('tlc-coach-personality') || undefined;
+      const recentMsgs = messages.slice(-10).map(m => ({
+        role: (m.role === 'coach' ? 'assistant' : 'user') as 'user' | 'assistant',
+        content: m.content,
+      }));
+      recentMsgs.push({ role: 'user', content: text });
+
+      let accumulated = '';
+      const msgId = crypto.randomUUID();
+      streamingMsgId.current = msgId;
+
+      // Add empty coach message that we'll stream into
+      addMessage({ role: 'coach', content: '...', type: 'text', id: msgId });
+
+      streamCoachResponse({
+        messages: recentMsgs,
+        personality,
+        onDelta: (chunk) => {
+          accumulated += chunk;
+          // Update the last coach message in place
+          addMessage({ role: 'coach', content: accumulated, type: 'text', id: msgId, replace: true });
+        },
+        onDone: () => {
+          setIsTyping(false);
+          streamingMsgId.current = null;
+        },
+        onError: (err) => {
+          if (!accumulated) {
+            addMessage({ role: 'coach', content: `Sorry, I couldn't connect right now. Try again or ask about a specific exercise! ⚡`, type: 'text', id: msgId, replace: true });
+          }
+          setIsTyping(false);
+          streamingMsgId.current = null;
+        },
+      });
+    }
+  }, [addMessage, setCanvas, coachCtx, updateCtx, messages]);
 
   const handleCanvasAction = useCallback((action: string) => {
     const actionMessages: Record<string, string> = {
