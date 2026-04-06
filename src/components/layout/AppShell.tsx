@@ -7,7 +7,7 @@ interface AppShellProps {
 
 export function AppShell({ children }: AppShellProps) {
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-background skeuo-grain notebook-ruled">
+    <div className="relative min-h-screen overflow-x-hidden bg-background">
       {/* Large faded TLC Thunder watermark */}
       <div 
         className="pointer-events-none fixed inset-0 z-0 flex items-center justify-center"
