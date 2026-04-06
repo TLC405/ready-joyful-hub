@@ -22,21 +22,15 @@ export function TLCVideoPlayer({ videoUrl, thumbnailUrl, title, className }: TLC
   if (!embedUrl) return null;
 
   return (
-    <div className={cn("relative w-full overflow-hidden skeuo-bezel rounded-sm p-[4px]", className)}>
-      {/* TLC Brand Bar — thunder gradient leather */}
-      <div className="flex items-center gap-2 skeuo-leather px-3 py-1.5">
-        <div className="thunder-led" />
-        <span className="text-label text-[9px] text-primary-foreground/90 tracking-widest">TLC PLAYER</span>
-        <div className="ml-auto flex gap-1">
-          <div className="h-1.5 w-1.5 rounded-full bg-thunder-orange/60" />
-          <div className="h-1.5 w-1.5 rounded-full bg-thunder-blue/60" />
-        </div>
+    <div className={cn("relative w-full overflow-hidden border border-foreground/10 bg-card", className)}>
+      {/* TLC header bar */}
+      <div className="flex items-center gap-2 bg-foreground/95 px-3 py-1.5">
+        <div className="h-1.5 w-1.5 rounded-full bg-thunder-orange animate-pulse" />
+        <span className="text-label text-[9px] text-card/90 tracking-widest">TLC PLAYER</span>
       </div>
 
       {/* Screen */}
-      <div className="relative bg-foreground" style={{
-        boxShadow: 'inset 0 0 12px rgba(0,0,0,0.5)',
-      }}>
+      <div className="relative">
         {!playing ? (
           <button
             onClick={() => setPlaying(true)}
@@ -49,13 +43,13 @@ export function TLCVideoPlayer({ videoUrl, thumbnailUrl, title, className }: TLC
                 <span className="font-chalk text-2xl text-muted-foreground/30">{title[0]}</span>
               </div>
             )}
-            <div className="absolute inset-0 flex items-center justify-center bg-foreground/30 transition-colors group-hover:bg-foreground/50">
-              <div className="flex h-16 w-16 items-center justify-center btn-thunder transition-transform group-hover:scale-110">
-                <Play className="h-6 w-6 text-thunder-orange-foreground ml-1" fill="currentColor" />
+            <div className="absolute inset-0 flex items-center justify-center transition-colors">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-thunder-orange/90 shadow-lg transition-all group-hover:scale-110 group-hover:bg-thunder-orange">
+                <Play className="h-5 w-5 text-white ml-0.5" fill="currentColor" />
               </div>
             </div>
-            <div className="absolute bottom-0 left-0 right-0 skeuo-leather px-3 py-2">
-              <p className="truncate text-left font-chalk text-xs text-primary-foreground/90">{title}</p>
+            <div className="absolute bottom-0 left-0 right-0 bg-foreground/80 px-3 py-2">
+              <p className="truncate text-left font-chalk text-xs text-card/90">{title}</p>
             </div>
           </button>
         ) : (

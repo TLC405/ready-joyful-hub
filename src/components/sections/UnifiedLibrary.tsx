@@ -117,7 +117,7 @@ function InlineTVBrowser() {
                 <button
                   key={ex.id}
                   onClick={() => navigate(`/video/${ex.id}`)}
-                  className="group flex flex-col bg-card hover:bg-surface-0 transition-all text-left skeuo-card skeuo-grain"
+                  className="group flex flex-col bg-card hover:bg-surface-0 transition-all text-left border border-foreground/5 hover:border-foreground/15"
                 >
                   <div className="relative aspect-video overflow-hidden bg-surface-0">
                     {thumb ? (
