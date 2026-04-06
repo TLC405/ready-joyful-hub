@@ -1,60 +1,56 @@
 
+# How-To Guide + Calisthenics Wiki + TLC Branding Enhancement
 
-# Real AI Coach + TLC Branding Sweep + Detail Polish
+## 1. New "GUIDE" Nav Section — How to Use the App
 
-## Overview
+Add a new nav item "GUIDE" (BookOpen icon) that shows an interactive walkthrough of the app's features:
 
-Three changes: (1) Replace the hardcoded `generateResponse` with real AI via Lovable AI gateway so the Coach learns context and generates real responses, (2) remove all "Lovable" references and add "Created with TLC" branding throughout, (3) add more polish details.
+- **Getting Started** — overview of the 4 sections (Library, Coach, Progress, Settings)
+- **Using the Coach** — how to paste URLs, ask for exercises, build workouts, search videos
+- **Library & Map** — how to browse exercises, filter categories, follow progression chains
+- **Progress Tracking** — streaks, heatmap, workout logs
+- **Keyboard Shortcuts** — ⌘K search, theme toggle, navigation
 
-## 1. Real AI Coach via Edge Function
+Each section uses expandable accordion cards with icons and short descriptions. Feels like a journal field guide.
 
-Create a new edge function `supabase/functions/coach-chat/index.ts` that:
-- Uses `LOVABLE_API_KEY` (already configured) to call `https://ai.gateway.lovable.dev/v1/chat/completions`
-- System prompt: expert calisthenics coach personality with knowledge of the exercise library, progression chains, and training principles
-- Streams responses token-by-token back to the client
-- Handles 429/402 errors with friendly messages
+## 2. New "WIKI" Tab Inside Library
 
-### Client-side changes (`CoachCareStudio.tsx`):
-- Keep the existing deterministic handlers for URLs, exercise detection, template building, and social search — these are structural commands that open canvas modes
-- For **general/conversational messages** that don't match any pattern, call the AI edge function instead of returning random hardcoded responses
-- Stream tokens into the chat message for a live typing effect
-- Pass recent message history (last 10 messages) as context so the AI maintains conversation continuity
-- The Coach personality is read from `localStorage('tlc-coach-personality')` and sent to the edge function
+Add a 4th tab to UnifiedLibrary: **WIKI** — a massive reference encyclopedia covering:
 
-### New streaming utility (`src/components/CoachCare/hooks/useCoachAI.ts`):
-- `streamCoachResponse(messages, onDelta, onDone, onError)` function
-- Calls the edge function with fetch + SSE parsing
-- Handles rate limit and payment errors with toast notifications
+### Categories (accordion sections):
+- **Calisthenics** — Progressive overload, skill tiers (beginner→elite), push/pull/legs/core fundamentals, static vs dynamic holds, programming principles
+- **Ballet** — Port de bras, positions (1st-5th), relevé, plié, arabesque, turnout mechanics, conditioning for athletes
+- **Yoga** — Sun salutations, warrior series, inversions, breathing (pranayama), flexibility vs mobility
+- **Gymnastics** — Rings fundamentals, pommel horse basics, floor skills, iron cross progression, strength standards
+- **Mobility** — Joint-by-joint approach, CARs, end-range training, stretching protocols
+- **Nutrition** — Fueling for bodyweight athletes, protein timing, hydration
+- **Recovery** — Deload weeks, sleep optimization, active recovery protocols
 
-## 2. Remove Lovable Branding + Add TLC Branding
+Each entry: title, 2-3 paragraph description, key exercises list, pro tips. All in notebook journal style.
 
-| Location | Change |
-|----------|--------|
-| `vite.config.ts` | Remove `lovable-tagger` import and plugin usage |
-| `src/components/layout/Navigation.tsx` | Add "Created with TLC" footer text in sidebar |
-| `src/components/CoachCare/Canvas/IdleCanvas.tsx` | Add "Powered by TLC" subtle text |
-| `src/components/sections/HeroSection.tsx` | Add "TLC" watermark/badge |
-| `src/components/layout/AppShell.tsx` | Add subtle "TLC" footer bar at bottom of all pages |
+## 3. TLC Branding Enhancements
 
-## 3. Detail Polish
+- Welcome message in Coach → "Welcome to TLC Coach"
+- HeroSection subtitle → add "⚡ TLC" badge
+- Wiki footer → "TLC Calisthenics Knowledge Base"
+- Guide header → "TLC Field Guide"
 
-- **IdleCanvas**: Add "TLC COACH" branding with a subtle "AI-Powered" badge
-- **ChatPanel header**: Show "TLC COACH · AI" instead of just "COACH CARE"  
-- **Navigation footer**: "© 2026 TLC Calisthenics" at bottom of sidebar
-- **AppShell**: Thin footer bar with "Created with TLC · AI-Powered Training"
+## 4. Text Enhancements
+
+- All section headers use `text-editorial` + `text-embossed` + thunder accents
+- Wiki entries use `text-journal` body with `notebook-ruled` backgrounds
+- Guide cards use `skeuo-card` styling with thunder borders
 
 ## Files
 
 | File | Change |
 |------|--------|
-| `supabase/functions/coach-chat/index.ts` | **New** — AI gateway edge function with calisthenics system prompt |
-| `src/components/CoachCare/hooks/useCoachAI.ts` | **New** — streaming fetch utility for coach AI |
-| `src/components/CoachCare/CoachCareStudio.tsx` | Route general messages through AI, keep structural commands local |
-| `src/components/CoachCare/ChatPanel.tsx` | Update header branding to "TLC COACH · AI" |
-| `src/components/CoachCare/Canvas/IdleCanvas.tsx` | Add "TLC" branding, "AI-Powered" badge |
-| `src/components/layout/Navigation.tsx` | Add "© 2026 TLC" footer in sidebar |
-| `src/components/layout/AppShell.tsx` | Add subtle TLC footer bar |
-| `vite.config.ts` | Remove lovable-tagger |
+| `src/components/sections/GuideSection.tsx` | **New** — interactive how-to walkthrough |
+| `src/components/sections/WikiSection.tsx` | **New** — massive calisthenics/ballet/yoga/gymnastics encyclopedia |
+| `src/components/sections/UnifiedLibrary.tsx` | Add WIKI tab |
+| `src/components/layout/Navigation.tsx` | Add GUIDE nav item |
+| `src/pages/Index.tsx` | Wire Guide section |
+| `src/components/CoachCare/hooks/useChatHistory.ts` | Update welcome message branding |
+| `src/components/sections/HeroSection.tsx` | Enhanced TLC branding |
 
-**8 files (2 new, 6 modified), 0 new dependencies**
-
+**7 files (2 new, 5 modified), 0 new dependencies**
