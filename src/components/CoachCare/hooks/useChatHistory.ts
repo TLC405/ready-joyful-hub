@@ -28,10 +28,16 @@ export function useChatHistory() {
     } catch {}
   }, [messages]);
 
-  const addMessage = useCallback((msg: Omit<ChatMessage, 'id' | 'timestamp'>) => {
+  const addMessage = useCallback((msg: Omit<ChatMessage, 'id' | 'timestamp'> & { id?: string; replace?: boolean }) => {
+    const { replace: shouldReplace, ...rest } = msg;
+    if (shouldReplace && msg.id) {
+      // Update existing message in place (for streaming)
+      setMessages(prev => prev.map(m => m.id === msg.id ? { ...m, ...rest } : m));
+      return { ...rest, id: msg.id, timestamp: new Date().toISOString() } as ChatMessage;
+    }
     const newMsg: ChatMessage = {
-      ...msg,
-      id: crypto.randomUUID(),
+      ...rest,
+      id: msg.id || crypto.randomUUID(),
       timestamp: new Date().toISOString(),
     };
     setMessages(prev => [...prev, newMsg]);
