@@ -87,50 +87,7 @@ const Index = () => {
           onTouchEnd={handleTouchEnd}
         >
           {activeSection === 'home' && (
-            <div>
-              <HeroSection onCategoryClick={handleCategoryClick} />
-
-              {/* Featured Skills */}
-              <section className="px-4 pb-8 lg:px-8">
-                <div className="editorial-divider-thick mb-4 pt-4">
-                  <div className="flex items-baseline justify-between">
-                    <h3 className="text-editorial-sm text-foreground">TLC'S FAVORITE SKILLS</h3>
-                    <button onClick={() => handleNavigate('library')} className="text-label text-xs text-primary hover:underline">
-                      VIEW ALL →
-                    </button>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-px bg-foreground/10 border border-foreground/10 sm:grid-cols-3 md:grid-cols-4">
-                  {featured.map((ex) => (
-                    <div
-                      key={ex.id}
-                      onClick={() => setSelectedExercise(ex)}
-                      className="group cursor-pointer bg-card transition-colors hover:bg-surface-0"
-                    >
-                      <div className="relative aspect-[4/3] overflow-hidden">
-                        <img src={ex.image} alt={ex.name} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                        <div className="absolute left-0 top-0">
-                          <span className={cn("border px-2 py-0.5 text-label text-[9px] bg-card/90", difficultyBadge[ex.difficulty])}>
-                            {ex.difficulty.toUpperCase()}
-                          </span>
-                        </div>
-                        {(ex.videoUrl || ex.videoSources?.length || ex.instagramUrl) && (
-                          <button
-                            onClick={(e) => { e.stopPropagation(); navigate(`/video/${ex.id}`); }}
-                            className="absolute right-2 bottom-2 flex h-8 w-8 items-center justify-center border border-card/50 bg-foreground/70 text-card hover:bg-primary transition-colors"
-                          >
-                            <Play className="h-3.5 w-3.5 ml-0.5" fill="currentColor" />
-                          </button>
-                        )}
-                      </div>
-                      <div className="border-t border-foreground/5 p-3">
-                        <h4 className="font-chalk text-sm truncate">{ex.name}</h4>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </section>
-            </div>
+            <HeroSection onCategoryClick={handleCategoryClick} onNavigate={handleNavigate} />
           )}
 
           {activeSection === 'library' && (
