@@ -64,7 +64,7 @@ export function HeroSection({ onCategoryClick, onNavigate }: HeroSectionProps) {
   }, []);
 
   return (
-    <div className="px-4 py-4 lg:px-8 lg:py-6 space-y-8 max-w-6xl mx-auto" style={{ background: 'red' }}>
+    <div className="px-4 py-4 lg:px-8 lg:py-6 space-y-8 max-w-6xl mx-auto">
       {/* Section 1: Compact Hero */}
       <section className="text-center space-y-3 pt-2">
         <div className="text-[10px] text-muted-foreground/60 tracking-[0.2em] uppercase">TLC CALISTHENICS · EST 2026</div>
