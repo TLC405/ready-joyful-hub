@@ -20,7 +20,7 @@ export function AppShell({ children }: AppShellProps) {
           draggable={false}
         />
       </div>
-      <div className="relative z-10">
+      <div className="relative z-10 min-h-screen">
         {children}
       </div>
       {/* TLC footer bar */}
