@@ -64,11 +64,11 @@ export function HeroSection({ onCategoryClick, onNavigate }: HeroSectionProps) {
   }, []);
 
   return (
-    <div className="px-4 py-6 lg:px-8 lg:py-10 space-y-10">
+    <div className="px-4 py-4 lg:px-8 lg:py-6 space-y-8 max-w-6xl mx-auto">
       {/* Section 1: Compact Hero */}
-      <section className="text-center space-y-4">
+      <section className="text-center space-y-3 pt-2">
         <div className="text-[10px] text-muted-foreground/60 tracking-[0.2em] uppercase">TLC CALISTHENICS · EST 2026</div>
-        <h1 className="font-chalk text-4xl md:text-6xl text-foreground leading-tight">
+        <h1 className="font-chalk text-3xl md:text-5xl lg:text-6xl text-foreground leading-tight">
           MASTER<br />
           <span className="bg-gradient-to-r from-thunder-orange to-thunder-blue bg-clip-text text-transparent">YOUR BODY.</span>
         </h1>
@@ -77,7 +77,7 @@ export function HeroSection({ onCategoryClick, onNavigate }: HeroSectionProps) {
         </p>
         <button
           onClick={() => onNavigate?.('coach')}
-          className="mt-2 inline-flex items-center gap-2 bg-gradient-to-r from-thunder-orange to-thunder-blue text-white font-chalk text-sm px-6 py-2.5 rounded-md hover:opacity-90 transition-opacity"
+          className="mt-2 inline-flex items-center gap-2 btn-thunder font-chalk text-sm px-6 py-2.5 rounded-md"
         >
           START TRAINING →
         </button>
