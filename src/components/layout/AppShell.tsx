@@ -16,11 +16,11 @@ export function AppShell({ children }: AppShellProps) {
         <img 
           src={tlcWatermark} 
           alt="" 
-          className="w-[70vmin] max-w-[600px] opacity-[0.04] dark:opacity-[0.03] select-none"
+          className="w-[70vmin] max-w-[600px] opacity-[0.08] dark:opacity-[0.06] select-none"
           draggable={false}
         />
       </div>
-      <div className="relative z-10">
+      <div className="relative z-10 min-h-screen">
         {children}
       </div>
       {/* TLC footer bar */}

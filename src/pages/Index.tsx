@@ -68,7 +68,7 @@ const Index = () => {
         <Navigation activeSection={activeSection} onNavigate={handleNavigate} onOpenSearch={handleOpenSearch} />
         
         <main
-          className="lg:pl-20 pt-2"
+          className="lg:ml-20"
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
