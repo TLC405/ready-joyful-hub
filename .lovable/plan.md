@@ -1,46 +1,117 @@
 
 
-# Rebuild Homepage + Simplify UX
+# Real Video Search + State-of-the-Art Logging + Calendar
 
-## Problem
-The homepage is thin — just a headline, 4 category cards, and a featured grid. There's no clear learning path, no "what should I do first?" guidance, and no quick access to the app's best features (Coach, Wiki, TV). The overall UX has too many sections competing for attention.
+## Three goals
 
-## New Homepage Design
+1. **Real video search from the internet** in the Coach (currently mocked with hardcoded results)
+2. **Real workout logging system + calendar view** to log sets and see history (currently no writes happen — heatmap is `Math.random()`)
+3. **Remove the EXPLORE / LEARN / TRAIN path cards** from the homepage
 
-Replace the current Hero + Featured grid with a single-scroll homepage that acts as a **learning dashboard**:
+---
 
-### Section 1: Compact Hero (keep, simplify)
-- Keep headline "MASTER YOUR BODY" and subtitle
-- Remove the 4 category emoji cards (they duplicate Library filters)
-- Add a single prominent CTA: "START TRAINING →" that opens Coach
+## 1. Real Video Search via YouTube Data API
 
-### Section 2: "Your Path" — 3 Action Cards
-Three large, clear cards in a row that answer "what can I do here?":
-- **EXPLORE** (→ Library) — "Browse 80+ exercises across calisthenics, yoga, ballet & mobility"
-- **LEARN** (→ Wiki/Guide) — "Read the encyclopedia — technique breakdowns, nutrition, recovery"  
-- **TRAIN** (→ Coach) — "Ask the AI coach to build your workout or find a video"
+**Currently:** `SocialCanvas.tsx` calls `generateMockResults()` which only returns videos from the local `exercises` array. No actual internet search.
 
-Each card: icon, title, one-line description, thumbnail background from exercises. Click navigates directly.
+**Fix:** Create a new edge function `youtube-search` that calls the official **YouTube Data API v3** (free tier: 10k requests/day, no cost). The user provides a YouTube Data API key once — stored as a Supabase secret `YOUTUBE_API_KEY`.
 
-### Section 3: "Featured Skills" (keep, clean up)
-- Reduce from 8 → 6 cards for cleaner grid (2×3 on mobile, 3×2 on desktop)
-- Larger thumbnails, bigger text, remove tiny difficulty badge clutter
-- Single "VIEW ALL →" link to Library
+- New file: `supabase/functions/youtube-search/index.ts` — accepts `{ query, maxResults }`, calls `https://www.googleapis.com/youtube/v3/search?...&type=video`, returns normalized `SocialSearchResult[]` (id, title, thumbnail, channel, embedUrl).
+- Update `SocialCanvas.tsx` `handleSearch` to call this edge function via `supabase.functions.invoke('youtube-search', ...)` and remove `generateMockResults` for YouTube path.
+- Instagram tab keeps using local exercise sources (Instagram Search has no public API; covered later if needed).
+- Show toast on 403/quota errors.
 
-### Section 4: "Quick Start" — Discipline Row
-Four horizontal pills (not cards): Calisthenics · Yoga · Ballet · Mobility
-- Click goes straight to Library with that filter pre-set
-- Minimal — just text pills with exercise count, no emojis, no thumbnails
+**Why this saves credits:** YouTube Data API is free, real, and doesn't use Lovable AI tokens.
 
-### Section 5: Compact Footer CTA
-"Need help? Ask the TLC Coach →" — small text link to Coach section
+---
+
+## 2. State-of-the-Art Logging + Calendar System
+
+**Currently:** `tlc-workout-logs` localStorage key is read but **never written** anywhere. Streak and heatmap are placeholders/random.
+
+### Data model (localStorage, no auth required)
+
+```ts
+type WorkoutLog = {
+  id: string;           // uuid
+  date: string;         // ISO date "2026-04-21"
+  exerciseId: string;
+  exerciseName: string;
+  sets: { reps?: number; timeSec?: number; weight?: number; rpe?: number }[];
+  notes?: string;
+  durationMin?: number;
+  createdAt: string;    // ISO timestamp
+};
+```
+
+Stored under `tlc-workout-logs` so existing reads stay compatible.
+
+### New shared module `src/lib/workout-log.ts`
+- `getAllLogs()`, `getLogsForDate(date)`, `getLogsForRange(start, end)`
+- `addLog(log)`, `updateLog(id, patch)`, `deleteLog(id)`
+- `getStreak()`, `getHeatmapData(weeks)` — replaces all the duplicated localStorage code in 3 files
+- Subscribes via a small custom event so components re-render when logs change
+
+### New section: `src/components/sections/LogbookSection.tsx`
+
+A calendar-first logging hub replacing the current "progress" tab content above the existing stats:
+
+- **Top row — KPIs:** Streak, total workouts, total sets this week, this month. Real numbers.
+- **Big calendar (month view)** using existing `src/components/ui/calendar.tsx` (react-day-picker):
+  - Custom `DayContent` renders a small thunder-orange dot/intensity square on days with logs
+  - Heatmap-style background tint per day based on number of sets
+  - Click a date → opens day detail panel below calendar
+  - Month/Week toggle + prev/next month navigation
+- **Day Detail Panel** (right side on desktop, below on mobile):
+  - Shows all logs for selected date grouped by exercise
+  - Each log: sets/reps/time/RPE with edit + delete buttons
+  - "Log workout" button opens a quick-log dialog
+- **Quick-Log Dialog (`LogWorkoutDialog`):**
+  - Exercise search (autocomplete from `exercises` lib)
+  - Add sets dynamically (reps OR time, optional weight + RPE)
+  - Notes field, duration field
+  - Save button writes via `addLog()`, toast confirms
+- **Weekly trend chart** under calendar using existing `recharts`: total sets per day for last 14 days
+- **CSV export button:** download all logs for the year
+
+### Wire-up
+- `Navigation.tsx`: rename "Progress" item to **"Logbook"** (icon: `CalendarDays`), point to `'logbook'` section
+- `Index.tsx`: add `'logbook'` to `Section` union and route it to `<LogbookSection />`. Keep `<ProgressDashboard />` accessible for legacy stats but optional — better to merge stats into the new logbook.
+- Update `ProgressDashboard.tsx`, `AnalyticsCanvas.tsx`, `CoachCareStudio.tsx` to import from `workout-log.ts` so the random heatmap becomes real data.
+- Add a "📒 Log this workout" quick reply in Coach when an exercise is loaded → opens the quick-log dialog pre-filled.
+
+---
+
+## 3. Homepage cleanup
+
+In `HeroSection.tsx`:
+- **Remove** the entire "Section 2: Your Path — 3 Action Cards" (EXPLORE / LEARN / TRAIN block + `pathCards` const + `pathThumbs`)
+- Keep: compact hero + featured skills grid + discipline pills + footer CTA
+- Add a small "Today's logged sets: X" badge under the hero CTA that links to Logbook
+
+---
 
 ## Files
 
-| File | Change |
+| File | Action |
 |------|--------|
-| `src/components/sections/HeroSection.tsx` | Full rewrite — compact hero + 3 action cards + discipline pills + featured grid |
-| `src/pages/Index.tsx` | Remove duplicate featured grid code (move into HeroSection), simplify home rendering |
+| `supabase/functions/youtube-search/index.ts` | **NEW** — proxy YouTube Data API v3 |
+| `src/lib/workout-log.ts` | **NEW** — single source of truth for logs |
+| `src/components/sections/LogbookSection.tsx` | **NEW** — calendar + KPIs + day detail |
+| `src/components/sections/log/LogWorkoutDialog.tsx` | **NEW** — quick-log form |
+| `src/components/sections/log/CalendarHeatmap.tsx` | **NEW** — calendar with intensity dots |
+| `src/components/sections/log/DayDetailPanel.tsx` | **NEW** — list/edit logs for a day |
+| `src/components/CoachCare/Canvas/SocialCanvas.tsx` | Replace mock search with edge function call |
+| `src/components/sections/HeroSection.tsx` | Remove path cards section |
+| `src/components/layout/Navigation.tsx` | Rename Progress → Logbook, update icon |
+| `src/pages/Index.tsx` | Add logbook route |
+| `src/components/sections/ProgressDashboard.tsx` | Use real `workout-log.ts` data, drop `Math.random` heatmap |
+| `src/components/CoachCare/Canvas/AnalyticsCanvas.tsx` | Use real `workout-log.ts` data |
+| `src/components/CoachCare/CoachCareStudio.tsx` | Use real `workout-log.ts` + add "Log this" quick reply |
 
-**2 files modified, 0 new files, 0 new dependencies**
+**6 new files, 7 modified, 0 new deps**
+
+## Required from you
+
+- **YouTube Data API key** (free at https://console.cloud.google.com → APIs & Services → enable "YouTube Data API v3" → create API key). I'll prompt to add it as the secret `YOUTUBE_API_KEY` once you approve.
 
