@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Flame, 
-  Settings, 
+import {
+  Flame,
+  Settings,
   Menu,
   X,
   Home,
@@ -11,9 +11,14 @@ import {
   Moon,
   MessageSquare,
   Search,
-  BookOpen
+  BookOpen,
+  LogIn,
+  LogOut,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/hooks/use-auth';
+import { supabase } from '@/integrations/supabase/client';
+import { useNavigate } from 'react-router-dom';
 
 interface NavItem {
   id: string;
@@ -54,7 +59,16 @@ function useTheme() {
 export function Navigation({ activeSection, onNavigate, onOpenSearch }: { activeSection: string; onNavigate: (section: string) => void; onOpenSearch?: () => void }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { theme, toggle } = useTheme();
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   const ThemeIcon = theme === 'dark' ? Sun : Moon;
+  const handleAuthClick = async () => {
+    if (isAuthenticated) {
+      await supabase.auth.signOut();
+    } else {
+      navigate('/auth');
+    }
+  };
 
   return (
     <>
@@ -109,6 +123,14 @@ export function Navigation({ activeSection, onNavigate, onOpenSearch }: { active
         <div className="mb-2 text-center">
           <span className="text-[8px] text-muted-foreground/40 tracking-widest">© 2026 TLC</span>
         </div>
+
+        <button
+          onClick={handleAuthClick}
+          className="mb-1 flex h-12 w-12 items-center justify-center text-muted-foreground transition-colors hover:text-thunder-blue btn-raised"
+          title={isAuthenticated ? 'Sign out' : 'Sign in'}
+        >
+          {isAuthenticated ? <LogOut className="h-5 w-5" /> : <LogIn className="h-5 w-5" />}
+        </button>
 
         <button
           onClick={toggle}
