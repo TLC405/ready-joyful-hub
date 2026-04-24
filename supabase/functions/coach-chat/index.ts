@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -31,11 +32,57 @@ FORMAT:
 - Use bullet points for lists of exercises or cues.
 - Keep paragraphs short (2-3 sentences max).`;
 
+type Msg = { role: "user" | "assistant" | "system"; content: string };
+
+function isValidPayload(body: unknown): body is { messages: Msg[]; personality?: string } {
+  if (!body || typeof body !== "object") return false;
+  const b = body as Record<string, unknown>;
+  if (!Array.isArray(b.messages) || b.messages.length === 0 || b.messages.length > 50) return false;
+  for (const m of b.messages) {
+    if (!m || typeof m !== "object") return false;
+    const mm = m as Record<string, unknown>;
+    if (!["user", "assistant", "system"].includes(String(mm.role))) return false;
+    if (typeof mm.content !== "string" || mm.content.length === 0 || mm.content.length > 8000) return false;
+  }
+  if (b.personality !== undefined && (typeof b.personality !== "string" || b.personality.length > 500)) return false;
+  return true;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { messages, personality } = await req.json();
+    // Auth: require a valid Supabase JWT
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_ANON_KEY")!,
+      { global: { headers: { Authorization: authHeader } } },
+    );
+    const token = authHeader.replace("Bearer ", "");
+    const { data: claims, error: claimsErr } = await supabase.auth.getClaims(token);
+    if (claimsErr || !claims?.claims) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const body = await req.json();
+    if (!isValidPayload(body)) {
+      return new Response(JSON.stringify({ error: "Invalid request payload" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const { messages, personality } = body;
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
