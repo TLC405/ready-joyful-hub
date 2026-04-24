@@ -9,6 +9,7 @@ import { CoachCareStudio } from '@/components/CoachCare/CoachCareStudio';
 import { GuideSection } from '@/components/sections/GuideSection';
 import { ExerciseDetailModal } from '@/components/shared/ExerciseDetailModal';
 import { CommandSearch } from '@/components/shared/CommandSearch';
+import { Protected } from '@/components/auth/Protected';
 import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts';
 import type { Exercise } from '@/lib/types';
 import { cn } from '@/lib/utils';
@@ -80,11 +81,17 @@ const Index = () => {
             <UnifiedLibrary defaultCategory={libraryCategory} onCategoryReset={() => setLibraryCategory(undefined)} />
           )}
 
-          {activeSection === 'coach' && <CoachCareStudio />}
+          {activeSection === 'coach' && (
+            <Protected><CoachCareStudio /></Protected>
+          )}
 
-          {activeSection === 'progress' && <ProgressDashboard />}
+          {activeSection === 'progress' && (
+            <Protected><ProgressDashboard /></Protected>
+          )}
 
-          {activeSection === 'settings' && <SettingsPanel />}
+          {activeSection === 'settings' && (
+            <Protected><SettingsPanel /></Protected>
+          )}
 
           {activeSection === 'guide' && <GuideSection />}
 
