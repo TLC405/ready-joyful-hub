@@ -1,8 +1,19 @@
 import { useState, useEffect } from 'react';
 import { Play, Youtube, Instagram, Twitter, Facebook, ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
+import DOMPurify from 'isomorphic-dompurify';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import type { VideoSource } from '@/lib/types';
+
+// Allow only Instagram iframe embeds — strip everything else
+function sanitizeEmbed(html: string): string {
+  return DOMPurify.sanitize(html, {
+    ALLOWED_TAGS: ['iframe', 'blockquote', 'a', 'div', 'p', 'span'],
+    ALLOWED_ATTR: ['src', 'width', 'height', 'frameborder', 'scrolling', 'allowtransparency', 'allow', 'allowfullscreen', 'class', 'style', 'href', 'target', 'rel', 'data-instgrm-captioned', 'data-instgrm-permalink', 'data-instgrm-version'],
+    ALLOWED_URI_REGEXP: /^https:\/\/(www\.)?instagram\.com\//i,
+    ADD_ATTR: ['target'],
+  });
+}
 
 function getPlatformIcon(platform: string) {
   switch (platform) {
@@ -121,7 +132,7 @@ export function TLCNotebookPlayer({ sources, title, cues = [], failSigns = [], c
                   <Loader2 className="h-8 w-8 text-thunder-orange animate-spin" />
                 </div>
               ) : igEmbed ? (
-                <div className="aspect-video w-full" dangerouslySetInnerHTML={{ __html: igEmbed }} />
+                <div className="aspect-video w-full" dangerouslySetInnerHTML={{ __html: sanitizeEmbed(igEmbed) }} />
               ) : (
                 <div className="flex aspect-video w-full items-center justify-center bg-surface-0">
                   <span className="font-chalk text-xl text-muted-foreground/40">LOADING REEL...</span>
