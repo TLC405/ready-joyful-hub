@@ -196,8 +196,15 @@ export function Navigation({ activeSection, onNavigate, onOpenSearch }: { active
                 })}
               </div>
               <button
-                onClick={toggle}
+                onClick={() => { handleAuthClick(); setMobileMenuOpen(false); }}
                 className="mt-4 flex items-center gap-4 skeuo-stitch p-4 text-foreground btn-raised"
+              >
+                {isAuthenticated ? <LogOut className="h-5 w-5" /> : <LogIn className="h-5 w-5" />}
+                <span className="font-chalk text-xl text-journal">{isAuthenticated ? 'SIGN OUT' : 'SIGN IN'}</span>
+              </button>
+              <button
+                onClick={toggle}
+                className="mt-2 flex items-center gap-4 skeuo-stitch p-4 text-foreground btn-raised"
               >
                 <ThemeIcon className="h-5 w-5" />
                 <span className="font-chalk text-xl text-journal">{theme === 'dark' ? 'LIGHT MODE' : 'DARK MODE'}</span>
