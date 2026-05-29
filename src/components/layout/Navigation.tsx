@@ -14,9 +14,11 @@ import {
   BookOpen,
   LogIn,
   LogOut,
+  Shield,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/use-auth';
+import { useAdmin } from '@/hooks/use-admin';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 
@@ -60,6 +62,7 @@ export function Navigation({ activeSection, onNavigate, onOpenSearch }: { active
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { theme, toggle } = useTheme();
   const { isAuthenticated } = useAuth();
+  const { isAdmin } = useAdmin();
   const navigate = useNavigate();
   const ThemeIcon = theme === 'dark' ? Sun : Moon;
   const handleAuthClick = async () => {

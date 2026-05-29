@@ -63,9 +63,18 @@ export function LogEntryForm({ date, initial, onSave, onCancel }: Props) {
       notes: notes.trim() || null,
     });
     if (!parsed.success) { setErr('Please pick an exercise and valid numbers.'); return; }
+    const d = parsed.data;
     setSaving(true);
     try {
-      await onSave({ ...parsed.data, logged_at: date });
+      await onSave({
+        logged_at: date,
+        exercise_id: d.exercise_id,
+        exercise_name: d.exercise_name,
+        sets: d.sets,
+        reps: d.reps,
+        duration_seconds: d.duration_seconds,
+        notes: d.notes,
+      });
       if (!initial) { setExerciseId(''); setExerciseName(''); setSets(''); setReps(''); setDuration(''); setNotes(''); }
     } catch (e) {
       setErr(e instanceof Error ? e.message : 'Save failed');
