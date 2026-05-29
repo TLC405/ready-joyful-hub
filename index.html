@@ -2,7 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#EF6B01" />
+    <!-- Content Security Policy: tightened, allows Supabase, Lovable AI gateway, YouTube, Instagram embeds, Google fonts -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.instagram.com https://www.youtube.com https://*.ytimg.com https://platform.instagram.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://ai.gateway.lovable.dev https://api.instagram.com https://*.sentry.io; frame-src https://www.youtube.com https://www.youtube-nocookie.com https://www.instagram.com https://platform.instagram.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self';" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <link id="seasonal-favicon" rel="icon" type="image/png" href="/favicon-spring.png" />
     <title>TLC Calisthenics</title>
     <script>

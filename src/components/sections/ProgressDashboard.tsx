@@ -1,71 +1,47 @@
 import { useMemo } from 'react';
-import { 
-  Target, Calendar, TrendingUp, Flame, Dumbbell, BarChart3
-} from 'lucide-react';
+import { TrendingUp, Flame, Dumbbell, BarChart3 } from 'lucide-react';
 import { exercises } from '@/lib/exercises';
-import { tracks } from '@/lib/tracks';
+import { useWorkoutLogs } from '@/hooks/use-workout-logs';
+import { toDateKey } from '@/lib/workout-logs';
+import { WorkoutCalendar } from '@/components/workout/WorkoutCalendar';
 
-function getWorkoutData() {
-  try {
-    const templates = JSON.parse(localStorage.getItem('tlc-templates') || '[]');
-    const logs = JSON.parse(localStorage.getItem('tlc-workout-logs') || '[]');
-    return { templates, logs };
-  } catch { return { templates: [], logs: [] }; }
-}
-
-function getStreak(): number {
-  try {
-    const logs = JSON.parse(localStorage.getItem('tlc-workout-logs') || '[]');
-    if (!logs.length) return 0;
-    let streak = 0;
-    const today = new Date();
-    for (let d = 0; d < 365; d++) {
-      const check = new Date(today);
-      check.setDate(check.getDate() - d);
-      const dateStr = check.toISOString().split('T')[0];
-      if (logs.some((l: any) => l.date?.startsWith(dateStr))) streak++;
-      else break;
-    }
-    return streak;
-  } catch { return 0; }
-}
-
-// Heatmap for last 4 weeks
-function WeeklyHeatmap() {
+function RealHeatmap() {
+  const { byDate } = useWorkoutLogs();
   const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
   const today = new Date();
-  const cells = [];
+  const cells: { date: Date; count: number }[] = [];
   for (let w = 3; w >= 0; w--) {
     for (let d = 0; d < 7; d++) {
       const date = new Date(today);
       date.setDate(date.getDate() - (w * 7 + (6 - d)));
-      const intensity = Math.random(); // Mock until real data
-      cells.push({ date, intensity, dayLabel: days[d] });
+      const count = (byDate.get(toDateKey(date)) || []).length;
+      cells.push({ date, count });
     }
   }
-
   return (
     <div>
       <div className="flex gap-[3px] mb-1">
         {days.map((d, i) => (
-          <span key={i} className="w-6 text-center text-[8px] text-muted-foreground">{d}</span>
+          <span key={i} className="w-6 text-center text-[8px] text-muted-foreground" aria-hidden="true">{d}</span>
         ))}
       </div>
-      <div className="grid grid-cols-7 gap-[3px]">
+      <div className="grid grid-cols-7 gap-[3px]" role="grid" aria-label="Last 4 weeks of training activity">
         {cells.map((c, i) => (
           <div
             key={i}
-            className="h-6 w-6 border border-foreground/5"
+            className="h-6 w-6 border border-foreground/5 rounded-sm"
             style={{
-              background: c.intensity > 0.7
+              background: c.count >= 3
                 ? 'hsl(var(--thunder-orange))'
-                : c.intensity > 0.4
-                  ? 'hsl(var(--thunder-orange) / 0.4)'
-                  : c.intensity > 0.1
-                    ? 'hsl(var(--thunder-orange) / 0.15)'
-                    : 'hsl(var(--foreground) / 0.03)',
+                : c.count === 2
+                  ? 'hsl(var(--thunder-orange) / 0.55)'
+                  : c.count === 1
+                    ? 'hsl(var(--thunder-orange) / 0.22)'
+                    : 'hsl(var(--foreground) / 0.04)',
             }}
-            title={c.date.toLocaleDateString()}
+            title={`${c.date.toLocaleDateString()} — ${c.count} ${c.count === 1 ? 'entry' : 'entries'}`}
+            role="gridcell"
+            aria-label={`${c.date.toLocaleDateString()}: ${c.count} entries`}
           />
         ))}
       </div>
@@ -74,95 +50,72 @@ function WeeklyHeatmap() {
 }
 
 export function ProgressDashboard() {
-  const streak = getStreak();
-  const { templates } = getWorkoutData();
+  const { logs, streak } = useWorkoutLogs();
 
-  const trackProgress = useMemo(() => {
-    return tracks.slice(0, 6).map(track => {
-      const total = track.nodes.length;
-      const completed = Math.floor(Math.random() * total * 0.6); // Mock
-      return { name: track.name, total, completed, pct: total > 0 ? Math.round((completed / total) * 100) : 0 };
-    });
-  }, []);
+  const totalEntries = logs.length;
+  const recent = useMemo(() => logs.slice(0, 8), [logs]);
 
   return (
-    <section className="relative px-4 py-8 lg:px-8">
+    <section className="relative px-4 py-8 lg:px-8 max-w-6xl mx-auto">
       <div className="thunder-divider mb-4" />
       <div className="mb-6 pt-2">
         <h2 className="text-editorial-sm text-foreground text-embossed">YOUR <span className="thunder-text">PROGRESS</span></h2>
       </div>
 
       <div className="space-y-4">
-        {/* Top stats */}
         <div className="grid grid-cols-3 gap-px bg-foreground/10 border border-foreground/10">
           {[
             { icon: Flame, label: 'STREAK', value: `${streak}d`, color: 'text-thunder-orange' },
-            { icon: Dumbbell, label: 'WORKOUTS', value: `${templates.length}`, color: 'text-thunder-blue' },
+            { icon: Dumbbell, label: 'LOGGED', value: `${totalEntries}`, color: 'text-thunder-blue' },
             { icon: BarChart3, label: 'EXERCISES', value: `${exercises.length}`, color: 'text-thunder-orange' },
           ].map(({ icon: Icon, label, value, color }) => (
             <div key={label} className="bg-card p-4 text-center skeuo-thunder-card skeuo-grain">
-              <Icon className={`mx-auto mb-2 h-5 w-5 ${color}`} />
+              <Icon className={`mx-auto mb-2 h-5 w-5 ${color}`} aria-hidden="true" />
               <div className="font-chalk text-2xl text-foreground text-journal-lg">{value}</div>
               <span className="text-label text-[10px] text-muted-foreground text-journal-sm">{label}</span>
             </div>
           ))}
         </div>
 
-        {/* Weekly heatmap */}
-        <div className="border border-foreground/10 bg-card p-5 skeuo-thunder-card skeuo-grain">
-          <h3 className="font-chalk text-sm text-foreground mb-3 text-embossed text-journal">WEEKLY ACTIVITY</h3>
-          <WeeklyHeatmap />
-        </div>
-
-        {/* Track progress bars */}
-        <div className="border border-foreground/10 bg-card p-5 skeuo-card skeuo-grain">
-          <h3 className="font-chalk text-sm text-foreground mb-3 text-embossed text-journal">SKILL TRACKS</h3>
-          <div className="space-y-3">
-            {trackProgress.map(tp => (
-              <div key={tp.name}>
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-[11px] text-foreground font-chalk text-journal-sm">{tp.name}</span>
-                  <span className="text-[10px] text-muted-foreground">{tp.completed}/{tp.total}</span>
-                </div>
-                <div className="h-2 bg-foreground/5 border border-foreground/5">
-                  <div
-                    className="h-full transition-all"
-                    style={{
-                      width: `${tp.pct}%`,
-                      background: 'linear-gradient(90deg, hsl(var(--thunder-blue)), hsl(var(--thunder-orange)))',
-                    }}
-                  />
-                </div>
-              </div>
-            ))}
+        <div className="grid lg:grid-cols-2 gap-4">
+          <div className="border border-foreground/10 bg-card p-5 skeuo-thunder-card skeuo-grain">
+            <h3 className="font-chalk text-sm text-foreground mb-3 text-embossed text-journal">LAST 4 WEEKS</h3>
+            <RealHeatmap />
           </div>
+
+          <WorkoutCalendar />
         </div>
 
-        {/* Recent workouts */}
-        {templates.length > 0 && (
+        {recent.length > 0 && (
           <div className="border border-foreground/10 bg-card p-5 skeuo-card">
-            <h3 className="font-chalk text-sm text-foreground mb-3 text-embossed text-journal">RECENT WORKOUTS</h3>
-            <div className="space-y-2">
-              {templates.slice(-3).reverse().map((t: any) => (
-                <div key={t.id} className="flex items-center justify-between border border-foreground/5 bg-surface-0 px-3 py-2 skeuo-card notebook-entry">
-                  <div>
-                    <span className="font-chalk text-sm text-foreground text-journal">{t.name}</span>
-                    <span className="ml-2 text-[9px] text-muted-foreground">{t.blocks?.length || 0} exercises</span>
+            <h3 className="font-chalk text-sm text-foreground mb-3 text-embossed text-journal">RECENT ENTRIES</h3>
+            <ul className="space-y-1.5">
+              {recent.map(l => (
+                <li key={l.id} className="flex items-center justify-between border border-foreground/5 bg-surface-0 px-3 py-2 notebook-entry text-sm">
+                  <div className="min-w-0">
+                    <span className="font-chalk text-foreground text-journal">{l.exercise_name}</span>
+                    <span className="ml-2 text-[10px] text-muted-foreground">
+                      {[
+                        l.sets && l.reps ? `${l.sets}×${l.reps}` : l.sets ? `${l.sets}s` : l.reps ? `${l.reps}r` : null,
+                        l.duration_seconds ? `${l.duration_seconds}s` : null,
+                      ].filter(Boolean).join(' · ')}
+                    </span>
                   </div>
-                  <span className="text-[9px] text-muted-foreground">{new Date(t.lastModified || t.createdAt).toLocaleDateString()}</span>
-                </div>
+                  <time className="text-[10px] text-muted-foreground" dateTime={l.logged_at}>
+                    {new Date(l.logged_at).toLocaleDateString()}
+                  </time>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         )}
 
-        {/* Empty state for new users */}
-        {templates.length === 0 && streak === 0 && (
+        {recent.length === 0 && (
           <div className="border border-foreground/10 bg-card p-8 text-center skeuo-thunder-card skeuo-grain">
-            <TrendingUp className="mx-auto mb-4 h-10 w-10 text-thunder-orange/30" />
-            <h3 className="font-chalk text-lg text-foreground mb-2 text-embossed text-journal-lg">START LOGGING WORKOUTS</h3>
+            <TrendingUp className="mx-auto mb-4 h-10 w-10 text-thunder-orange/30" aria-hidden="true" />
+            <h3 className="font-chalk text-lg text-foreground mb-2 text-embossed text-journal-lg">START LOGGING</h3>
             <p className="text-sm text-muted-foreground max-w-md mx-auto text-journal">
-              Your real training data will appear here once you begin. Ask the Coach to build you a template to get started.
+              Tap any day on the calendar above to add your first entry. Your real training history will appear here.
             </p>
           </div>
         )}

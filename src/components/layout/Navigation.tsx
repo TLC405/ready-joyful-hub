@@ -14,9 +14,11 @@ import {
   BookOpen,
   LogIn,
   LogOut,
+  Shield,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/use-auth';
+import { useAdmin } from '@/hooks/use-admin';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 
@@ -60,6 +62,7 @@ export function Navigation({ activeSection, onNavigate, onOpenSearch }: { active
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { theme, toggle } = useTheme();
   const { isAuthenticated } = useAuth();
+  const { isAdmin } = useAdmin();
   const navigate = useNavigate();
   const ThemeIcon = theme === 'dark' ? Sun : Moon;
   const handleAuthClick = async () => {
@@ -124,10 +127,22 @@ export function Navigation({ activeSection, onNavigate, onOpenSearch }: { active
           <span className="text-[8px] text-muted-foreground/40 tracking-widest">© 2026 TLC</span>
         </div>
 
+        {isAdmin && (
+          <button
+            onClick={() => navigate('/admin')}
+            className="mb-1 flex h-12 w-12 items-center justify-center text-thunder-orange transition-colors hover:text-thunder-blue btn-raised"
+            title="Admin"
+            aria-label="Admin dashboard"
+          >
+            <Shield className="h-5 w-5" />
+          </button>
+        )}
+
         <button
           onClick={handleAuthClick}
           className="mb-1 flex h-12 w-12 items-center justify-center text-muted-foreground transition-colors hover:text-thunder-blue btn-raised"
           title={isAuthenticated ? 'Sign out' : 'Sign in'}
+          aria-label={isAuthenticated ? 'Sign out' : 'Sign in'}
         >
           {isAuthenticated ? <LogOut className="h-5 w-5" /> : <LogIn className="h-5 w-5" />}
         </button>
@@ -195,9 +210,18 @@ export function Navigation({ activeSection, onNavigate, onOpenSearch }: { active
                   );
                 })}
               </div>
+              {isAdmin && (
+                <button
+                  onClick={() => { navigate('/admin'); setMobileMenuOpen(false); }}
+                  className="mt-4 flex items-center gap-4 skeuo-stitch p-4 text-thunder-orange btn-raised"
+                >
+                  <Shield className="h-5 w-5" />
+                  <span className="font-chalk text-xl text-journal">ADMIN</span>
+                </button>
+              )}
               <button
                 onClick={() => { handleAuthClick(); setMobileMenuOpen(false); }}
-                className="mt-4 flex items-center gap-4 skeuo-stitch p-4 text-foreground btn-raised"
+                className="mt-2 flex items-center gap-4 skeuo-stitch p-4 text-foreground btn-raised"
               >
                 {isAuthenticated ? <LogOut className="h-5 w-5" /> : <LogIn className="h-5 w-5" />}
                 <span className="font-chalk text-xl text-journal">{isAuthenticated ? 'SIGN OUT' : 'SIGN IN'}</span>
