@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Play, Youtube, Instagram, Twitter, Facebook, ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
+import { Play, Youtube, Instagram, Twitter, Facebook, ChevronDown, ChevronUp, Loader2, ExternalLink, Maximize2, Minimize2 } from 'lucide-react';
 import DOMPurify from 'isomorphic-dompurify';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
@@ -59,6 +59,8 @@ export function TLCNotebookPlayer({ sources, title, cues = [], failSigns = [], c
   const [showAngles, setShowAngles] = useState(false);
   const [igEmbed, setIgEmbed] = useState<string | null>(null);
   const [igLoading, setIgLoading] = useState(false);
+  const [igError, setIgError] = useState<string | null>(null);
+  const [theater, setTheater] = useState(false);
   const alternates = sources.filter(s => s !== activeSource);
   const embedUrl = activeSource.platform === 'instagram' ? null : getEmbedUrl(activeSource);
 
@@ -66,23 +68,24 @@ export function TLCNotebookPlayer({ sources, title, cues = [], failSigns = [], c
     if (activeSource.platform === 'instagram' && playing) {
       setIgLoading(true);
       setIgEmbed(null);
-      supabase.functions.invoke('proxy-instagram', {
-        body: { url: activeSource.url },
-      }).then(({ data }) => {
-        if (data?.html) {
-          setIgEmbed(data.html);
-        } else {
-          const match = activeSource.url.match(/instagram\.com\/(p|reel|reels)\/([a-zA-Z0-9_-]+)/);
-          if (match) {
-            setIgEmbed(`<iframe src="https://www.instagram.com/${match[1]}/${match[2]}/embed/captioned" width="100%" height="100%" frameborder="0" scrolling="no" allowtransparency="true"></iframe>`);
-          }
-        }
-        setIgLoading(false);
-      }).catch(() => {
+      setIgError(null);
+      const fallback = () => {
         const match = activeSource.url.match(/instagram\.com\/(p|reel|reels)\/([a-zA-Z0-9_-]+)/);
         if (match) {
-          setIgEmbed(`<iframe src="https://www.instagram.com/${match[1]}/${match[2]}/embed/captioned" width="100%" height="100%" frameborder="0" scrolling="no" allowtransparency="true"></iframe>`);
+          setIgEmbed(`<iframe src="https://www.instagram.com/${match[1]}/${match[2]}/embed/captioned" width="100%" height="100%" frameborder="0" scrolling="no" allowtransparency="true" allowfullscreen></iframe>`);
+        } else {
+          setIgError('Could not load this reel. Open it on Instagram instead.');
         }
+      };
+      supabase.functions.invoke('proxy-instagram', {
+        body: { url: activeSource.url },
+      }).then(({ data, error }) => {
+        if (error) fallback();
+        else if (data?.html) setIgEmbed(data.html);
+        else fallback();
+        setIgLoading(false);
+      }).catch(() => {
+        fallback();
         setIgLoading(false);
       });
     }
@@ -111,33 +114,64 @@ export function TLCNotebookPlayer({ sources, title, cues = [], failSigns = [], c
           <h2 className="font-chalk text-lg text-foreground px-4 py-2 border-b border-foreground/8">{title}</h2>
           
           {/* Video frame */}
-          <div className="relative bg-foreground/95 overflow-hidden">
+          <div className={cn(
+            "relative bg-foreground/95 overflow-hidden group/frame",
+            isIg && playing ? "mx-auto" : "",
+            isIg && playing && !theater ? "max-w-md" : "",
+          )}>
             {!playing ? (
               <button
                 onClick={() => setPlaying(true)}
-                className="group relative aspect-video w-full"
+                className={cn("group relative w-full", isIg ? "aspect-[9/16] max-h-[70vh] mx-auto max-w-md" : "aspect-video")}
               >
-                <div className="flex h-full w-full items-center justify-center bg-foreground/90">
+                <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-foreground/90 to-foreground/70">
                   <span className="font-chalk text-3xl text-card/20">{title}</span>
                 </div>
                 <div className="absolute inset-0 flex items-center justify-center transition-colors">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-thunder-orange/90 shadow-lg transition-all group-hover:scale-110 group-hover:bg-thunder-orange">
-                    <Play className="h-5 w-5 text-white ml-0.5" fill="currentColor" />
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-thunder-orange/90 shadow-2xl transition-all group-hover:scale-110 group-hover:bg-thunder-orange">
+                    <Play className="h-6 w-6 text-white ml-0.5" fill="currentColor" />
                   </div>
                 </div>
+                {isIg && (
+                  <div className="absolute top-2 right-2 flex items-center gap-1 rounded-full bg-card/90 px-2 py-1 text-[10px] text-foreground">
+                    <Instagram className="h-3 w-3" /> REEL
+                  </div>
+                )}
               </button>
             ) : isIg ? (
-              igLoading ? (
-                <div className="flex aspect-video w-full items-center justify-center bg-foreground">
-                  <Loader2 className="h-8 w-8 text-thunder-orange animate-spin" />
+              <div className={cn("relative w-full bg-black", theater ? "aspect-video" : "aspect-[9/16] max-h-[80vh]")}>
+                {igLoading ? (
+                  <div className="flex h-full w-full items-center justify-center">
+                    <Loader2 className="h-8 w-8 text-thunder-orange animate-spin" />
+                  </div>
+                ) : igError ? (
+                  <div className="flex h-full w-full flex-col items-center justify-center gap-3 p-4 text-center">
+                    <Instagram className="h-8 w-8 text-thunder-orange" />
+                    <p className="text-xs text-card/70">{igError}</p>
+                  </div>
+                ) : igEmbed ? (
+                  <div className="h-full w-full [&_iframe]:h-full [&_iframe]:w-full" dangerouslySetInnerHTML={{ __html: sanitizeEmbed(igEmbed) }} />
+                ) : null}
+                {/* Controls overlay */}
+                <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover/frame:opacity-100 transition-opacity">
+                  <button
+                    onClick={() => setTheater(t => !t)}
+                    className="flex h-8 w-8 items-center justify-center rounded-full bg-card/90 text-foreground hover:bg-thunder-orange hover:text-white transition-colors"
+                    aria-label={theater ? 'Portrait' : 'Theater mode'}
+                  >
+                    {theater ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
+                  </button>
+                  <a
+                    href={activeSource.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex h-8 w-8 items-center justify-center rounded-full bg-card/90 text-foreground hover:bg-thunder-orange hover:text-white transition-colors"
+                    aria-label="Open on Instagram"
+                  >
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
                 </div>
-              ) : igEmbed ? (
-                <div className="aspect-video w-full" dangerouslySetInnerHTML={{ __html: sanitizeEmbed(igEmbed) }} />
-              ) : (
-                <div className="flex aspect-video w-full items-center justify-center bg-surface-0">
-                  <span className="font-chalk text-xl text-muted-foreground/40">LOADING REEL...</span>
-                </div>
-              )
+              </div>
             ) : embedUrl ? (
               <div className="aspect-video w-full">
                 <iframe
