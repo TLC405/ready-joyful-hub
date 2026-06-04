@@ -3,6 +3,13 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 }
 
+function fallbackEmbed(url: string) {
+  const match = url.match(/instagram\.com\/(p|reel|reels)\/([a-zA-Z0-9_-]+)/)
+  if (!match) return null
+
+  return `<iframe src="https://www.instagram.com/${match[1]}/${match[2]}/embed/captioned" width="100%" height="100%" frameborder="0" scrolling="no" allowtransparency="true"></iframe>`
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
@@ -45,21 +52,29 @@ Deno.serve(async (req) => {
     })
 
     if (resp.ok) {
-      const data = await resp.json()
-      return new Response(JSON.stringify({
-        html: data.html || null,
-        thumbnail_url: data.thumbnail_url || null,
-        title: data.title || null,
-        author_name: data.author_name || null,
-      }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      })
+      const contentType = resp.headers.get('content-type') || ''
+      const raw = await resp.text()
+
+      if (contentType.includes('application/json')) {
+        try {
+          const data = JSON.parse(raw)
+          return new Response(JSON.stringify({
+            html: data.html || fallbackEmbed(url),
+            thumbnail_url: data.thumbnail_url || null,
+            title: data.title || null,
+            author_name: data.author_name || null,
+          }), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          })
+        } catch {
+          // Instagram sometimes answers 200 with a non-JSON body; fall through to local embed.
+        }
+      }
     }
 
     // Fallback: extract shortcode and return basic embed URL
-    const match = url.match(/instagram\.com\/(p|reel|reels)\/([a-zA-Z0-9_-]+)/)
-    if (match) {
-      const embedHtml = `<iframe src="https://www.instagram.com/${match[1]}/${match[2]}/embed/captioned" width="100%" height="100%" frameborder="0" scrolling="no" allowtransparency="true"></iframe>`
+    const embedHtml = fallbackEmbed(url)
+    if (embedHtml) {
       return new Response(JSON.stringify({
         html: embedHtml,
         thumbnail_url: null,
