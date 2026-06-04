@@ -1,8 +1,9 @@
 import { exercises } from '@/lib/exercises';
 import { useMemo } from 'react';
-import { Play, Sparkles, TrendingUp } from 'lucide-react';
+import { Play, Sparkles, TrendingUp, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { WorkoutCalendar } from '@/components/workout/WorkoutCalendar';
+import { useAdmin } from '@/hooks/use-admin';
 
 interface HeroSectionProps {
   onCategoryClick?: (category: string) => void;
@@ -11,6 +12,7 @@ interface HeroSectionProps {
 
 export function HeroSection({ onNavigate }: HeroSectionProps) {
   const navigate = useNavigate();
+  const { isAdmin } = useAdmin();
   const featured = useMemo(() => exercises.filter(e => e.image).slice(0, 8), []);
   const [hero, ...rest] = featured;
 
@@ -20,13 +22,20 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
       <section className="relative overflow-hidden rounded-2xl border border-foreground/10 bg-gradient-to-br from-foreground/[0.02] to-thunder-orange/5">
         <div className="grid md:grid-cols-2 gap-0">
           <div className="p-6 md:p-10 flex flex-col justify-center space-y-4">
-            <div className="text-[10px] text-muted-foreground/60 tracking-[0.25em] uppercase">TLC Calisthenics · Est 2026</div>
+            <div className="flex items-center gap-2">
+              <div className="flex h-8 w-8 items-center justify-center border-2 skeuo-card thunder-border">
+                <span className="font-chalk text-[10px] thunder-text">TLC</span>
+              </div>
+              <div className="text-[10px] text-muted-foreground/70 tracking-[0.25em] uppercase">TLC Calisthenics · Est 2026</div>
+            </div>
             <h1 className="font-chalk text-4xl md:text-6xl lg:text-7xl leading-[0.95] text-foreground">
-              MASTER<br />
-              <span className="bg-gradient-to-r from-thunder-orange to-thunder-blue bg-clip-text text-transparent">YOUR BODY.</span>
+              SUPER<span className="bg-gradient-to-r from-thunder-orange to-thunder-blue bg-clip-text text-transparent">HUMAN.</span>
             </h1>
-            <p className="text-sm md:text-base text-muted-foreground max-w-md">
-              Hybrid strength training — calisthenics, yoga, ballet, and beyond. Log every session. Master every skill.
+            <p className="text-sm md:text-base text-foreground/80 max-w-md font-medium">
+              Training for the hybrid athlete.
+            </p>
+            <p className="text-xs md:text-sm text-muted-foreground max-w-md">
+              Calisthenics, yoga, ballet, strength — one journal. Log every session, master every skill, become uncontainable.
             </p>
             <div className="flex flex-wrap gap-2 pt-2">
               <button
@@ -41,6 +50,15 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
               >
                 <TrendingUp className="h-4 w-4" /> Your progress
               </button>
+              {isAdmin && (
+                <button
+                  onClick={() => navigate('/admin')}
+                  className="inline-flex items-center gap-2 rounded-full border border-thunder-orange/40 bg-thunder-orange/10 px-5 py-2.5 text-sm font-medium text-thunder-orange hover:bg-thunder-orange/20 transition-colors"
+                  title="Admin dashboard"
+                >
+                  <Shield className="h-4 w-4" /> Admin
+                </button>
+              )}
             </div>
           </div>
           {hero && (
