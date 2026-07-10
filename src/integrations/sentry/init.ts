@@ -9,8 +9,10 @@ export async function initSentry() {
   if (!dsn) return;
   try {
     // Dynamically import so the package is optional.
+    // Build a runtime string to defeat static analysis by Rollup/Vite.
+    const pkg = ['@sentry', 'react'].join('/');
     // @ts-ignore — optional peer dependency
-    const Sentry = await import(/* @vite-ignore */ '@sentry/react');
+    const Sentry = await import(/* @vite-ignore */ pkg);
     Sentry.init({
       dsn,
       environment: import.meta.env.MODE,
