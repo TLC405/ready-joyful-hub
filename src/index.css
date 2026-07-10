@@ -249,7 +249,7 @@
   /* ===== SKEUO 2.0 UTILITIES ===== */
 
   /* Paper grain texture overlay */
-  .skeuo-grain {
+  :where(.skeuo-grain) {
     position: relative;
   }
   .skeuo-grain::after {
