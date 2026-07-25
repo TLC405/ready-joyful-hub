@@ -1,15 +1,17 @@
-import { useMemo } from 'react';
-import { CalendarDays, ChevronRight, Dumbbell, Play, Search, Target, TrendingUp } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import { Bot, CalendarDays, ChevronRight, Dumbbell, Play, Search, Sparkles, Target, TrendingUp } from 'lucide-react';
 import { WorkoutCalendar } from '@/components/workout/WorkoutCalendar';
 import { useWorkoutLogs } from '@/hooks/use-workout-logs';
 import { useLearningProgress } from '@/hooks/use-learning-progress';
 import { learningPaths } from '@/lib/learning-paths';
 import { getExerciseById } from '@/lib/exercises';
+import { getTLCRecommendation, loadAthleteProfile, type AthleteProfile } from '@/lib/athlete-profile';
 import { useNavigate } from 'react-router-dom';
 
 interface HeroSectionProps {
   onCategoryClick?: (category: string) => void;
   onNavigate?: (section: string) => void;
+  onOpenAssessment?: () => void;
 }
 
 const quickFilters = [
@@ -17,12 +19,20 @@ const quickFilters = [
   ['Skills', 'skills'], ['Mobility', 'mobility'], ['Yoga', 'yoga'], ['Rings', 'rings'],
 ] as const;
 
-export function HeroSection({ onCategoryClick, onNavigate }: HeroSectionProps) {
+export function HeroSection({ onCategoryClick, onNavigate, onOpenAssessment }: HeroSectionProps) {
   const navigate = useNavigate();
   const { logs, streak } = useWorkoutLogs();
   const { state, pathProgress } = useLearningProgress();
+  const [profile, setProfile] = useState<AthleteProfile | null>(() => loadAthleteProfile());
   const activePaths = learningPaths.filter(path => state.selectedPathIds.includes(path.id)).slice(0, 3);
   const activeWorkoutId = typeof window !== 'undefined' ? localStorage.getItem('tlc-active-workout-v2') : null;
+  const recommendation = profile ? getTLCRecommendation(profile) : null;
+
+  useEffect(() => {
+    const refresh = () => setProfile(loadAthleteProfile());
+    window.addEventListener('tlc-profile-updated', refresh as EventListener);
+    return () => window.removeEventListener('tlc-profile-updated', refresh as EventListener);
+  }, []);
 
   const recent = useMemo(() => logs.slice(0, 3), [logs]);
   const todayLabel = new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 'long', day: 'numeric' }).format(new Date());
@@ -37,6 +47,23 @@ export function HeroSection({ onCategoryClick, onNavigate }: HeroSectionProps) {
         </div>
         {streak > 0 && <button onClick={() => onNavigate?.('progress')} className="rounded-full border border-border bg-card px-3 py-2 font-mono text-xs tabular-nums shadow-sm">{streak} day streak</button>}
       </header>
+
+      <section className="rounded-2xl border border-primary/25 bg-primary/5 p-4 shadow-sm" aria-label="TLC AI recommendation">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex min-w-0 items-start gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground"><Bot className="h-5 w-5" /></div>
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.14em] text-primary"><Sparkles className="h-3.5 w-3.5" /> TLC AI recommends</div>
+              <h2 className="mt-1 font-chalk text-lg text-foreground">{recommendation ? recommendation.headline : 'Let me find your real starting point'}</h2>
+              <p className="mt-1 max-w-2xl text-sm leading-relaxed text-muted-foreground">{recommendation ? recommendation.firstAction : 'Answer a short capability assessment. TLC AI will configure a workout and learning route from your goals, equipment, schedule, and current capacity.'}</p>
+            </div>
+          </div>
+          <div className="flex shrink-0 flex-wrap gap-2">
+            {recommendation ? <button onClick={() => onNavigate?.('train')} className="min-h-11 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-sm">Do this now</button> : <button onClick={onOpenAssessment} className="min-h-11 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-sm">Start assessment</button>}
+            <button onClick={onOpenAssessment} className="min-h-11 rounded-xl border border-border bg-card px-4 text-xs font-semibold text-foreground hover:bg-muted">{recommendation ? 'Update answers' : 'How it works'}</button>
+          </div>
+        </div>
+      </section>
 
       <section className="rounded-2xl border border-border bg-card p-5 shadow-md" aria-label="Today's workout">
         <div className="flex flex-wrap items-start justify-between gap-4">
@@ -88,9 +115,7 @@ export function HeroSection({ onCategoryClick, onNavigate }: HeroSectionProps) {
           <button onClick={() => onNavigate?.('library')} className="min-h-11 rounded-lg border border-border px-4 text-xs font-semibold hover:bg-muted">Open Library</button>
         </div>
         <div className="mt-4 flex gap-2 overflow-x-auto pb-1 hide-scrollbar">
-          {quickFilters.map(([label, category]) => (
-            <button key={label} onClick={() => onCategoryClick?.(category)} className="shrink-0 rounded-full border border-border bg-background px-4 py-2 text-xs font-semibold hover:border-primary/50 hover:bg-muted">{label}</button>
-          ))}
+          {quickFilters.map(([label, category]) => <button key={label} onClick={() => onCategoryClick?.(category)} className="shrink-0 rounded-full border border-border bg-background px-4 py-2 text-xs font-semibold hover:border-primary/50 hover:bg-muted">{label}</button>)}
         </div>
       </section>
 
