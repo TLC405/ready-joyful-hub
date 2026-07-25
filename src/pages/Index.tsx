@@ -11,7 +11,7 @@ import { CoachCareStudio } from '@/components/CoachCare/CoachCareStudio';
 import { GuideSection } from '@/components/sections/GuideSection';
 import { CommandSearch } from '@/components/shared/CommandSearch';
 import { TLCAIGuide } from '@/components/shared/TLCAIGuide';
-import { TLCAIAssessment } from '@/components/onboarding/TLCAIAssessment';
+import { TLCAIAssessmentFlow } from '@/components/onboarding/TLCAIAssessmentFlow';
 import { Protected } from '@/components/auth/Protected';
 import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts';
 import { loadAthleteProfile } from '@/lib/athlete-profile';
@@ -72,7 +72,7 @@ const Index = () => {
         </main>
         <CommandSearch open={searchOpen} onClose={() => setSearchOpen(false)} />
         <TLCAIGuide activeSection={activeSection} onNavigate={handleNavigate} onOpenAssessment={openAssessment} />
-        <TLCAIAssessment open={assessmentOpen} onClose={closeAssessment} onNavigate={handleNavigate} />
+        <TLCAIAssessmentFlow open={assessmentOpen} onClose={closeAssessment} onNavigate={handleNavigate} />
       </div>
     </AppShell>
   );
