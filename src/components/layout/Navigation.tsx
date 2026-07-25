@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { BookOpen, Dumbbell, Home, Library, LogIn, LogOut, Menu, MessageSquare, Moon, Route, Search, Settings, Shield, Sun, TrendingUp, X } from 'lucide-react';
+import { BookOpen, Bot, Dumbbell, Home, Library, LogIn, LogOut, Menu, Moon, Route, Search, Settings, Shield, Sun, TrendingUp, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/use-auth';
 import { useAdmin } from '@/hooks/use-admin';
@@ -18,7 +18,7 @@ const primaryItems: NavItem[] = [
 ];
 
 const secondaryItems: NavItem[] = [
-  { id: 'coach', label: 'Coach TLC', icon: MessageSquare },
+  { id: 'coach', label: 'TLC AI', icon: Bot },
   { id: 'learn', label: 'Learn', icon: BookOpen },
   { id: 'settings', label: 'Settings', icon: Settings },
 ];
