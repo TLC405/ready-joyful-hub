@@ -1,5 +1,6 @@
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
+import { athleteProfileSummary, loadAthleteProfile } from '@/lib/athlete-profile';
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/coach-chat`;
 
@@ -35,7 +36,11 @@ export async function streamCoachResponse({
         'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ messages, personality, athleteProfile }),
+      body: JSON.stringify({
+        messages,
+        personality,
+        athleteProfile: athleteProfile || athleteProfileSummary(loadAthleteProfile()),
+      }),
     });
 
     if (!resp.ok) {
