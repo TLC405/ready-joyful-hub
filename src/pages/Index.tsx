@@ -61,7 +61,7 @@ const Index = () => {
       <div className="min-h-dvh text-foreground">
         <Navigation activeSection={activeSection} onNavigate={handleNavigate} onOpenSearch={() => setSearchOpen(true)} />
         <main className="pb-24 lg:ml-20 lg:pb-0">
-          {activeSection === 'home' && <HeroSection onCategoryClick={handleCategoryClick} onNavigate={handleNavigate} />}
+          {activeSection === 'home' && <HeroSection onCategoryClick={handleCategoryClick} onNavigate={handleNavigate} onOpenAssessment={openAssessment} />}
           {activeSection === 'train' && <TrainingHub />}
           {activeSection === 'skills' && <BeginnerSkillHub />}
           {activeSection === 'library' && <UnifiedLibrary defaultCategory={libraryCategory} onCategoryReset={() => setLibraryCategory(undefined)} />}
