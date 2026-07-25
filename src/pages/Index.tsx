@@ -7,7 +7,7 @@ import { BeginnerSkillHub } from '@/components/sections/BeginnerSkillHub';
 import { UnifiedLibrary } from '@/components/sections/UnifiedLibrary';
 import { ProgressDashboard } from '@/components/sections/ProgressDashboard';
 import { SettingsPanel } from '@/components/sections/SettingsPanel';
-import { CoachCareStudio } from '@/components/CoachCare/CoachCareStudio';
+import { TLCAIStudio } from '@/components/TLCAI/TLCAIStudio';
 import { GuideSection } from '@/components/sections/GuideSection';
 import { CommandSearch } from '@/components/shared/CommandSearch';
 import { TLCAIGuide } from '@/components/shared/TLCAIGuide';
@@ -66,7 +66,7 @@ const Index = () => {
           {activeSection === 'skills' && <BeginnerSkillHub />}
           {activeSection === 'library' && <UnifiedLibrary defaultCategory={libraryCategory} onCategoryReset={() => setLibraryCategory(undefined)} />}
           {activeSection === 'progress' && <Protected><ProgressDashboard /></Protected>}
-          {activeSection === 'coach' && <Protected><CoachCareStudio /></Protected>}
+          {activeSection === 'coach' && <Protected><TLCAIStudio onNavigate={handleNavigate} onOpenAssessment={openAssessment} /></Protected>}
           {activeSection === 'learn' && <GuideSection />}
           {activeSection === 'settings' && <Protected><SettingsPanel /></Protected>}
         </main>
