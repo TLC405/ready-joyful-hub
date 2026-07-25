@@ -1,0 +1,184 @@
+{
+  "version": 1,
+  "sdk_version": "0.24.0",
+  "path": "/functions/v1/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://dqrllgdffkaclpoglbfk.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "superhuman-tlc-mcp",
+      "version": "0.1.0",
+      "title": "SUPERHUMAN by TLC"
+    },
+    "tools": [
+      {
+        "name": "training_summary",
+        "title": "Training summary",
+        "description": "Summarize the signed-in athlete's recent training: session count, current streak, most-trained exercises, and last session date.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "days": {
+              "description": "Look-back window in days (default 30, max 365).",
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_workout_logs",
+        "title": "List workout logs",
+        "description": "List the signed-in athlete's logged training sets, newest first. Optionally filter by date range (YYYY-MM-DD).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "from": {
+              "description": "Earliest log date, YYYY-MM-DD.",
+              "type": "string"
+            },
+            "to": {
+              "description": "Latest log date, YYYY-MM-DD.",
+              "type": "string"
+            },
+            "limit": {
+              "description": "Max rows to return (default 50, max 200).",
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          }
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "log_workout",
+        "title": "Log a workout set",
+        "description": "Log a training entry for the signed-in athlete: exercise name, date, and any of sets, reps, duration, notes.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "exercise_name": {
+              "type": "string",
+              "description": "Human-readable exercise name, e.g. 'Hollow Body Hold'."
+            },
+            "exercise_id": {
+              "description": "Slug id from the app's library if known, e.g. 'hollow-body-hold'.",
+              "type": "string"
+            },
+            "logged_at": {
+              "description": "Date of the session, YYYY-MM-DD. Defaults to today (UTC).",
+              "type": "string"
+            },
+            "sets": {
+              "description": "Number of sets performed.",
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "reps": {
+              "description": "Reps per set.",
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "duration_seconds": {
+              "description": "Hold or work duration in seconds.",
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "notes": {
+              "description": "Free-form coaching notes.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "exercise_name"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "delete_workout_log",
+        "title": "Delete a workout log",
+        "description": "Permanently delete one of the signed-in athlete's workout log entries by id.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "The workout log id (uuid) to delete."
+            }
+          },
+          "required": [
+            "id"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "search_exercise_videos",
+        "title": "Search exercise videos",
+        "description": "Search the app's exercise video library (TLC TV) by exercise id or keyword and return matching video entries.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "Keyword or exercise id to match, e.g. 'planche' or 'clutch-flag'."
+            },
+            "limit": {
+              "description": "Max rows to return (default 10, max 50).",
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "query"
+          ]
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}

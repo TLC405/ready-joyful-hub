@@ -10,6 +10,7 @@ import NotFound from "./pages/NotFound";
 const VideoPage = lazy(() => import("./pages/VideoPage"));
 const AuthPage = lazy(() => import("./pages/Auth"));
 const AdminPage = lazy(() => import("./pages/Admin"));
+const OAuthConsentPage = lazy(() => import("./pages/OAuthConsent"));
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/video" element={<Suspense fallback={<div className="flex h-screen items-center justify-center"><span className="text-muted-foreground">Loading...</span></div>}><VideoPage /></Suspense>} />
           <Route path="/video/:exerciseId" element={<Suspense fallback={<div className="flex h-screen items-center justify-center"><span className="text-muted-foreground">Loading...</span></div>}><VideoPage /></Suspense>} />
           <Route path="/admin" element={<Suspense fallback={<div className="flex h-screen items-center justify-center"><span className="text-muted-foreground">Loading...</span></div>}><AdminPage /></Suspense>} />
+          <Route path="/.lovable/oauth/consent" element={<Suspense fallback={<div className="flex h-screen items-center justify-center"><span className="text-muted-foreground">Loading...</span></div>}><OAuthConsentPage /></Suspense>} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
