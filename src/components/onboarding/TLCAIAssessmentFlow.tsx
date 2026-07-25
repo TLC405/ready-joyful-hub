@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { ArrowLeft, ArrowRight, Bot, Check, ShieldAlert, Sparkles, X } from 'lucide-react';
 import {
   applyTLCRecommendation,
@@ -28,7 +28,10 @@ const goals: { id: TrainingGoal; label: string }[] = [
   { id: 'planche', label: 'Planche' }, { id: 'rings', label: 'Rings / muscle-up' },
   { id: 'human-flag', label: 'Human flag' }, { id: 'mobility-splits', label: 'Mobility and splits' },
 ];
-const equipment = [['floor','Floor space'],['wall','Wall'],['chair','Chair / bench'],['pull-up-bar','Pull-up bar'],['rings','Rings'],['parallettes','Parallettes'],['resistance-band','Resistance band']] as const;
+const equipment = [
+  ['floor','Floor space'], ['wall','Wall'], ['chair','Chair / bench'], ['pull-up-bar','Pull-up bar'],
+  ['rings','Rings'], ['parallettes','Parallettes'], ['resistance-band','Resistance band'], ['vertical-pole','Vertical pole / stall bars'],
+] as const;
 const painAreas = ['Wrists', 'Elbows', 'Shoulders', 'Back', 'Hips', 'Knees', 'Ankles / feet'];
 
 function defaultDraft(): Draft {
@@ -44,7 +47,7 @@ function defaultDraft(): Draft {
   };
 }
 
-function Choice({ selected, children, onClick }: { selected: boolean; children: React.ReactNode; onClick: () => void }) {
+function Choice({ selected, children, onClick }: { selected: boolean; children: ReactNode; onClick: () => void }) {
   return <button type="button" onClick={onClick} className={cn('flex min-h-12 items-center justify-between rounded-xl border px-4 text-left text-sm font-semibold transition-colors', selected ? 'border-primary bg-primary/10 text-foreground' : 'border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground')}>{children}{selected && <Check className="h-4 w-4 text-primary" />}</button>;
 }
 
