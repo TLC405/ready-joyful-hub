@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { Navigation } from '@/components/layout/Navigation';
 import { AppShell } from '@/components/layout/AppShell';
 import { HeroSection } from '@/components/sections/HeroSection';
@@ -10,15 +10,24 @@ import { SettingsPanel } from '@/components/sections/SettingsPanel';
 import { CoachCareStudio } from '@/components/CoachCare/CoachCareStudio';
 import { GuideSection } from '@/components/sections/GuideSection';
 import { CommandSearch } from '@/components/shared/CommandSearch';
+import { TLCAIGuide } from '@/components/shared/TLCAIGuide';
+import { TLCAIAssessment } from '@/components/onboarding/TLCAIAssessment';
 import { Protected } from '@/components/auth/Protected';
 import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts';
+import { loadAthleteProfile } from '@/lib/athlete-profile';
 
 type Section = 'home' | 'train' | 'skills' | 'library' | 'progress' | 'coach' | 'learn' | 'settings';
+
+const ASSESSMENT_DISMISSED_KEY = 'tlc-assessment-dismissed-v1';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState<Section>('home');
   const [searchOpen, setSearchOpen] = useState(false);
   const [libraryCategory, setLibraryCategory] = useState<string | undefined>();
+  const [assessmentOpen, setAssessmentOpen] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return !loadAthleteProfile() && localStorage.getItem(ASSESSMENT_DISMISSED_KEY) !== 'true';
+  });
 
   const handleCategoryClick = useCallback((category: string) => {
     setLibraryCategory(category);
@@ -29,6 +38,16 @@ const Index = () => {
   const handleNavigate = useCallback((section: string) => {
     setActiveSection(section as Section);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  const closeAssessment = useCallback(() => {
+    setAssessmentOpen(false);
+    localStorage.setItem(ASSESSMENT_DISMISSED_KEY, 'true');
+  }, []);
+
+  const openAssessment = useCallback(() => {
+    localStorage.removeItem(ASSESSMENT_DISMISSED_KEY);
+    setAssessmentOpen(true);
   }, []);
 
   useKeyboardShortcuts({
@@ -52,6 +71,8 @@ const Index = () => {
           {activeSection === 'settings' && <Protected><SettingsPanel /></Protected>}
         </main>
         <CommandSearch open={searchOpen} onClose={() => setSearchOpen(false)} />
+        <TLCAIGuide activeSection={activeSection} onNavigate={handleNavigate} onOpenAssessment={openAssessment} />
+        <TLCAIAssessment open={assessmentOpen} onClose={closeAssessment} onNavigate={handleNavigate} />
       </div>
     </AppShell>
   );
