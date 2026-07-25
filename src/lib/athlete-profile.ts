@@ -58,8 +58,14 @@ export function saveAthleteProfile(profile: AthleteProfile) {
 }
 
 export function getTLCRecommendation(profile: AthleteProfile): TLCRecommendation {
-  const goals = profile.goals.length ? profile.goals : ['general'];
+  const goals: TrainingGoal[] = profile.goals.length ? profile.goals : ['general'];
   const pathIds: string[] = [];
+  const equipmentGaps: string[] = [];
+  const hasBar = profile.equipment.includes('pull-up-bar') || profile.equipment.includes('rings');
+  const hasRings = profile.equipment.includes('rings');
+  const hasPole = profile.equipment.includes('vertical-pole');
+  const hasWall = profile.equipment.includes('wall');
+  const hasFloor = profile.equipment.includes('floor');
 
   if (profile.pushUps === 'none' || profile.rows === 'none' || profile.squatControl === 'none' || profile.hollowHold === 'none') {
     pathIds.push('start-here');
@@ -67,19 +73,36 @@ export function getTLCRecommendation(profile: AthleteProfile): TLCRecommendation
 
   for (const goal of goals) {
     if (goal === 'general') pathIds.push('start-here');
-    if (goal === 'pull-up') pathIds.push('pull-up');
-    if (goal === 'handstand') pathIds.push('handstand');
+    if (goal === 'pull-up') {
+      pathIds.push(hasBar ? 'pull-up' : 'start-here');
+      if (!hasBar) equipmentGaps.push('a pull-up bar or rings for vertical pulling');
+    }
+    if (goal === 'handstand') {
+      pathIds.push(hasWall && hasFloor ? 'handstand' : 'start-here');
+      if (!hasWall) equipmentGaps.push('a clear wall for supported handstand practice');
+    }
     if (goal === 'l-sit') pathIds.push('l-sit');
     if (goal === 'pistol') pathIds.push('pistol');
-    if (goal === 'front-lever') pathIds.push(profile.pullUps === 'strong' ? 'front-lever' : 'pull-up');
-    if (goal === 'planche') pathIds.push(profile.pushUps === 'strong' && profile.hollowHold !== 'none' ? 'planche' : 'start-here');
-    if (goal === 'rings') pathIds.push(profile.rows === 'none' ? 'start-here' : 'rings');
-    if (goal === 'human-flag') pathIds.push(profile.pullUps === 'strong' ? 'human-flag' : 'start-here');
+    if (goal === 'front-lever') {
+      pathIds.push(hasBar && profile.pullUps === 'strong' ? 'front-lever' : hasBar ? 'pull-up' : 'start-here');
+      if (!hasBar) equipmentGaps.push('a pull-up bar or rings for front-lever training');
+    }
+    if (goal === 'planche') {
+      pathIds.push(hasFloor && profile.pushUps === 'strong' && profile.hollowHold !== 'none' ? 'planche' : 'start-here');
+      if (!hasFloor) equipmentGaps.push('stable floor space or parallettes for planche training');
+    }
+    if (goal === 'rings') {
+      pathIds.push(hasRings && profile.rows !== 'none' ? 'rings' : 'start-here');
+      if (!hasRings) equipmentGaps.push('gymnastic rings for the rings pathway');
+    }
+    if (goal === 'human-flag') {
+      pathIds.push(hasPole && profile.pullUps === 'strong' ? 'human-flag' : 'start-here');
+      if (!hasPole) equipmentGaps.push('a stable vertical pole or stall bars for human-flag practice');
+    }
     if (goal === 'mobility-splits') pathIds.push('mobility-splits');
   }
 
   const uniquePaths = Array.from(new Set(pathIds)).slice(0, 3);
-  const hasBar = profile.equipment.includes('pull-up-bar') || profile.equipment.includes('rings');
   const workoutId = uniquePaths.includes('pull-up') || uniquePaths.includes('front-lever') || uniquePaths.includes('rings')
     ? (hasBar ? 'pull' : 'foundation-a')
     : uniquePaths.includes('pistol')
@@ -91,19 +114,19 @@ export function getTLCRecommendation(profile: AthleteProfile): TLCRecommendation
           : 'foundation-b';
 
   const foundationFirst = uniquePaths[0] === 'start-here';
-  const caution = profile.painAreas.length
-    ? `You marked ${profile.painAreas.join(', ')}. TLC AI should keep those areas out of sharp pain and suggest professional evaluation when symptoms persist, worsen, or affect daily activity.`
-    : undefined;
+  const notices: string[] = [];
+  if (profile.painAreas.length) notices.push(`You marked ${profile.painAreas.join(', ')}. Keep those areas out of sharp pain and seek qualified care when symptoms persist, worsen, or affect daily activity.`);
+  if (equipmentGaps.length) notices.push(`Your selected goal eventually needs ${Array.from(new Set(equipmentGaps)).join('; ')}. TLC AI is starting you with work that fits what you currently have.`);
 
   return {
     pathIds: uniquePaths.length ? uniquePaths : ['start-here'],
     workoutId,
     headline: foundationFirst ? 'Build your base first' : 'Your best starting route is ready',
     reason: foundationFirst
-      ? 'Your answers show that a short foundation block will make every later skill safer and easier to understand.'
+      ? 'Your answers, available equipment, or current capacity show that a short foundation block is the safest useful route toward your goal.'
       : 'TLC AI matched your current capacity, equipment, schedule, and selected goals to the smallest useful next step.',
     firstAction: foundationFirst ? 'Complete Foundation A and open the Start Here path.' : 'Open your first recommended path and complete its current-step readiness check.',
-    caution,
+    caution: notices.length ? notices.join(' ') : undefined,
   };
 }
 
