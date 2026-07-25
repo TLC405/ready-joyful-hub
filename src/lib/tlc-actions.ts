@@ -38,6 +38,10 @@ function isText(value: unknown, max = 500): value is string {
   return typeof value === 'string' && value.trim().length > 0 && value.length <= max;
 }
 
+function isStringArray(value: unknown, maxItems = 12): value is string[] {
+  return Array.isArray(value) && value.length <= maxItems && value.every(item => typeof item === 'string' && item.length <= 100);
+}
+
 export function validateTLCAction(action: unknown): TLCActionResult {
   if (!action || typeof action !== 'object') return { ok: false, message: 'Invalid TLC AI action.' };
   const candidate = action as Record<string, unknown>;
@@ -60,7 +64,9 @@ export function validateTLCAction(action: unknown): TLCActionResult {
         ? { ok: true, message: 'Learning-path action is valid.' }
         : { ok: false, message: 'Unknown learning path.' };
     case 'FILTER_LIBRARY':
-      return (!candidate.query || typeof candidate.query === 'string') && (!candidate.category || typeof candidate.category === 'string') && (!candidate.equipment || Array.isArray(candidate.equipment))
+      return (!candidate.query || typeof candidate.query === 'string')
+        && (!candidate.category || typeof candidate.category === 'string')
+        && (!candidate.equipment || isStringArray(candidate.equipment))
         ? { ok: true, message: 'Library filter action is valid.' }
         : { ok: false, message: 'Invalid Library filter.' };
     case 'ADD_EXERCISE':
@@ -68,7 +74,10 @@ export function validateTLCAction(action: unknown): TLCActionResult {
         ? { ok: true, message: 'Exercise action is valid.', requiresConfirmation: true }
         : { ok: false, message: 'Unknown exercise.' };
     case 'SWAP_EXERCISE':
-      return typeof candidate.fromExerciseId === 'string' && typeof candidate.toExerciseId === 'string' && Boolean(getExerciseById(candidate.fromExerciseId)) && Boolean(getExerciseById(candidate.toExerciseId))
+      return typeof candidate.fromExerciseId === 'string'
+        && typeof candidate.toExerciseId === 'string'
+        && Boolean(getExerciseById(candidate.fromExerciseId))
+        && Boolean(getExerciseById(candidate.toExerciseId))
         ? { ok: true, message: 'Exercise swap is valid.', requiresConfirmation: true }
         : { ok: false, message: 'Invalid exercise swap.' };
     case 'SET_SESSION_LENGTH':
@@ -76,11 +85,13 @@ export function validateTLCAction(action: unknown): TLCActionResult {
         ? { ok: true, message: 'Session-length action is valid.', requiresConfirmation: true }
         : { ok: false, message: 'Unsupported session length.' };
     case 'START_REST_TIMER':
-      return Number.isInteger(candidate.seconds) && Number(candidate.seconds) >= 10 && Number(candidate.seconds) <= 600
+      return Number.isInteger(Number(candidate.seconds)) && Number(candidate.seconds) >= 10 && Number(candidate.seconds) <= 600
         ? { ok: true, message: 'Rest timer action is valid.' }
         : { ok: false, message: 'Rest timer must be between 10 and 600 seconds.' };
     case 'CREATE_CHANGE_REQUEST':
-      return isText(candidate.title, 120) && isText(candidate.description, 4000) && (!candidate.affectedFiles || Array.isArray(candidate.affectedFiles))
+      return isText(candidate.title, 120)
+        && isText(candidate.description, 4000)
+        && (!candidate.affectedFiles || isStringArray(candidate.affectedFiles, 30))
         ? { ok: true, message: 'Change request is valid.', requiresConfirmation: true }
         : { ok: false, message: 'Invalid developer change request.' };
     default:
@@ -95,11 +106,19 @@ async function confirmIfNeeded(action: TLCAction, context: TLCActionContext): Pr
 }
 
 function followPath(pathId: string) {
-  const existing = JSON.parse(localStorage.getItem(LEARNING_PROGRESS_KEY) || '{}');
+  let existing: Record<string, unknown> = {};
+  try {
+    existing = JSON.parse(localStorage.getItem(LEARNING_PROGRESS_KEY) || '{}');
+  } catch {
+    existing = {};
+  }
+  const selectedPathIds = Array.isArray(existing.selectedPathIds) ? existing.selectedPathIds.filter(id => typeof id === 'string') : [];
+  const completedStepIds = Array.isArray(existing.completedStepIds) ? existing.completedStepIds : [];
+  const completedCheckIds = Array.isArray(existing.completedCheckIds) ? existing.completedCheckIds : [];
   localStorage.setItem(LEARNING_PROGRESS_KEY, JSON.stringify({
-    selectedPathIds: Array.from(new Set([...(existing.selectedPathIds || []), pathId])),
-    completedStepIds: existing.completedStepIds || [],
-    completedCheckIds: existing.completedCheckIds || [],
+    selectedPathIds: Array.from(new Set([...selectedPathIds, pathId])),
+    completedStepIds,
+    completedCheckIds,
     lastPathId: pathId,
   }));
   window.dispatchEvent(new CustomEvent('tlc-learning-progress-updated', { detail: { pathId } }));
