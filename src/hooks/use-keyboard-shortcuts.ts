@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
 
-type Section = 'home' | 'library' | 'coach' | 'progress' | 'settings';
-
-const sections: Section[] = ['home', 'library', 'coach', 'progress', 'settings'];
+const sections = ['home', 'train', 'skills', 'library', 'progress'] as const;
+type Section = typeof sections[number];
 
 interface UseKeyboardShortcutsOptions {
   onNavigate: (section: string) => void;
@@ -12,43 +11,37 @@ interface UseKeyboardShortcutsOptions {
 
 export function useKeyboardShortcuts({ onNavigate, activeSection, onOpenSearch }: UseKeyboardShortcutsOptions) {
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      // Don't intercept when typing in inputs
-      const tag = (e.target as HTMLElement)?.tagName;
+    const handler = (event: KeyboardEvent) => {
+      const tag = (event.target as HTMLElement)?.tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
 
-      // Number keys 1-5 jump to sections
-      if (e.key >= '1' && e.key <= '5' && !e.metaKey && !e.ctrlKey) {
-        const idx = parseInt(e.key) - 1;
-        if (sections[idx]) {
-          e.preventDefault();
-          onNavigate(sections[idx]);
+      if (event.key >= '1' && event.key <= '5' && !event.metaKey && !event.ctrlKey) {
+        const section = sections[Number(event.key) - 1];
+        if (section) {
+          event.preventDefault();
+          onNavigate(section);
         }
         return;
       }
 
-      // Cmd+K or Ctrl+K or / opens search
-      if ((e.key === 'k' && (e.metaKey || e.ctrlKey)) || (e.key === '/' && !e.metaKey && !e.ctrlKey)) {
-        e.preventDefault();
+      if ((event.key === 'k' && (event.metaKey || event.ctrlKey)) || (event.key === '/' && !event.metaKey && !event.ctrlKey)) {
+        event.preventDefault();
         onOpenSearch();
         return;
       }
 
-      // Arrow left/right navigate sections
-      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-        const currentIdx = sections.indexOf(activeSection as Section);
-        if (currentIdx === -1) return;
-        const nextIdx = e.key === 'ArrowLeft' 
-          ? Math.max(0, currentIdx - 1) 
-          : Math.min(sections.length - 1, currentIdx + 1);
-        if (nextIdx !== currentIdx) {
-          e.preventDefault();
-          onNavigate(sections[nextIdx]);
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+        const currentIndex = sections.indexOf(activeSection as Section);
+        if (currentIndex < 0) return;
+        const nextIndex = event.key === 'ArrowLeft' ? Math.max(0, currentIndex - 1) : Math.min(sections.length - 1, currentIndex + 1);
+        if (nextIndex !== currentIndex) {
+          event.preventDefault();
+          onNavigate(sections[nextIndex]);
         }
       }
     };
 
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [onNavigate, activeSection, onOpenSearch]);
+  }, [activeSection, onNavigate, onOpenSearch]);
 }
