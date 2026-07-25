@@ -1,28 +1,33 @@
-import { useState, useRef, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { Navigation } from '@/components/layout/Navigation';
 import { AppShell } from '@/components/layout/AppShell';
 import { HeroSection } from '@/components/sections/HeroSection';
+import { TrainingHub } from '@/components/sections/TrainingHub';
+import { BeginnerSkillHub } from '@/components/sections/BeginnerSkillHub';
 import { UnifiedLibrary } from '@/components/sections/UnifiedLibrary';
 import { ProgressDashboard } from '@/components/sections/ProgressDashboard';
 import { SettingsPanel } from '@/components/sections/SettingsPanel';
-import { CoachCareStudio } from '@/components/CoachCare/CoachCareStudio';
+import { TLCAIStudio } from '@/components/TLCAI/TLCAIStudio';
 import { GuideSection } from '@/components/sections/GuideSection';
-import { ExerciseDetailModal } from '@/components/shared/ExerciseDetailModal';
 import { CommandSearch } from '@/components/shared/CommandSearch';
+import { TLCAIGuide } from '@/components/shared/TLCAIGuide';
+import { TLCAIAssessmentFlow } from '@/components/onboarding/TLCAIAssessmentFlow';
 import { Protected } from '@/components/auth/Protected';
 import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts';
-import type { Exercise } from '@/lib/types';
-import { cn } from '@/lib/utils';
+import { loadAthleteProfile } from '@/lib/athlete-profile';
 
-type Section = 'home' | 'library' | 'coach' | 'progress' | 'settings' | 'guide';
+type Section = 'home' | 'train' | 'skills' | 'library' | 'progress' | 'coach' | 'learn' | 'settings';
 
-const sectionOrder: Section[] = ['home', 'library', 'coach', 'progress', 'guide', 'settings'];
+const ASSESSMENT_DISMISSED_KEY = 'tlc-assessment-dismissed-v1';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState<Section>('home');
-  const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [libraryCategory, setLibraryCategory] = useState<string | undefined>();
+  const [assessmentOpen, setAssessmentOpen] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return !loadAthleteProfile() && localStorage.getItem(ASSESSMENT_DISMISSED_KEY) !== 'true';
+  });
 
   const handleCategoryClick = useCallback((category: string) => {
     setLibraryCategory(category);
@@ -30,86 +35,44 @@ const Index = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
-  const touchStartX = useRef(0);
-  const touchStartY = useRef(0);
-
   const handleNavigate = useCallback((section: string) => {
     setActiveSection(section as Section);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
-  const handleOpenSearch = useCallback(() => setSearchOpen(true), []);
+  const closeAssessment = useCallback(() => {
+    setAssessmentOpen(false);
+    localStorage.setItem(ASSESSMENT_DISMISSED_KEY, 'true');
+  }, []);
+
+  const openAssessment = useCallback(() => {
+    localStorage.removeItem(ASSESSMENT_DISMISSED_KEY);
+    setAssessmentOpen(true);
+  }, []);
 
   useKeyboardShortcuts({
     onNavigate: handleNavigate,
     activeSection,
-    onOpenSearch: handleOpenSearch,
+    onOpenSearch: () => setSearchOpen(true),
   });
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-    touchStartY.current = e.touches[0].clientY;
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    const dx = e.changedTouches[0].clientX - touchStartX.current;
-    const dy = e.changedTouches[0].clientY - touchStartY.current;
-    if (Math.abs(dx) < 60 || Math.abs(dy) > Math.abs(dx)) return;
-    const idx = sectionOrder.indexOf(activeSection);
-    if (dx < 0 && idx < sectionOrder.length - 1) {
-      handleNavigate(sectionOrder[idx + 1]);
-    } else if (dx > 0 && idx > 0) {
-      handleNavigate(sectionOrder[idx - 1]);
-    }
-  };
 
   return (
     <AppShell>
-      <div className="min-h-screen text-foreground">
-        <Navigation activeSection={activeSection} onNavigate={handleNavigate} onOpenSearch={handleOpenSearch} />
-        
-        <main
-          className="lg:ml-20"
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-        >
-          {activeSection === 'home' && (
-            <HeroSection onCategoryClick={handleCategoryClick} onNavigate={handleNavigate} />
-          )}
-
-          {activeSection === 'library' && (
-            <UnifiedLibrary defaultCategory={libraryCategory} onCategoryReset={() => setLibraryCategory(undefined)} />
-          )}
-
-          {activeSection === 'coach' && (
-            <Protected><CoachCareStudio /></Protected>
-          )}
-
-          {activeSection === 'progress' && (
-            <Protected><ProgressDashboard /></Protected>
-          )}
-
-          {activeSection === 'settings' && (
-            <Protected><SettingsPanel /></Protected>
-          )}
-
-          {activeSection === 'guide' && <GuideSection />}
-
-          {selectedExercise && (
-            <ExerciseDetailModal exercise={selectedExercise} onClose={() => setSelectedExercise(null)} />
-          )}
-
-          {/* Mobile swipe indicator */}
-          <div className="h-24 lg:hidden">
-            <div className="flex items-center justify-center gap-1.5 pt-2">
-              {sectionOrder.map(s => (
-                <div key={s} className={cn("h-1 w-1 rounded-full transition-colors", s === activeSection ? "bg-primary" : "bg-foreground/15")} />
-              ))}
-            </div>
-          </div>
+      <div className="min-h-dvh text-foreground">
+        <Navigation activeSection={activeSection} onNavigate={handleNavigate} onOpenSearch={() => setSearchOpen(true)} />
+        <main className="pb-24 lg:ml-20 lg:pb-0">
+          {activeSection === 'home' && <HeroSection onCategoryClick={handleCategoryClick} onNavigate={handleNavigate} onOpenAssessment={openAssessment} />}
+          {activeSection === 'train' && <TrainingHub />}
+          {activeSection === 'skills' && <BeginnerSkillHub />}
+          {activeSection === 'library' && <UnifiedLibrary defaultCategory={libraryCategory} onCategoryReset={() => setLibraryCategory(undefined)} />}
+          {activeSection === 'progress' && <Protected><ProgressDashboard /></Protected>}
+          {activeSection === 'coach' && <Protected><TLCAIStudio onNavigate={handleNavigate} onOpenAssessment={openAssessment} /></Protected>}
+          {activeSection === 'learn' && <GuideSection />}
+          {activeSection === 'settings' && <Protected><SettingsPanel /></Protected>}
         </main>
-
         <CommandSearch open={searchOpen} onClose={() => setSearchOpen(false)} />
+        <TLCAIGuide activeSection={activeSection} onNavigate={handleNavigate} onOpenAssessment={openAssessment} />
+        <TLCAIAssessmentFlow open={assessmentOpen} onClose={closeAssessment} onNavigate={handleNavigate} />
       </div>
     </AppShell>
   );

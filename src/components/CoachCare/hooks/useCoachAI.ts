@@ -1,4 +1,6 @@
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
+import { athleteProfileSummary, loadAthleteProfile } from '@/lib/athlete-profile';
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/coach-chat`;
 
@@ -7,32 +9,47 @@ type Msg = { role: 'user' | 'assistant'; content: string };
 export async function streamCoachResponse({
   messages,
   personality,
+  athleteProfile,
   onDelta,
   onDone,
   onError,
 }: {
   messages: Msg[];
   personality?: string;
+  athleteProfile?: string;
   onDelta: (text: string) => void;
   onDone: () => void;
   onError: (err: string) => void;
 }) {
   try {
+    const { data } = await supabase.auth.getSession();
+    const accessToken = data.session?.access_token;
+    if (!accessToken) {
+      toast.error('Sign in to use TLC AI chat');
+      onError('Authentication required');
+      return;
+    }
+
     const resp = await fetch(CHAT_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ messages, personality }),
+      body: JSON.stringify({
+        messages,
+        personality,
+        athleteProfile: athleteProfile || athleteProfileSummary(loadAthleteProfile()),
+      }),
     });
 
     if (!resp.ok) {
       const errData = await resp.json().catch(() => ({ error: 'Unknown error' }));
       const errMsg = errData.error || `Error ${resp.status}`;
-      if (resp.status === 429) toast.error('Rate limited — slow down a bit!');
+      if (resp.status === 401) toast.error('Your session expired — sign in again');
+      else if (resp.status === 429) toast.error('TLC AI is busy — slow down a bit');
       else if (resp.status === 402) toast.error('AI credits depleted');
-      else toast.error('Coach AI error');
+      else toast.error('TLC AI error');
       onError(errMsg);
       return;
     }
@@ -70,7 +87,6 @@ export async function streamCoachResponse({
       }
     }
 
-    // Flush remaining
     if (buffer.trim()) {
       for (let raw of buffer.split('\n')) {
         if (!raw) continue;
@@ -82,14 +98,14 @@ export async function streamCoachResponse({
           const parsed = JSON.parse(jsonStr);
           const content = parsed.choices?.[0]?.delta?.content as string | undefined;
           if (content) onDelta(content);
-        } catch { /* ignore */ }
+        } catch { /* ignore malformed final chunk */ }
       }
     }
 
     onDone();
   } catch (err) {
     const msg = err instanceof Error ? err.message : 'Network error';
-    toast.error('Failed to reach Coach AI');
+    toast.error('Failed to reach TLC AI');
     onError(msg);
   }
 }

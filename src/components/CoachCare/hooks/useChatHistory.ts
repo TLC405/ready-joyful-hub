@@ -1,12 +1,12 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { ChatMessage } from '../types';
 
-const STORAGE_KEY = 'tlc-coach-chat';
+const STORAGE_KEY = 'tlc-ai-chat-v1';
 
 const welcomeMessage: ChatMessage = {
   id: 'welcome',
   role: 'coach',
-  content: "⚡ Welcome to **TLC Coach** — your AI-powered training partner. Paste a YouTube URL for form analysis, ask about any exercise, or let me build you a program. What are we working on?",
+  content: "Welcome to **TLC AI**. I can use your assessment to explain what to train, point you to the right path, find an exercise, or help adjust your current plan. What do you want help with?",
   timestamp: new Date().toISOString(),
   type: 'text',
 };
@@ -25,14 +25,13 @@ export function useChatHistory() {
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
-    } catch {}
+    } catch { /* storage may be unavailable */ }
   }, [messages]);
 
   const addMessage = useCallback((msg: Omit<ChatMessage, 'id' | 'timestamp'> & { id?: string; replace?: boolean }) => {
     const { replace: shouldReplace, ...rest } = msg;
     if (shouldReplace && msg.id) {
-      // Update existing message in place (for streaming)
-      setMessages(prev => prev.map(m => m.id === msg.id ? { ...m, ...rest } : m));
+      setMessages(prev => prev.map(message => message.id === msg.id ? { ...message, ...rest } : message));
       return { ...rest, id: msg.id, timestamp: new Date().toISOString() } as ChatMessage;
     }
     const newMsg: ChatMessage = {
@@ -44,9 +43,7 @@ export function useChatHistory() {
     return newMsg;
   }, []);
 
-  const clearHistory = useCallback(() => {
-    setMessages([welcomeMessage]);
-  }, []);
+  const clearHistory = useCallback(() => setMessages([welcomeMessage]), []);
 
   return { messages, addMessage, clearHistory };
 }
