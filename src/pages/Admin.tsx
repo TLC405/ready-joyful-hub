@@ -35,18 +35,16 @@ function AdminDashboard() {
   const tools = [
     {
       icon: Download,
-      title: 'Download full code',
-      desc: 'Export the complete source (React + TypeScript + Tailwind) as a ZIP, ready for web, iOS and Android via Capacitor.',
-      action: 'Get the code',
-      onClick: () => toast({ title: 'Export via GitHub', description: GITHUB_HINT }),
-      note: 'Connect GitHub once, then export or clone anytime.',
-    },
-    {
-      icon: Github,
-      title: 'GitHub sync',
-      desc: 'Two-way sync between this project and your own repository. Every change lands as a commit.',
-      action: 'How to connect',
-      onClick: () => toast({ title: 'GitHub sync', description: GITHUB_HINT }),
+      title: 'Download everything (one ZIP)',
+      desc: 'All source code, the full exercise library (JSON) and every video thumbnail + skill image — ready to upload to ChatGPT.',
+      action: 'Download ZIP',
+      onClick: () => {
+        const a = document.createElement('a');
+        a.href = '/downloads/tlc-calisthenics-full.zip';
+        a.download = 'tlc-calisthenics-full.zip';
+        document.body.appendChild(a); a.click(); a.remove();
+      },
+      note: '~6.5 MB · 324 files',
     },
     {
       icon: Database,
