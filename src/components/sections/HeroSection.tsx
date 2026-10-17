@@ -1,4 +1,5 @@
 import { exercises } from '@/lib/exercises';
+import { exerciseThumbnail } from '@/lib/video-thumbnail';
 import { useMemo } from 'react';
 import { Play, Sparkles, TrendingUp, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -13,7 +14,14 @@ interface HeroSectionProps {
 export function HeroSection({ onNavigate }: HeroSectionProps) {
   const navigate = useNavigate();
   const { isAdmin } = useAdmin();
-  const featured = useMemo(() => exercises.filter(e => e.image).slice(0, 8), []);
+  const featured = useMemo(
+    () =>
+      exercises
+        .map(e => ({ ex: e, thumb: exerciseThumbnail(e) }))
+        .filter((t): t is { ex: (typeof exercises)[number]; thumb: string } => Boolean(t.thumb))
+        .slice(0, 8),
+    []
+  );
   const [hero, ...rest] = featured;
 
   return (
