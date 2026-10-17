@@ -7,6 +7,10 @@ import {
 import { Navigation } from '@/components/layout/Navigation';
 import { useNavigate } from 'react-router-dom';
 import { exercises } from '@/lib/exercises';
+import { toast } from '@/hooks/use-toast';
+
+const GITHUB_HINT = 'Use the GitHub button in the Lovable editor toolbar (top right) to connect a repo — then export or clone the full source anytime.';
+const BACKEND_HINT = 'Open the Backend panel from the Lovable editor toolbar to manage tables, auth users and functions.';
 
 function AdminDashboard() {
   const navigate = useNavigate();
