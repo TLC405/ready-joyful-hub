@@ -1,4 +1,5 @@
 import { exercises } from '@/lib/exercises';
+import { exerciseThumbnail } from '@/lib/video-thumbnail';
 import { useMemo } from 'react';
 import { Play, Sparkles, TrendingUp, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -13,7 +14,14 @@ interface HeroSectionProps {
 export function HeroSection({ onNavigate }: HeroSectionProps) {
   const navigate = useNavigate();
   const { isAdmin } = useAdmin();
-  const featured = useMemo(() => exercises.filter(e => e.image).slice(0, 8), []);
+  const featured = useMemo(
+    () =>
+      exercises
+        .map(e => ({ ex: e, thumb: exerciseThumbnail(e) }))
+        .filter((t): t is { ex: (typeof exercises)[number]; thumb: string } => Boolean(t.thumb))
+        .slice(0, 8),
+    []
+  );
   const [hero, ...rest] = featured;
 
   return (
@@ -63,13 +71,13 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
           </div>
           {hero && (
             <button
-              onClick={() => navigate(`/video/${hero.id}`)}
+              onClick={() => navigate(`/video/${hero.ex.id}`)}
               className="group relative aspect-[4/3] md:aspect-auto md:min-h-[320px] overflow-hidden"
-              aria-label={`Open ${hero.name}`}
+              aria-label={`Open ${hero.ex.name}`}
             >
               <img
-                src={hero.image}
-                alt={hero.name}
+                src={hero.thumb}
+                alt={hero.ex.name}
                 loading="eager"
                 decoding="async"
                 className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -77,8 +85,8 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
               <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-5 text-left">
                 <div className="text-[10px] tracking-[0.2em] text-card/70 uppercase mb-1">Skill of the day</div>
-                <div className="font-chalk text-2xl md:text-3xl text-card">{hero.name}</div>
-                <div className="text-xs text-card/60 capitalize mt-1">{hero.difficulty}</div>
+                <div className="font-chalk text-2xl md:text-3xl text-card">{hero.ex.name}</div>
+                <div className="text-xs text-card/60 capitalize mt-1">{hero.ex.difficulty}</div>
               </div>
               <div className="absolute top-4 right-4 h-12 w-12 rounded-full bg-thunder-orange/90 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
                 <Play className="h-5 w-5 text-white ml-0.5" fill="currentColor" aria-hidden="true" />
@@ -102,7 +110,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
           </button>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 auto-rows-[140px] md:auto-rows-[180px]">
-          {rest.map((ex, idx) => {
+          {rest.map(({ ex, thumb }, idx) => {
             const big = idx === 0 || idx === 3;
             return (
               <button
@@ -112,7 +120,7 @@ export function HeroSection({ onNavigate }: HeroSectionProps) {
                 aria-label={`Open ${ex.name}`}
               >
                 <img
-                  src={ex.image}
+                  src={thumb}
                   alt={ex.name}
                   loading="lazy"
                   decoding="async"
