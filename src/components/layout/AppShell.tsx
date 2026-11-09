@@ -11,8 +11,8 @@ export function AppShell({ children }: AppShellProps) {
         {children}
       </div>
       {/* TLC footer bar */}
-      <div className="relative z-10 py-3 text-center border-t border-foreground/5">
-        <span className="text-[9px] text-muted-foreground/30 tracking-[0.2em]">CREATED WITH TLC · AI-POWERED TRAINING</span>
+      <div className="relative z-10 hidden border-t border-border/10 py-4 text-center lg:ml-20 lg:block">
+        <span className="text-xs text-muted-foreground">© 2026 TLC · Superhuman</span>
       </div>
     </div>
   );

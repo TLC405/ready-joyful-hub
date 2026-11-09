@@ -95,13 +95,13 @@ export function LogEntryForm({ date, initial, onSave, onCancel }: Props) {
               variant="outline"
               role="combobox"
               aria-expanded={open}
-              className="w-full justify-between mt-1 font-normal"
+              className="w-full justify-between mt-1 font-normal [&>span]:truncate"
             >
               {exerciseName || <span className="text-muted-foreground">Pick an exercise…</span>}
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-[320px] p-0 pointer-events-auto" align="start">
+          <PopoverContent className="w-[var(--radix-popover-trigger-width)] max-w-[calc(100vw-48px)] p-0 pointer-events-auto" align="start">
             <Command>
               <CommandInput placeholder="Search exercises…" />
               <CommandList>
