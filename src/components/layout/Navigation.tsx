@@ -1,242 +1,69 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import {
-  Flame,
-  Settings,
-  Menu,
-  X,
-  Home,
-  Library,
-  Sun,
-  Moon,
-  MessageSquare,
-  Search,
-  BookOpen,
-  LogIn,
-  LogOut,
-  Shield,
-} from 'lucide-react';
+import { Home, Library, Sun, Moon, MessageSquare, Search, BookOpen, LogIn, LogOut, Shield, Menu, CalendarDays, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/hooks/use-auth';
 import { useAdmin } from '@/hooks/use-admin';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 
-interface NavItem {
-  id: string;
-  label: string;
-  icon: React.ElementType;
-}
-
-const navItems: NavItem[] = [
-  { id: 'home', label: 'HOME', icon: Home },
-  { id: 'library', label: 'LIBRARY', icon: Library },
-  { id: 'coach', label: 'COACH', icon: MessageSquare },
-  { id: 'progress', label: 'PROGRESS', icon: Flame },
-  { id: 'guide', label: 'GUIDE', icon: BookOpen },
-  { id: 'settings', label: 'SETTINGS', icon: Settings },
+const navItems = [
+  { id: 'home', label: 'Home', icon: Home },
+  { id: 'library', label: 'Library', icon: Library },
+  { id: 'coach', label: 'Coach', icon: MessageSquare },
+  { id: 'progress', label: 'Journal', icon: CalendarDays },
+  { id: 'guide', label: 'Guide', icon: BookOpen },
+  { id: 'settings', label: 'Settings', icon: Settings },
 ];
-
 function useTheme() {
-  const [theme, setThemeState] = useState<'dark' | 'light'>(() => {
-    if (typeof window !== 'undefined') {
-      return (localStorage.getItem('theme') as 'dark' | 'light') || 'light';
-    }
-    return 'light';
-  });
-
-  useEffect(() => {
-    const root = document.documentElement;
-    root.classList.remove('light', 'dark');
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    }
-    localStorage.setItem('theme', theme);
-  }, [theme]);
-
-  const toggle = () => setThemeState(t => t === 'dark' ? 'light' : 'dark');
-  return { theme, toggle };
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') === 'dark' ? 'dark' : 'light');
+  useEffect(() => { document.documentElement.classList.toggle('dark', theme === 'dark'); localStorage.setItem('theme', theme); }, [theme]);
+  return { theme, toggle: () => setTheme(t => t === 'dark' ? 'light' : 'dark') };
 }
-
 export function Navigation({ activeSection, onNavigate, onOpenSearch }: { activeSection: string; onNavigate: (section: string) => void; onOpenSearch?: () => void }) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const { theme, toggle } = useTheme();
   const { isAuthenticated } = useAuth();
   const { isAdmin } = useAdmin();
   const navigate = useNavigate();
   const ThemeIcon = theme === 'dark' ? Sun : Moon;
-  const handleAuthClick = async () => {
-    if (isAuthenticated) {
-      await supabase.auth.signOut();
-    } else {
-      navigate('/auth');
-    }
-  };
-
-  return (
-    <>
-      {/* Desktop Sidebar */}
-      <nav className="fixed left-0 top-0 z-50 hidden h-screen w-20 flex-col items-center border-r border-foreground/10 bg-card py-8 lg:flex skeuo-grain">
-        {/* Logo with thunder gradient border */}
-        <div className="mb-12">
-          <div className="flex h-12 w-12 items-center justify-center border-2 skeuo-card thunder-border">
-            <span className="font-chalk text-lg thunder-text text-journal">TLC</span>
-          </div>
+  const authLabel = isAuthenticated ? 'Sign out' : 'Sign in';
+  const authAction = async () => { if (isAuthenticated) await supabase.auth.signOut(); else navigate('/auth'); setOpen(false); };
+  const go = (id: string) => { onNavigate(id); setOpen(false); };
+  return <>
+    <nav aria-label="Main navigation" className="fixed left-0 top-0 z-40 hidden h-dvh w-20 flex-col items-center border-r border-border/15 bg-card py-5 lg:flex">
+      <Button variant="ghost" size="icon" onClick={() => go('home')} className="mb-7 font-chalk text-lg text-thunder-orange" aria-label="TLC home">TLC</Button>
+      <div className="flex flex-1 flex-col gap-2">
+        {navItems.map(({ id, label, icon: Icon }) => <Button key={id} size="icon" variant="ghost" title={label} aria-label={label} aria-current={activeSection === id ? 'page' : undefined} onClick={() => go(id)} className={cn('relative h-12 w-12', activeSection === id ? 'bg-thunder-orange/10 text-thunder-orange' : 'text-muted-foreground')}><Icon />{activeSection === id && <span className="absolute -right-4 h-6 w-1 bg-thunder-orange" />}</Button>)}
+      </div>
+      {onOpenSearch && <Button size="icon" variant="ghost" onClick={onOpenSearch} aria-label="Search" title="Search"><Search /></Button>}
+      {isAdmin && <Button size="icon" variant="ghost" onClick={() => navigate('/admin')} aria-label="Admin dashboard" title="Admin" className="text-thunder-orange"><Shield /></Button>}
+      <Button size="icon" variant="ghost" onClick={authAction} aria-label={authLabel} title={authLabel}>{isAuthenticated ? <LogOut /> : <LogIn />}</Button>
+      <Button size="icon" variant="ghost" onClick={toggle} aria-label={theme === 'dark' ? 'Light mode' : 'Dark mode'} title="Change appearance"><ThemeIcon /></Button>
+    </nav>
+    <header className="safe-top fixed inset-x-0 top-0 z-40 border-b border-border/10 bg-background/95 backdrop-blur-md lg:hidden">
+      <div className="flex h-16 items-center justify-between px-4">
+        <Button variant="ghost" onClick={() => go('home')} className="h-auto gap-3 p-0 hover:bg-transparent"><span className="font-chalk text-2xl text-thunder-orange">TLC<span className="text-thunder-blue">.</span></span><span className="border-l border-border/15 pl-3 text-xs font-semibold text-foreground">SUPERHUMAN</span></Button>
+        <div className="flex gap-1">{onOpenSearch && <Button size="icon" variant="ghost" onClick={onOpenSearch} aria-label="Search"><Search /></Button>}<Button size="icon" variant="ghost" onClick={toggle} aria-label={theme === 'dark' ? 'Light mode' : 'Dark mode'}><ThemeIcon /></Button></div>
+      </div>
+    </header>
+    <nav aria-label="Phone navigation" className="safe-bottom fixed inset-x-0 bottom-0 z-40 border-t border-border/15 bg-card/95 backdrop-blur-md lg:hidden">
+      <div className="grid h-[72px] grid-cols-5 px-1">
+        {navItems.slice(0, 4).map(({ id, label, icon: Icon }) => <Button key={id} variant="ghost" onClick={() => go(id)} aria-current={activeSection === id ? 'page' : undefined} className={cn('h-full flex-col gap-1 rounded-none px-0 text-[11px] hover:bg-muted', activeSection === id ? 'text-thunder-orange' : 'text-muted-foreground')}><Icon className="!h-5 !w-5" /><span>{label}</span></Button>)}
+        <Button variant="ghost" onClick={() => setOpen(true)} aria-label="More options" className="h-full flex-col gap-1 rounded-none px-0 text-[11px] text-muted-foreground"><Menu className="!h-5 !w-5" />More</Button>
+      </div>
+    </nav>
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetContent side="bottom" className="safe-bottom max-h-[90dvh] overflow-y-auto rounded-t-lg p-5">
+        <SheetHeader className="text-left"><SheetTitle className="font-chalk text-2xl">TLC Superhuman</SheetTitle><SheetDescription>Training for the hybrid athlete</SheetDescription></SheetHeader>
+        <div className="mt-5 grid grid-cols-2 gap-2">{navItems.map(({ id, label, icon: Icon }) => <Button key={id} variant="ghost" className="h-14 justify-start border border-border/10" onClick={() => go(id)}><Icon />{label}</Button>)}</div>
+        <div className="mt-4 space-y-1 border-t border-border/10 pt-3">
+          {isAdmin && <Button variant="ghost" className="w-full justify-start text-thunder-orange" onClick={() => { setOpen(false); navigate('/admin'); }}><Shield />Admin dashboard</Button>}
+          <Button variant="ghost" className="w-full justify-start" onClick={toggle}><ThemeIcon />{theme === 'dark' ? 'Light mode' : 'Dark mode'}</Button>
+          <Button variant="ghost" className="w-full justify-start" onClick={authAction}>{isAuthenticated ? <LogOut /> : <LogIn />}{authLabel}</Button>
         </div>
-
-        <div className="flex flex-1 flex-col items-center gap-1">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = activeSection === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => onNavigate(item.id)}
-                className={cn(
-                  "group relative flex h-14 w-14 items-center justify-center transition-all",
-                  isActive 
-                    ? "text-thunder-orange skeuo-pressed" 
-                    : "text-muted-foreground hover:text-thunder-blue"
-                )}
-              >
-                <Icon className="h-5 w-5" />
-                <div className="pointer-events-none absolute left-full ml-3 flex items-center gap-2 border border-foreground/10 bg-card px-3 py-2 opacity-0 transition-opacity group-hover:opacity-100 skeuo-thunder-card">
-                  <span className="whitespace-nowrap text-label text-xs text-embossed">{item.label}</span>
-                </div>
-                {isActive && (
-                  <motion.div layoutId="activeIndicator" className="absolute -right-[1px] h-8 w-0.5 thunder-gradient" transition={{ type: "spring", stiffness: 500, damping: 30 }} />
-                )}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Search button */}
-        {onOpenSearch && (
-          <button
-            onClick={onOpenSearch}
-            className="mb-2 flex h-12 w-12 items-center justify-center text-muted-foreground transition-colors hover:text-thunder-blue btn-raised"
-            title="Search (⌘K)"
-          >
-            <Search className="h-5 w-5" />
-          </button>
-        )}
-
-        {/* TLC Footer */}
-        <div className="mb-2 text-center">
-          <span className="text-[8px] text-muted-foreground/40 tracking-widest">© 2026 TLC</span>
-        </div>
-
-        {isAdmin && (
-          <button
-            onClick={() => navigate('/admin')}
-            className="mb-1 flex h-12 w-12 items-center justify-center text-thunder-orange transition-colors hover:text-thunder-blue btn-raised"
-            title="Admin"
-            aria-label="Admin dashboard"
-          >
-            <Shield className="h-5 w-5" />
-          </button>
-        )}
-
-        <button
-          onClick={handleAuthClick}
-          className="mb-1 flex h-12 w-12 items-center justify-center text-muted-foreground transition-colors hover:text-thunder-blue btn-raised"
-          title={isAuthenticated ? 'Sign out' : 'Sign in'}
-          aria-label={isAuthenticated ? 'Sign out' : 'Sign in'}
-        >
-          {isAuthenticated ? <LogOut className="h-5 w-5" /> : <LogIn className="h-5 w-5" />}
-        </button>
-
-        <button
-          onClick={toggle}
-          className="mt-0 flex h-12 w-12 items-center justify-center text-muted-foreground transition-colors hover:text-thunder-orange btn-raised"
-        >
-          <ThemeIcon className="h-5 w-5" />
-        </button>
-      </nav>
-
-      {/* Mobile Bottom Bar */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 skeuo-leather skeuo-stitch lg:hidden">
-        <div className="flex items-center justify-around py-3">
-          {navItems.slice(0, 4).map((item) => {
-            const Icon = item.icon;
-            const isActive = activeSection === item.id;
-            return (
-              <button key={item.id} onClick={() => onNavigate(item.id)}
-                className={cn("flex flex-col items-center gap-1 px-3 py-1 transition-colors", isActive ? "text-thunder-orange" : "text-primary-foreground/50")}>
-                <Icon className="h-5 w-5" />
-                <span className="text-label text-[10px] text-journal-sm">{item.label}</span>
-                {isActive && <div className="h-0.5 w-4 thunder-gradient" />}
-              </button>
-            );
-          })}
-          <button onClick={() => setMobileMenuOpen(true)} className="flex flex-col items-center gap-1 px-3 py-1 text-primary-foreground/50">
-            <Menu className="h-5 w-5" />
-            <span className="text-label text-[10px]">MORE</span>
-          </button>
-        </div>
-      </nav>
-
-      {/* Mobile Menu Overlay */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 bg-card notebook-ruled notebook-margin lg:hidden">
-            <div className="flex h-full flex-col p-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center border-2 skeuo-card thunder-border">
-                    <span className="font-chalk text-lg thunder-text">TLC</span>
-                  </div>
-                  <span className="font-chalk text-2xl thunder-text text-journal-lg">TLC CALISTHENICS</span>
-                </div>
-                <button onClick={() => setMobileMenuOpen(false)} className="flex h-10 w-10 items-center justify-center border border-foreground/10 btn-raised">
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-              {/* Thunder divider */}
-              <div className="mt-4 thunder-divider" />
-              <div className="mt-4 flex flex-1 flex-col gap-1">
-                {navItems.map((item, index) => {
-                  const Icon = item.icon;
-                  const isActive = activeSection === item.id;
-                  return (
-                    <motion.button key={item.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: index * 0.05 }}
-                      onClick={() => { onNavigate(item.id); setMobileMenuOpen(false); }}
-                      className={cn("notebook-entry flex items-center gap-4 p-4 text-left transition-all", isActive ? "text-thunder-orange" : "text-foreground hover:text-thunder-blue")}>
-                      <Icon className="h-5 w-5" />
-                      <span className="font-chalk text-xl text-journal">{item.label}</span>
-                      {isActive && <div className="ml-auto thunder-led" />}
-                    </motion.button>
-                  );
-                })}
-              </div>
-              {isAdmin && (
-                <button
-                  onClick={() => { navigate('/admin'); setMobileMenuOpen(false); }}
-                  className="mt-4 flex items-center gap-4 skeuo-stitch p-4 text-thunder-orange btn-raised"
-                >
-                  <Shield className="h-5 w-5" />
-                  <span className="font-chalk text-xl text-journal">ADMIN</span>
-                </button>
-              )}
-              <button
-                onClick={() => { handleAuthClick(); setMobileMenuOpen(false); }}
-                className="mt-2 flex items-center gap-4 skeuo-stitch p-4 text-foreground btn-raised"
-              >
-                {isAuthenticated ? <LogOut className="h-5 w-5" /> : <LogIn className="h-5 w-5" />}
-                <span className="font-chalk text-xl text-journal">{isAuthenticated ? 'SIGN OUT' : 'SIGN IN'}</span>
-              </button>
-              <button
-                onClick={toggle}
-                className="mt-2 flex items-center gap-4 skeuo-stitch p-4 text-foreground btn-raised"
-              >
-                <ThemeIcon className="h-5 w-5" />
-                <span className="font-chalk text-xl text-journal">{theme === 'dark' ? 'LIGHT MODE' : 'DARK MODE'}</span>
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
-  );
+      </SheetContent>
+    </Sheet>
+  </>;
 }
