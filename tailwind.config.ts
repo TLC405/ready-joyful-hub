@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        chalk: ['"Space Grotesk"', 'sans-serif'],
-        sans: ['Inter', 'sans-serif'],
+        chalk: ['Bitter', 'Georgia', 'serif'],
+        sans: ['"Work Sans"', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -23,6 +23,7 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        media: { DEFAULT: "hsl(var(--media-background))", foreground: "hsl(var(--media-foreground))" },
         "surface-0": "hsl(var(--surface-0))",
         "surface-1": "hsl(var(--surface-1))",
         "surface-2": "hsl(var(--surface-2))",

@@ -8,6 +8,7 @@ import { WikiSection } from './WikiSection';
 import { AppBreadcrumb } from '@/components/shared/Breadcrumb';
 import { exercises } from '@/lib/exercises';
 import type { Exercise } from '@/lib/types';
+import { Button } from '@/components/ui/button';
 
 type Tab = 'browse' | 'map' | 'tv' | 'wiki';
 
@@ -180,7 +181,7 @@ export function UnifiedLibrary({ defaultCategory, onCategoryReset }: UnifiedLibr
   const breadcrumbItems = [
     { label: 'HOME' },
     { label: 'LIBRARY' },
-    { label: tabs.find(t => t.id === activeTab)!.label },
+    { label: tabs.find(t => t.id === activeTab)?.label ?? 'BROWSE' },
   ];
 
   return (
@@ -188,23 +189,23 @@ export function UnifiedLibrary({ defaultCategory, onCategoryReset }: UnifiedLibr
       <AppBreadcrumb items={breadcrumbItems} />
 
       {/* Tab bar — leather strip */}
-      <div className="mb-4 flex items-center gap-0 skeuo-leather">
+      <div className="mb-4 grid grid-cols-4 gap-1 border-b border-border/15 py-2">
         {tabs.map(tab => {
           const Icon = tab.icon;
           return (
-            <button
+            <Button variant="ghost"
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={cn(
-                "flex flex-1 items-center justify-center gap-2 px-4 py-2.5 text-label text-[10px] tracking-widest transition-colors border-r last:border-r-0 border-primary-foreground/10",
+                "flex min-w-0 items-center justify-center gap-1 px-1 text-xs",
                 activeTab === tab.id
-                  ? "skeuo-pressed bg-primary-foreground/15 text-primary-foreground"
-                  : "text-primary-foreground/60 hover:text-primary-foreground/80"
+                  ? "bg-thunder-orange/10 text-thunder-orange"
+                  : "text-muted-foreground"
               )}
             >
               <Icon className="h-3.5 w-3.5" />
               {tab.label}
-            </button>
+            </Button>
           );
         })}
       </div>
